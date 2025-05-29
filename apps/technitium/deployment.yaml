@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: technitium-dns
+  labels:
+    app.kubernetes.io/name: technitium-dns
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: technitium-dns
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: technitium-dns
+    spec:
+      volumes:
+        - name: technitium-data
+          persistentVolumeClaim:
+            claimName: technitium-data-pvc
+      containers:
+        - image: technitium/dns-server:latest
+          name: technitium
+          ports:
+            - containerPort: 5380
+            - containerPort: 53
+              protocol: TCP
+            - containerPort: 53
+              protocol: UDP
+          volumeMounts:
+          - name: technitium-data
+            mountPath: "/etc/dns"

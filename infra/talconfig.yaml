@@ -1,0 +1,100 @@
+---
+clusterName: yakumo
+talosVersion: v1.10.3
+kubernetesVersion: v1.33.1
+endpoint: https://10.0.0.240:6443
+domain: yakumo.prettysunflower.moe
+allowSchedulingOnControlPlanes: false
+clusterPodNets:
+  - 10.244.0.0/16
+clusterSvcNets:
+  - 10.96.0.0/12
+patches:
+  - |-
+    - op: add
+      path: /machine/network/kubespan
+      value:
+        enabled: true
+    - op: add
+      path: /machine/features/hostDNS
+      value:
+        forwardKubeDNSToHost: false
+nodes:
+  - hostname: yukari
+    ipAddress: 10.0.0.240
+    controlPlane: true
+    arch: amd64
+    installDisk: /dev/sda
+    nodeLabels:
+      location: yul
+  - hostname: byakuren
+    ipAddress: 10.0.15.33
+    controlPlane: true
+    arch: amd64
+    installDisk: /dev/sda
+    nodeLabels:
+      location: fsn
+  - hostname: tojiko
+    ipAddress: 10.0.15.35
+    controlPlane: true
+    arch: amd64
+    installDisk: /dev/sda
+    nodeLabels:
+      location: fsn
+  - hostname: chen
+    ipAddress: 10.0.15.32
+    controlPlane: false
+    arch: amd64
+    installDisk: /dev/sda
+    nodeLabels:
+      location: fsn
+  - hostname: ran
+    ipAddress: 10.0.0.241
+    controlPlane: false
+    arch: amd64
+    installDisk: /dev/sda
+    nodeLabels:
+      location: yul
+  - hostname: fujiwara-no-moukou
+    ipAddress: 10.0.0.245
+    controlPlane: false
+    arch: amd64
+    installDisk: /dev/sda
+    nodeLabels:
+      location: yul
+
+controlPlane:
+  extraManifests:
+    - tailscale.patch.yaml
+  schematic:
+      customization:
+        systemExtensions:
+            officialExtensions:
+                - siderolabs/iscsi-tools
+                - siderolabs/qemu-guest-agent
+                - siderolabs/tailscale
+                - siderolabs/util-linux-tools
+
+worker:
+  extraManifests:
+    - tailscale.patch.yaml
+  schematic:
+      customization:
+        systemExtensions:
+            officialExtensions:
+                - siderolabs/iscsi-tools
+                - siderolabs/qemu-guest-agent
+                - siderolabs/tailscale
+                - siderolabs/util-linux-tools
+  patches:
+    - |-
+        - op: add
+          path: /machine/kubelet/extraMounts
+          value:
+            - destination: /var/lib/longhorn
+              type: bind
+              source: /var/lib/longhorn
+              options:
+                - bind
+                - rshared
+                - rw

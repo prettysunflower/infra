@@ -1,0 +1,6 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: prettysunflower-website
+  labels:
+    name: prettysunflower-website

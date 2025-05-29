@@ -1,0 +1,5 @@
+resources:
+- deployment.yaml
+- services.yaml
+- pvc.yaml
+- namespace.yaml

@@ -1,0 +1,3 @@
+secrets.yaml
+infra/tailscale.patch.yaml
+.DS_Store

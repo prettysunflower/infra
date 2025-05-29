@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: znc
+  labels:
+    app.kubernetes.io/name: znc
+spec:
+  replicas: 1
+  serviceName: "znc"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: znc
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: znc
+    spec:
+      volumes:
+        - name: znc-config
+          persistentVolumeClaim:
+            claimName: znc-pvc
+      containers:
+        - name: znc
+          image: znc:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4921
+          volumeMounts:
+          - name: znc-config
+            mountPath: "/znc-data"
