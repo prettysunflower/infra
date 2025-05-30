@@ -1,0 +1,8 @@
+resources:
+  - deployment.yaml
+  - pvc.yaml
+  - services.yaml
+configMapGenerator:
+- name: static-websites-caddy-config
+  files:
+  - Caddyfile

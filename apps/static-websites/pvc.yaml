@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: prettysunflower-staticwebsites-pv
+spec:
+  storageClassName: s3yuyuko
+  capacity:
+    storage: 10T
+  accessModes:
+    - ReadOnlyMany
+  claimRef:
+    namespace: default
+    name: prettysunflower-staticwebsites-pvc
+  csi:
+    driver: ru.yandex.s3.csi
+    controllerPublishSecretRef:
+      name: csi-tigris-secret
+      namespace: kube-system
+    nodePublishSecretRef:
+      name: csi-tigris-secret
+      namespace: kube-system
+    nodeStageSecretRef:
+      name: csi-tigris-secret
+      namespace: kube-system
+    volumeAttributes:
+      capacity: 10Ti
+      mounter: geesefs
+      options: --memory-limit 1000 --dir-mode 0777 --file-mode 0666
+    volumeHandle: prettysunflower-staticwebsites
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prettysunflower-staticwebsites-pvc
+spec:
+  storageClassName: "s3yuyuko"
+  resources:
+    requests:
+      storage: 10Ti
+  volumeMode: Filesystem
+  accessModes:
+    - ReadOnlyMany
+  volumeName: prettysunflower-staticwebsites-pv

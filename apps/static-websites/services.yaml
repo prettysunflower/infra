@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: static-websites
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: static-websites
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      name: http

@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: static-websites
+  labels:
+    app.kubernetes.io/name: static-websites
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: static-websites
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: static-websites
+    spec:
+      volumes:
+        - name: prettysunflower-staticwebsites
+          persistentVolumeClaim:
+            claimName: prettysunflower-staticwebsites-pvc
+        - name: config
+          configMap:
+            name: static-websites-caddy-config
+      containers:
+        - image: caddy:latest
+          name: caddy
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          volumeMounts:
+          - name: prettysunflower-staticwebsites
+            mountPath: "/srv/prettysunflower-staticwebsites"
+          - name: config
+            mountPath: /etc/caddy

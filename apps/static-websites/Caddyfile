@@ -1,0 +1,4 @@
+http://cerclemagique.ca {
+	root * /srv/prettysunflower-staticwebsites/cerclemagique.ca
+	file_server
+}
