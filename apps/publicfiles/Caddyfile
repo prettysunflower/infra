@@ -1,0 +1,4 @@
+http://publicfiles.default.svc.yakumo.prettysunflower.moe, http://files.prettysunflower.moe {
+	root * /srv
+	file_server browse
+}
