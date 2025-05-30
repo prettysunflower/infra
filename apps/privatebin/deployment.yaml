@@ -46,7 +46,7 @@ spec:
             - name: "BIND"
               value: ":8081"
             - name: "DIFFICULTY"
-              value: "4"
+              value: "3"
             - name: ED25519_PRIVATE_KEY_HEX
               valueFrom:
                 secretKeyRef:
