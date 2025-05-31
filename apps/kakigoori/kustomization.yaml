@@ -1,0 +1,8 @@
+resources:
+- deployment.yaml
+- services.yaml
+- secrets.yaml
+configMapGenerator:
+- name: kakigoori-config
+  files:
+  - local_settings.py
