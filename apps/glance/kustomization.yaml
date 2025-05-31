@@ -1,0 +1,7 @@
+resources:
+- deployment.yaml
+- services.yaml
+configMapGenerator:
+- name: glance-config
+  files:
+  - glance.yml
