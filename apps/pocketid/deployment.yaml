@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pocketid
+  labels:
+    app.kubernetes.io/name: pocketid
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pocketid
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: pocketid
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: location
+                operator: In
+                values:
+                - fsn
+      volumes:
+        - name: pocketid-data
+          persistentVolumeClaim:
+            claimName: pocketid-data-pvc
+      containers:
+        - name: pocketid
+          image: ghcr.io/pocket-id/pocket-id:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 1411
+          envFrom:
+            - configMapRef:
+                name: pocketid-config
+          volumeMounts:
+          - name: pocketid-data
+            mountPath: "/app/data"
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
