@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: valkey
+  namespace: teable
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: valkey
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+      name: valkey
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: teable
+  namespace: teable
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: teable
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+      name: http

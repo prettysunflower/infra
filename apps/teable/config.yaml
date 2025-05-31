@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: teable-config
+  namespace: teable
+data:
+  PUBLIC_ORIGIN: "https://data.remilia.ch"
+  
+  BACKEND_CACHE_PROVIDER: "redis"
+  
+  NEXT_ENV_IMAGES_ALL_REMOTE: "true"
+  PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: "1"
+  NODE_TLS_REJECT_UNAUTHORIZED: '0'
