@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: opengist
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: opengist
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 6157
+      name: http
