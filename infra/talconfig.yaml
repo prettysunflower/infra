@@ -62,6 +62,13 @@ nodes:
     installDisk: /dev/sda
     nodeLabels:
       location: yul
+  - hostname: wagasakihime
+    ipAddress: 192.168.19.133
+    controlPlane: false
+    arch: amd64
+    installDisk: /dev/sda
+    nodeLabels:
+      location: gva
 
 controlPlane:
   extraManifests:
