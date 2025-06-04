@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: renovate-gitea
+spec:
+  schedule: '@hourly'
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 1
+                preference:
+                  matchExpressions:
+                  - key: location
+                    operator: In
+                    values:
+                    - fsn
+          hostAliases:
+          - ip: "100.105.22.116"
+            hostnames:
+            - "git.prettysunflower.moe"
+          containers:
+            - name: renovate
+              image: renovate/renovate:40.40.3
+              env:
+                - name: LOG_LEVEL
+                  value: debug
+              envFrom:
+                - secretRef:
+                    name: renovate-gitea-env
+          restartPolicy: Never
