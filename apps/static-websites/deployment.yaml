@@ -22,7 +22,7 @@ spec:
           configMap:
             name: static-websites-caddy-config
       containers:
-        - image: caddy:latest
+        - image: caddy:v2.10.0
           name: caddy
           imagePullPolicy: Always
           ports:

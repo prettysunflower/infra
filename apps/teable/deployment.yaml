@@ -31,7 +31,7 @@ spec:
             claimName: valkey-data-pvc
       initContainers:
         - name: db-migrate
-          image: ghcr.io/teableio/teable:latest
+          image: ghcr.io/teableio/teable:v1.8.0
           args:
             - migrate-only
           envFrom:
@@ -48,7 +48,7 @@ spec:
               memory: 1024Mi
       containers:
         - name: teable
-          image: ghcr.io/teableio/teable:latest
+          image: ghcr.io/teableio/teable:v1.8.0
           args:
             - skip-migrate
           ports:

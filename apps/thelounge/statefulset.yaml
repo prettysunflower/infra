@@ -21,7 +21,7 @@ spec:
             claimName: thelounge-pvc
       containers:
         - name: thelounge
-          image: ghcr.io/thelounge/thelounge:latest
+          image: ghcr.io/thelounge/thelounge:4.4.3
           imagePullPolicy: Always
           ports:
             - containerPort: 9000

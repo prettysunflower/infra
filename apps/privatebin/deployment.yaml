@@ -20,7 +20,7 @@ spec:
           persistentVolumeClaim:
             claimName: privatebin-data-pvc
       containers:
-        - image: privatebin/nginx-fpm-alpine:latest
+        - image: privatebin/nginx-fpm-alpine:v1.7.6
           name: privatebin
           imagePullPolicy: Always
           ports:
@@ -40,7 +40,7 @@ spec:
             seccompProfile:
               type: RuntimeDefault
         - name: anubis
-          image: ghcr.io/techarohq/anubis:latest
+          image: ghcr.io/techarohq/anubis:v0.8.1
           imagePullPolicy: Always
           env:
             - name: "BIND"

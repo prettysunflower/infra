@@ -20,7 +20,7 @@ spec:
             claimName: pocketid-data-pvc
       containers:
         - name: pocketid
-          image: ghcr.io/pocket-id/pocket-id:latest
+          image: ghcr.io/pocket-id/pocket-id:v1.2.0
           imagePullPolicy: Always
           ports:
             - containerPort: 1411
