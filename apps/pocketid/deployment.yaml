@@ -40,3 +40,16 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 1411
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            periodSeconds: 90
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 1411
+            failureThreshold: 30
+            periodSeconds: 10
