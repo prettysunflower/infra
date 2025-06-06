@@ -1,4 +1,9 @@
 http://publicfiles.default.svc.yakumo.prettysunflower.moe, http://files.prettysunflower.moe {
 	root * /srv
+
+	basic_auth /memberpress-basic-1.12.6.zip {
+		koumbit $2a$14$h7aJxLpgu1sUoZaT0bCl2u1QdkXssHpYlkH.SZRaVEwas2XlNyR/q
+	}
+
 	file_server browse
 }
