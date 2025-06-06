@@ -1,12 +1,11 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: thelounge
   labels:
     app.kubernetes.io/name: thelounge
 spec:
   replicas: 1
-  serviceName: "thelounge"
   selector:
     matchLabels:
       app.kubernetes.io/name: thelounge

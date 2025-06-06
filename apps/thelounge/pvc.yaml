@@ -1,11 +1,44 @@
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: thelounge-pv
+spec:
+  storageClassName: s3yuyuko
+  capacity:
+    storage: 5G
+  accessModes:
+    - ReadWriteOnce
+  claimRef:
+    namespace: default
+    name: thelounge-pvc
+  csi:
+    driver: ru.yandex.s3.csi
+    controllerPublishSecretRef:
+      name: csi-yuyuko-secret
+      namespace: kube-system
+    nodePublishSecretRef:
+      name: csi-yuyuko-secret
+      namespace: kube-system
+    nodeStageSecretRef:
+      name: csi-yuyuko-secret
+      namespace: kube-system
+    volumeAttributes:
+      capacity: 5G
+      mounter: s3fs-fuse
+      options: --memory-limit 1000 --dir-mode 0777 --file-mode 0666
+    volumeHandle: thelounge-pv
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: thelounge-pvc
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: longhorn
+  storageClassName: s3yuyuko
   resources:
     requests:
-      storage: 2Gi
+      storage: 5G
+  volumeMode: Filesystem
+  volumeName: thelounge-pv
+
