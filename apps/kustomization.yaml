@@ -1,8 +1,17 @@
 resources:
-  - longhorn
   - autoupdate-teable-figurines
+  - glance
+  - kakigoori
+  - longhorn
+  - opengist
+  - pocketid
   - prettysunflower-website
   - privatebin
+  - publicfiles
+  - rallly
+  - renovate
+  - static-websites
+  - teable
   - technitium
   - thelounge
   - uptime-kuma
