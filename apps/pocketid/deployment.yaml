@@ -17,7 +17,7 @@ spec:
       volumes:
         - name: pocketid-data
           persistentVolumeClaim:
-            claimName: pocketid-data-pvc
+            claimName: pocketid-data-pvc-yuyuko
       containers:
         - name: pocketid
           image: ghcr.io/pocket-id/pocket-id:v1.2.0
