@@ -2,11 +2,10 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: uptime-kuma-pvc
-  namespace: uptime-kuma
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: longhorn
+  storageClassName: s3yuyuko
   resources:
     requests:
       storage: 3Gi
