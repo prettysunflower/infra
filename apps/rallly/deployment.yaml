@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rallly
+  labels:
+    app.kubernetes.io/name: rallly
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: rallly
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: rallly
+    spec:
+      containers:
+        - image: lukevella/rallly
+          name: rallly
+          envFrom:
+            - secretRef:
+                name: rallly-config
+          ports:
+            - containerPort: 3000
+              protocol: TCP
