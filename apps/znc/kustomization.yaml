@@ -1,4 +1,4 @@
 resources:
-  - pvc.yalm
+  - pvc.yaml
   - services.yaml
   - statefulset.yaml
