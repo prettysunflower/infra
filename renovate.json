@@ -6,5 +6,11 @@
     "managerFilePatterns": [
       "/\\.yaml$/"
     ]
-  }
+  },
+  "packageRules": [
+    {
+      "matchPackageNames": ["renovate/renovate"],
+      "automerge": true
+    }
+  ]
 }
