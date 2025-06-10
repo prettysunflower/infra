@@ -21,7 +21,7 @@ spec:
             claimName: znc-yuyuko-pvc
       containers:
         - name: znc
-          image: znc:1.9.1
+          image: znc:1.10.0
           imagePullPolicy: Always
           ports:
             - containerPort: 4921
