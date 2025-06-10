@@ -35,7 +35,8 @@ spec:
         - "mail.prettysunflower.moe"
       initContainers:
         - name: db-migrate
-          image: ghcr.io/teableio/teable:latest
+          image: ghcr.io/teableio/teable:sha-257d098af67e9260b6abb09da0e08eafef34ae08
+          imagePullPolicy: Always
           args:
             - migrate-only
           envFrom:
@@ -52,7 +53,8 @@ spec:
               memory: 1024Mi
       containers:
         - name: teable
-          image: ghcr.io/teableio/teable:latest
+          image: ghcr.io/teableio/teable:sha-257d098af67e9260b6abb09da0e08eafef34ae08
+          imagePullPolicy: Always
           args:
             - skip-migrate
           ports:
