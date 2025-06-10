@@ -18,7 +18,7 @@ spec:
       volumes:
         - name: znc-config
           persistentVolumeClaim:
-            claimName: znc-pvc
+            claimName: znc-yuyuko-pvc
       containers:
         - name: znc
           image: znc:1.9.1
@@ -28,3 +28,13 @@ spec:
           volumeMounts:
           - name: znc-config
             mountPath: "/znc-data"
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
