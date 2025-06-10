@@ -18,9 +18,9 @@ spec:
       volumes:
         - name: privatebin-data
           persistentVolumeClaim:
-            claimName: privatebin-data-pvc
+            claimName: privatebin-data-yuyuko-pvc
       containers:
-        - image: privatebin/nginx-fpm-alpine:v1.7.6
+        - image: privatebin/nginx-fpm-alpine:1.7.6
           name: privatebin
           imagePullPolicy: Always
           ports:

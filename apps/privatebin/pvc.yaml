@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: privatebin-data-pvc
+  name: privatebin-data-yuyuko-pvc
   namespace: privatebin
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: longhorn
+  storageClassName: s3yuyuko
   resources:
     requests:
       storage: 5Gi
