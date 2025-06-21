@@ -45,7 +45,7 @@ spec:
             seccompProfile:
               type: RuntimeDefault
         - name: anubis
-          image: reg.xeiaso.net/techaro/anubis:thoth
+          image: ghcr.io/techarohq/anubis:v1.20.0-pre1
           imagePullPolicy: Always
           env:
             - name: "BIND"
@@ -98,3 +98,7 @@ spec:
       - name: config
         configMap:
           name: kakigoori-config
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - 100.96.226.96
