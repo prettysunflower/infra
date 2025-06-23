@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vaultwarden-config
+data:
+  DOMAIN: "https://passwords.prettysunflower.moe"
+  SMTP_HOST: mail.prettysunflower.moe
+  SMTP_FROM: vaultwarden@prettysunflower.moe
+  SMTP_PORT: "587"
+  SMTP_SECURITY: starttls
+  SMTP_USERNAME: me@prettysunflower.moe
+  SIGNUPS_DOMAINS_WHITELIST: prettysunflower.moe
