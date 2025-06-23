@@ -14,16 +14,6 @@ spec:
       labels:
         app.kubernetes.io/name: opengist
     spec:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 1
-            preference:
-              matchExpressions:
-              - key: location
-                operator: In
-                values:
-                - fsn
       volumes:
         - name: opengist-data
           persistentVolumeClaim:
@@ -43,5 +33,5 @@ spec:
             httpGet:
               path: /healthcheck
               port: 6157
-            initialDelaySeconds: 3
-            periodSeconds: 3
+            initialDelaySeconds: 30
+            periodSeconds: 5
