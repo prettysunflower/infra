@@ -1,23 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pocketid-data-pvc
+  name: pocketid-pvc
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: longhorn
   resources:
     requests:
       storage: 2Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: pocketid-data-pvc-yuyuko
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: s3yuyuko
-  resources:
-    requests:
-      storage: 2Gi
+  storageClassName: seaweedfs-storage
