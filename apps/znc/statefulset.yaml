@@ -18,7 +18,7 @@ spec:
       volumes:
         - name: znc-config
           persistentVolumeClaim:
-            claimName: znc-yuyuko-pvc
+            claimName: znc-pvc
       containers:
         - name: znc
           image: znc:1.10.0
