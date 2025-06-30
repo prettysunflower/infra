@@ -6,7 +6,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: s3yuyuko
   resources:
     requests:
-      storage: 2Gi
+      storage: 5Gi
+  storageClassName: seaweedfs-storage
