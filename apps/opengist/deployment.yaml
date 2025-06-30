@@ -34,4 +34,5 @@ spec:
               path: /healthcheck
               port: 6157
             initialDelaySeconds: 30
-            periodSeconds: 5
+            periodSeconds: 30
+            failureThreshold: 3
