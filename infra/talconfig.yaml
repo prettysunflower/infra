@@ -2,7 +2,7 @@
 clusterName: yakumo
 talosVersion: v1.10.4
 kubernetesVersion: v1.33.1
-endpoint: https://10.0.0.240:6443
+endpoint: https://10.0.15.33:6443
 domain: yakumo.prettysunflower.moe
 allowSchedulingOnControlPlanes: false
 clusterPodNets:
