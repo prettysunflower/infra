@@ -20,7 +20,7 @@ spec:
             claimName: pocketid-pvc
       containers:
         - name: pocketid
-          image: ghcr.io/pocket-id/pocket-id:v1.6.0
+          image: ghcr.io/pocket-id/pocket-id:v1.6.0-distroless
           imagePullPolicy: Always
           ports:
             - containerPort: 1411
@@ -41,15 +41,17 @@ spec:
             seccompProfile:
               type: RuntimeDefault
           livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 1411
+            exec:
+              command:
+              - /app/pocket-id
+              - healthcheck
             initialDelaySeconds: 10
             failureThreshold: 3
             periodSeconds: 90
           startupProbe:
-            httpGet:
-              path: /healthz
-              port: 1411
+            exec:
+              command:
+              - /app/pocket-id
+              - healthcheck
             failureThreshold: 30
             periodSeconds: 10
