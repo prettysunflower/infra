@@ -3,12 +3,16 @@ kind: CronJob
 metadata:
   name: renovate-gitea
 spec:
-  schedule: '@hourly'
+  schedule: '*/5 * * * *'
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       template:
         spec:
+          dnsPolicy: "None"
+          dnsConfig:
+            nameservers:
+              - 100.96.226.96
           affinity:
             nodeAffinity:
               preferredDuringSchedulingIgnoredDuringExecution:
@@ -19,10 +23,6 @@ spec:
                     operator: In
                     values:
                     - fsn
-          hostAliases:
-          - ip: "100.105.22.116"
-            hostnames:
-            - "git.prettysunflower.moe"
           containers:
             - name: renovate
               image: renovate/renovate:41.23.5
