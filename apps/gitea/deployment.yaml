@@ -27,7 +27,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: gitea-tigris-pvc
+            claimName: gitea-pvc
         - name: config
           persistentVolumeClaim:
             claimName: gitea-config-pvc
@@ -46,7 +46,7 @@ spec:
             - containerPort: 3000
               protocol: TCP
               name: http
-            - containerPort: 22
+            - containerPort: 2222
               protocol: TCP
               name: ssh
           volumeMounts:
