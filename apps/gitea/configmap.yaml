@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gitea-config
+data:
+  GITEA__DEFAULT__RUN_USER: git
+  GITEA__DEFAULT__RUN_MODE: prod
+  GITEA__DEFAULT__APP_NAME: prettysunflower's gitea
+  GITEA__DEFAULT__WORK_PATH: /var/lib/gitea
+  GITEA__repository__ROOT: /var/lib/gitea/git
+  GITEA__repository__SCRIPT_TYPE: sh
+  GITEA__repository__DISABLE_STARS: "true"
+  GITEA__server__STATIC_ROOT_PATH: /usr/share/webapps/gitea
+  GITEA__server__APP_DATA_PATH: /var/lib/gitea/data
+  GITEA__server__LFS_START_SERVER: "true"
+  GITEA__server__SSH_DOMAIN: git.default.svc.yakumo.prettysunflower.moe
+  GITEA__server__DOMAIN: git.prettysunflower.moe
+  GITEA__server__HTTP_PORT: "3000"
+  GITEA__server__ROOT_URL: https://git.prettysunflower.moe/
+  GITEA__server__DISABLE_SSH: "false"
+  GITEA__server__SSH_PORT: "22"
+  GITEA__server__OFFLINE_MODE: "false"
+  GITEA__server__PUBLIC_URL_DETECTION: auto
+  GITEA__database__DB_TYPE: postgres
+  GITEA__database__SSL_MODE: disable
+  GITEA__database__HOST: 100.75.132.10:5432
+  GITEA__database__NAME: gitea
+  GITEA__database__SCHEMA: public
+  GITEA__database__LOG_SQL: "false"
+  GITEA__session__PROVIDER: redis
+  GITEA__log__MODE: console
+  GITEA__log__LEVEL: info
+  GITEA__mailer__ENABLED: "true"
+  GITEA__mailer__FROM: gitea@prettysunflower.moe
+  GITEA__mailer__PROTOCOL: smtp+starttls
+  GITEA__mailer__SMTP_ADDR: mail.prettysunflower.moe
+  GITEA__mailer__SMTP_PORT: "587"
+  GITEA__storage__STORAGE_TYPE: minio
+  GITEA__storage__MINIO_ENDPOINT: t3.storage.dev:443
+  GITEA__storage__MINIO_ACCESS_KEY_ID: tid_uCZAvxLOlpVdEusuMYvVmsOvMgVccrwxGJwqauuhSucI_MwddN
+  GITEA__storage__MINIO_BUCKET: prettysunflower-gitea
+  GITEA__storage__MINIO_LOCATION: auto
+  GITEA__storage__MINIO_USE_SSL : "true"
+  GITEA__storage__SERVE_DIRECT: "true"
+  GITEA__service__REGISTER_EMAIL_CONFIRM: "false"
+  GITEA__service__ENABLE_NOTIFY_MAIL: "false"
+  GITEA__service__DISABLE_REGISTRATION: "true"
+  GITEA__service__ALLOW_ONLY_EXTERNAL_REGISTRATION: "false"
+  GITEA__service__ENABLE_CAPTCHA: "false"
+  GITEA__service__REQUIRE_SIGNIN_VIEW: "false"
+  GITEA__service__DEFAULT_KEEP_EMAIL_PRIVATE: "false"
+  GITEA__service__DEFAULT_ALLOW_CREATE_ORGANIZATION: "true"
+  GITEA__service__DEFAULT_ENABLE_TIMETRACKING: "true"
+  GITEA__service__NO_REPLY_ADDRESS: noreply.localhost
+  GITEA__openid__ENABLE_OPENID_SIGNIN: "true"
+  GITEA__openid__ENABLE_OPENID_SIGNUP: "true"
+  GITEA__cron_0X2E_update_checker__ENABLED: "false"
+  GITEA__repository_0X2E_pull_0X2D_request__DEFAULT_MERGE_STYLE: merge
+  GITEA__repository_0X2E_signing__DEFAULT_TRUST_MODEL: committer
+  GITEA__security__INSTALL_LOCK: "true"
+  GITEA__security__PASSWORD_HASH_ALGO: argon2
+  GITEA__cache__ADAPTER: redis
+  GITEA__cache__HOST: redis://127.0.0.1:6379/0
+  GITEA__cache_0X2E_last_commit__COMMITS_COUNT: "1"

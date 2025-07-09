@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: git
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: gitea
+  ports:
+    - protocol: TCP
+      port: 22
+      targetPort: ssh
+      name: ssh
+    - protocol: TCP
+      port: 80
+      targetPort: http
+      name: http
