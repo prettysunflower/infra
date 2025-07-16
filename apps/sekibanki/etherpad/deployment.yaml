@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: etherpad
+  labels:
+    app.kubernetes.io/name: etherpad
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: etherpad
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: etherpad
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: location
+                operator: In
+                values:
+                - fsn
+      containers:
+        - name: etherpad
+          image: etherpad/etherpad:2.3.2
+          ports:
+            - containerPort: 9001
+              name: http
+          envFrom:
+            - configMapRef:
+                name: etherpad-config
+            - secretRef:
+                name: etherpad-secrets
+          volumeMounts:
+          - name: etherpad-images
+            mountPath: /opt/etherpad-lite/src/static/skins/colibris/images
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - 100.96.226.96
+      volumes:
+      - name: etherpad-images
+        persistentVolumeClaim:
+          claimName: etherpad-images-pvc

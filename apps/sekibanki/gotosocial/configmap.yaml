@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gotosocial-config
+data:
+  GTS_HOST: fedi.prettysunflower.moe
+  GTS_ACCOUNT_DOMAIN: prettysunflower.moe
+  GTS_TRUSTED_PROXIES: "10.217.0.0/32"
+  GTS_INSTANCE_LANGUAGES: en,fr
+  GTS_ACCOUNTS_ALLOW_CUSTOM_CSS: "true"

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: planka
+  labels:
+    app.kubernetes.io/name: planka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: planka
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: planka
+    spec:
+      volumes:
+        - name: planka-data
+          persistentVolumeClaim:
+            claimName: planka-data-pvc
+      containers:
+        - name: planka
+          image: ghcr.io/plankanban/planka:2.0.0-rc.3
+          ports:
+            - containerPort: 1337
+              name: http
+          volumeMounts:
+          - name: planka-data
+            subPath: favicons
+            mountPath: "/app/public/favicons/"
+          - name: planka-data
+            subPath: user-avatars
+            mountPath: "/app/public/user-avatars/"
+          - name: planka-data
+            subPath: background-images
+            mountPath: "/app/public/background-images/"
+          - name: planka-data
+            subPath: attachments
+            mountPath: "/app/private/attachments/"
+          envFrom:
+            - configMapRef:
+                name: planka-config
+            - secretRef:
+                name: planka-secrets

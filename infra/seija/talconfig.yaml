@@ -1,0 +1,66 @@
+---
+clusterName: seija
+talosVersion: v1.10.5
+kubernetesVersion: v1.33.2
+endpoint: https://10.11.0.2:6443
+domain: seija.prettysunflower.moe
+allowSchedulingOnControlPlanes: true
+clusterPodNets:
+  - 10.215.0.0/16
+clusterSvcNets:
+  - 10.216.0.0/16
+patches:
+  - |-
+    - op: add
+      path: /machine/network/kubespan
+      value:
+        enabled: true
+    - op: add
+      path: /machine/features/hostDNS
+      value:
+        forwardKubeDNSToHost: false
+    - op: add
+      path: /machine/network
+      value:
+        nameservers:
+          - 100.96.226.96
+nodes:
+  - hostname: fulgora
+    ipAddress: 10.11.0.2
+    controlPlane: true
+    arch: amd64
+    installDisk: /dev/sda
+  - hostname: gleba
+    ipAddress: 10.11.0.3
+    controlPlane: true
+    arch: amd64
+    installDisk: /dev/sda
+  - hostname: vulcanus
+    ipAddress: 10.11.0.4
+    controlPlane: true
+    arch: amd64
+    installDisk: /dev/sda
+
+controlPlane:
+  extraManifests:
+    - tailscale.patch.yaml
+  schematic:
+      customization:
+        systemExtensions:
+            officialExtensions:
+                - siderolabs/iscsi-tools
+                - siderolabs/qemu-guest-agent
+                - siderolabs/tailscale
+                - siderolabs/util-linux-tools
+
+worker:
+  extraManifests:
+    - tailscale.patch.yaml
+  schematic:
+      customization:
+        systemExtensions:
+            officialExtensions:
+                - siderolabs/iscsi-tools
+                - siderolabs/qemu-guest-agent
+                - siderolabs/tailscale
+                - siderolabs/util-linux-tools

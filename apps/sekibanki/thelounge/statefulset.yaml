@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thelounge
+  labels:
+    app.kubernetes.io/name: thelounge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: thelounge
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: thelounge
+    spec:
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - 100.96.226.96
+      volumes:
+        - name: thelounge-data
+          persistentVolumeClaim:
+            claimName: thelounge-pvc
+      containers:
+        - name: thelounge
+          image: ghcr.io/thelounge/thelounge:4.4.3
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+          volumeMounts:
+          - name: thelounge-data
+            mountPath: "/var/opt/thelounge"

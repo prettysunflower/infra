@@ -1,0 +1,145 @@
+pages:
+  - name: Home
+    columns:
+      - size: small
+        widgets:
+          - type: calendar
+
+          - type: rss
+            limit: 10
+            collapse-after: 3
+            cache: 30m
+            feeds:
+              - url: https://piranhaplant1.blogspot.com/feeds/posts/default
+              - url: https://www.nekomagic.com/feed/
+              - url: https://soatok.blog/feed
+              - url: http://feeds.feedburner.com/PythonInsider
+              - url: https://blog.thunderbird.net/feed/
+              - url: https://usesthis.com/feed.atom
+              - url: https://xeiaso.net/blog.rss
+              - url: https://touhou-project.news/feed.rss
+              - url: http://www.post.japanpost.jp/rss/int.xml
+              - url: https://www.reddit.com/user/AzulCrescent/submitted/.rss
+              - url: https://www.reddit.com/user/TheArchiveTerminal/submitted/.rss
+              - url: https://blog.gitea.com/rss.xml
+
+          - type: twitch-channels
+            channels:
+              - a_lillian_
+              - princessxen
+              - barry
+              - sylvysprit
+              - The8BitDrummer
+              - MataraKan
+              - nyanners
+              - DougDoug
+              - Touhou_Replay_Showcase
+
+      - size: full
+        widgets:
+          - type: search
+            search-engine: https://kagi.com/search?token=ygXAizA-9gY.ejxyFYbeHxOWVxBYgxMGtJPmAeu1pi1DCtOVTW5yFd8&q={QUERY}
+            autofocus: true
+          - type: group
+            widgets:
+              - type: lobsters
+              - type: hacker-news
+          - type: bookmarks
+            groups:
+              - title: Internal
+                color: 331 64 52
+                links:
+                  - title: Hoarder
+                    url: https://hoarder.remilia.ch
+                    same-tab: true
+                  - title: Actual Budget
+                    url: https://actual.remilia.ch
+                    same-tab: true
+
+                  - title: Paperless
+                    url: https://papers.remilia.ch
+                    same-tab: true
+
+                  - title: Privatebin
+                    url: https://privatebin.remilia.ch
+                    same-tab: true
+
+                  - title: Proxmox
+                    url: https://yuyuko.remilia.ch:8006
+                    same-tab: true
+
+                  - title: Photos
+                    url: https://photos.remilia.ch
+                    same-tab: true
+
+                  - title: Portainer
+                    url: https://portainer.remilia.ch
+                    same-tab: true
+
+                  - title: Plex
+                    url: https://plex.remilia.ch
+                    same-tab: true
+
+              - title: Koumbit
+                color: 91 70 40
+                links:
+                  - title: IRC
+                    url: https://irc.prettysunflower.moe
+                    same-tab: true
+                  - title: Redmine
+                    url: https://redmine.koumbit.net/
+                    same-tab: true
+                  - title: kProject
+                    url: https://travail.koumbit.net/node/29390/punches
+                    same-tab: true
+                  - title: Etherpad
+                    url: https://pad.koumbit.net/
+                    same-tab: true
+                  - title: Wiki
+                    url: https://wiki.koumbit.net/
+                    same-tab: true
+              - title: Figurines
+                color: 10 70 50
+                links:
+                  - title: AmiAmi
+                    url: https://www.amiami.com/
+                    same-tab: true
+                  - title: HPOI
+                    url: https://www.hpoi.net/
+                    same-tab: true
+                  - title: OurFigureCollection (Suruga-ya)
+                    url: https://ourfigurecollection.moe/surugaya/
+                    same-tab: true
+                  - title: The Spreadsheet of Insanity
+                    url: https://data.remilia.ch/base/bsemaa6OqPGDk6A5Uch/tblZGRYDwnFCDqnFAld/viwJgLAdhRRzvGpULZR
+                    same-tab: true
+
+      - size: small
+        widgets:
+          - type: weather
+            location: Montréal, Canada
+
+          - type: clock
+            hour-format: 24h
+            timezones:
+              - timezone: Europe/Zurich
+                label: Genève
+              - timezone: Asia/Shanghai
+                label: Shanghai
+              - timezone: Asia/Tokyo
+                label: Tokyo
+
+          - type: rss
+            limit: 10
+            collapse-after: 3
+            cache: 15m
+            title: Dynasty Reader updates
+            feeds:
+              - url: https://dynasty-scans.com/feed
+
+theme:
+  light: true
+  background-color: 0 0 95
+  primary-color: 0 0 10
+  positive-color: 175 59 40
+  negative-color: 0 90 50

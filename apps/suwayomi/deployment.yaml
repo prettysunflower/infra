@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: suwayomi
+  labels:
+    app.kubernetes.io/name: suwayomi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: suwayomi
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: suwayomi
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                  - ran
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: suwayomi-pvc
+      containers:
+        - name: suwayomi
+          image: ghcr.io/suwayomi/suwayomi-server:v2.0.1802
+          ports:
+            - containerPort: 4567
+              name: http
+          env:
+          - name: "TZ"
+            value: "America/Toronto"
+          - name: "DOWNLOAD_AS_CBZ"
+            value: "true"
+          - name: "EXTENSION_REPOS"
+            value: "[\"https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json\"]"
+          - name: "AUTO_DOWNLOAD_CHAPTERS"
+            value: "true"
+          - name: "BASIC_AUTH_ENABLED"
+            value: "false"
+          volumeMounts:
+          - name: data
+            mountPath: "/home/suwayomi/.local/share/Tachidesk"
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            limits:
+              cpu: 1500m
+              memory: 1024Mi
+            requests:
+              cpu: 250m
+              memory: 256Mi

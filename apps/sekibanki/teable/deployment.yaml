@@ -1,0 +1,139 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: teable
+  namespace: teable
+  labels:
+    app.kubernetes.io/name: teable
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: teable
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: teable
+    spec:
+      hostAliases:
+      - ip: "100.113.193.5"
+        hostnames:
+        - "mail.prettysunflower.moe"
+      initContainers:
+        - name: db-migrate
+          image: ghcr.io/teableio/teable:83745958bbba83111145e1cd48de811cfc7db601
+          args:
+            - migrate-only
+          envFrom:
+            - configMapRef:
+                name: teable-config
+            - secretRef:
+                name: teable-secrets
+          resources:
+            requests:
+              cpu: 100m
+              memory: 102Mi
+            limits:
+              cpu: 1000m
+              memory: 1024Mi
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+      containers:
+        - name: teable
+          image: ghcr.io/teableio/teable:83745958bbba83111145e1cd48de811cfc7db601
+          args:
+            - skip-migrate
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: teable-config
+            - secretRef:
+                name: teable-secrets
+          resources:
+            requests:
+              cpu: 200m
+              memory: 400Mi
+            limits:
+              cpu: 2000m
+              memory: 4096Mi
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 30
+            successThreshold: 1
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: valkey
+  namespace: teable
+  labels:
+    app.kubernetes.io/name: valkey
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: valkey
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: valkey
+    spec:
+      volumes:
+        - name: valkey-data
+          persistentVolumeClaim:
+            claimName: valkey-data-pvc
+      containers:
+        - image: valkey/valkey:8.1.2-alpine
+          name: valkey
+          envFrom:
+            - secretRef:
+                name: valkey-secrets
+          command: ["valkey-server"]
+          ports:
+            - containerPort: 6379
+              protocol: TCP
+          volumeMounts:
+          - name: valkey-data
+            mountPath: "/data"
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault

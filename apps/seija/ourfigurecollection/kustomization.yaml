@@ -1,0 +1,8 @@
+resources:
+- deployment.yaml
+- svc.yaml
+- secrets.yaml
+configMapGenerator:
+- name: ourfigurecollection-config
+  files:
+  - local_settings.py

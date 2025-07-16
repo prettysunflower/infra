@@ -1,0 +1,61 @@
+---
+clusterName: sekibanki
+talosVersion: v1.10.5
+kubernetesVersion: v1.33.2
+endpoint: https://10.0.0.32:6443
+domain: sekibanki.prettysunflower.moe
+allowSchedulingOnControlPlanes: true
+clusterPodNets:
+  - 10.217.0.0/16
+clusterSvcNets:
+  - 10.218.0.0/16
+patches:
+  - |-
+    - op: add
+      path: /machine/network/kubespan
+      value:
+        enabled: true
+    - op: add
+      path: /machine/features/hostDNS
+      value:
+        forwardKubeDNSToHost: false
+nodes:
+  - hostname: fulgora
+    ipAddress: 10.0.0.32
+    controlPlane: true
+    arch: amd64
+    installDisk: /dev/sda
+  - hostname: gleba
+    ipAddress: 10.0.0.30
+    controlPlane: true
+    arch: amd64
+    installDisk: /dev/sda
+  - hostname: vulcanus
+    ipAddress: 10.0.0.33
+    controlPlane: true
+    arch: amd64
+    installDisk: /dev/sda
+
+controlPlane:
+  extraManifests:
+    - tailscale.patch.yaml
+  schematic:
+      customization:
+        systemExtensions:
+            officialExtensions:
+                - siderolabs/iscsi-tools
+                - siderolabs/qemu-guest-agent
+                - siderolabs/tailscale
+                - siderolabs/util-linux-tools
+
+worker:
+  extraManifests:
+    - tailscale.patch.yaml
+  schematic:
+      customization:
+        systemExtensions:
+            officialExtensions:
+                - siderolabs/iscsi-tools
+                - siderolabs/qemu-guest-agent
+                - siderolabs/tailscale
+                - siderolabs/util-linux-tools

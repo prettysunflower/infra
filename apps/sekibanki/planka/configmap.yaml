@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: planka-config
+data:
+  BASE_URL: https://kanban.prettysunflower.moe
+  OIDC_ISSUER: https://auth.remilia.ch
+  OIDC_CLIENT_ID: eb200a8b-5b93-4b77-a070-1081481270a1
+  OIDC_IGNORE_ROLES: "true"
+  OIDC_ENFORCED: "true"

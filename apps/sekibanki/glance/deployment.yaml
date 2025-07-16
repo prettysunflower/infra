@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: glance
+  labels:
+    app.kubernetes.io/name: glance
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: glance
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: glance
+    spec:
+      volumes:
+        - name: config
+          configMap:
+            name: glance-config
+      containers:
+        - image: glanceapp/glance:v0.8.4
+          name: glance
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          volumeMounts:
+          - name: config
+            mountPath: /app/config
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault

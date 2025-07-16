@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tigris-s3-secret
+  namespace: kube-system
+stringData:
+  accessKeyID: tid_GsNqXtWmklNUqliOVxEukmEFmBLoIaxNvDIlQHDXmKqNghvKwv
+  secretAccessKey: tsec_A-r53r0ktXNrW-vKqZjSlgX1JboZzGv6zzYrjcb3ySn+BjnNV3dffm05WSLYcG+Zo2c+OC
+  endpoint: https://t3.storage.dev
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: tigris
+provisioner: ca.gmem.s3.csi
+parameters:
+  mounter: tigrisfs
+  # you can set mount options here, for example limit memory cache size (recommended)
+  options: "--memory-limit 1000 --dir-mode 0777 --file-mode 0666"
+  # to use an existing bucket, specify it here:
+  #bucket: some-existing-bucket
+  csi.storage.k8s.io/provisioner-secret-name: tigris-s3-secret
+  csi.storage.k8s.io/provisioner-secret-namespace: kube-system
+  csi.storage.k8s.io/controller-publish-secret-name: tigris-s3-secret
+  csi.storage.k8s.io/controller-publish-secret-namespace: kube-system
+  csi.storage.k8s.io/node-stage-secret-name: tigris-s3-secret
+  csi.storage.k8s.io/node-stage-secret-namespace: kube-system
+  csi.storage.k8s.io/node-publish-secret-name: tigris-s3-secret
+  csi.storage.k8s.io/node-publish-secret-namespace: kube-system

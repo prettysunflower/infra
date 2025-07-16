@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gotosocial
+  labels:
+    app.kubernetes.io/name: gotosocial
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gotosocial
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: gotosocial
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: gotosocial-pvc
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - 100.96.226.96
+      containers:
+        - image: docker.io/superseriousbusiness/gotosocial:0.19.1
+          name: gotosocial
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+              name: http
+          volumeMounts:
+          - name: data
+            mountPath: /gotosocial/storage
+          envFrom:
+            - configMapRef:
+                name: gotosocial-config
+            - secretRef:
+                name: gotosocial-secrets
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
+          startupProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 30
+            successThreshold: 1
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1

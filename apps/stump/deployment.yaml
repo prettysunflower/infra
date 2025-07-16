@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stump
+  labels:
+    app.kubernetes.io/name: stump
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: stump
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: stump
+    spec:
+      volumes:
+        - name: stump-config
+          persistentVolumeClaim:
+            claimName: stump-config-pvc
+        - name: stump-data
+          persistentVolumeClaim:
+            claimName: stump-data-pvc
+      containers:
+        - name: stump
+          image: aaronleopold/stump:latest
+          ports:
+            - containerPort: 10801
+              name: http
+          volumeMounts:
+          - name: stump-config
+            mountPath: "/config"
+          - name: stump-data
+            mountPath: "/data"
+          env:
+            - name: PUID
+              value: '1000'
+            - name: PGID
+              value: '1000'
+            - name: STUMP_PORT
+              value: "10801"

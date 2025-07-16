@@ -15,7 +15,12 @@ spec:
       volumeMounts:
         - name: data
           mountPath: "/data"
+        # - name: olddata
+        #   mountPath: "/olddata"
   volumes:
     - name: data
       persistentVolumeClaim:
-        claimName: technitium-data-pvc
+        claimName: znc-pvc
+    # - name: olddata
+    #   persistentVolumeClaim:
+    #     claimName: gitea-pvc

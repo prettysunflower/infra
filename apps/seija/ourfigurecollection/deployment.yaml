@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ourfigurecollection
+  labels:
+    app.kubernetes.io/name: ourfigurecollection
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ourfigurecollection
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ourfigurecollection
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: location
+                operator: In
+                values:
+                - fsn
+      containers:
+        - name: ourfigurecollection-django
+          image: "git.prettysunflower.moe/prettysunflower/ourfigurecollection:main"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8001
+          volumeMounts:
+          - name: config
+            mountPath: /ourfigurecollection/ourfigurecollection/local_settings.py
+            subPath: local_settings.py
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+        - name: ourfigurecollection-static
+          image: "git.prettysunflower.moe/prettysunflower/ourfigurecollection-static:main"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8002
+        - name: anubis
+          image: ghcr.io/techarohq/anubis:v1.20.0
+          env:
+            - name: "BIND"
+              value: ":8080"
+            - name: "DIFFICULTY"
+              value: "4"
+            - name: ED25519_PRIVATE_KEY_HEX
+              valueFrom:
+                secretKeyRef:
+                  name: anubis-ourfigurecollection-key
+                  key: ED25519_PRIVATE_KEY_HEX
+            - name: "THOTH_URL"
+              valueFrom:
+                secretKeyRef:
+                  name: anubis-ourfigurecollection-key
+                  key: THOTH_URL
+            - name: "THOTH_TOKEN"
+              valueFrom:
+                secretKeyRef:
+                  name: anubis-ourfigurecollection-key
+                  key: THOTH_TOKEN
+            - name: "METRICS_BIND"
+              value: ":9090"
+            - name: "SERVE_ROBOTS_TXT"
+              value: "true"
+            - name: "TARGET"
+              value: "http://localhost:8001"
+            - name: "OG_PASSTHROUGH"
+              value: "true"
+            - name: "OG_EXPIRY_TIME"
+              value: "24h"
+          resources:
+            limits:
+              cpu: 750m
+              memory: 256Mi
+            requests:
+              cpu: 250m
+              memory: 256Mi
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+      volumes:
+      - name: config
+        configMap:
+          name: ourfigurecollection-config
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - 100.96.226.96

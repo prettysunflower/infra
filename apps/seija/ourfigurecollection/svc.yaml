@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ourfigurecollection
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: ourfigurecollection
+  ports:
+    - protocol: TCP
+      port: 8001
+      targetPort: 8001
+      name: ourfigurecollection
+    - protocol: TCP
+      port: 8002
+      targetPort: 8002
+      name: ourfigurecollection-static
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      name: anubis

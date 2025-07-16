@@ -1,3 +1,0 @@
-git clone https://github.com/seaweedfs/seaweedfs-csi-driver.git
-helm install --set storageClassName="seaweedfs-keiki" --set seaweedfsFiler="100.79.209.9:8888" seaweedfs-csi-keiki-driver ./seaweedfs-csi-driver/deploy/helm/seaweedfs-csi-driver --namespace="kube-system"
-helm install --set driverName="seaweedfs-csi-keiki-driver" --set storageClassName="seaweedfs-keiki" --set seaweedfsFiler="100.79.209.9:8888" seaweedfs-csi-keiki-driver ./seaweedfs-csi-driver/deploy/helm/seaweedfs-csi-driver --namespace="kube-system"
