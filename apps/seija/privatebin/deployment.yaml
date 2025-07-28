@@ -39,7 +39,7 @@ spec:
             seccompProfile:
               type: RuntimeDefault
         - name: anubis
-          image: ghcr.io/techarohq/anubis:v1.20.0
+          image: ghcr.io/techarohq/anubis:v1.21.3
           imagePullPolicy: Always
           env:
             - name: "BIND"
