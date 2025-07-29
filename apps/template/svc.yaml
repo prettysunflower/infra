@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: app
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 1234
+      name: http
