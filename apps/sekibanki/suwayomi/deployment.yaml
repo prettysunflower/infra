@@ -14,22 +14,13 @@ spec:
       labels:
         app.kubernetes.io/name: suwayomi
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                - key: kubernetes.io/hostname
-                  operator: In
-                  values:
-                  - ran
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: suwayomi-pvc
       containers:
         - name: suwayomi
-          image: ghcr.io/suwayomi/suwayomi-server:v2.0.1851
+          image: ghcr.io/suwayomi/suwayomi-server:v2.1.1875
           ports:
             - containerPort: 4567
               name: http

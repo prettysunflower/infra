@@ -8,4 +8,4 @@ spec:
   resources:
     requests:
       storage: 150Gi
-  storageClassName: seaweedfs-keiki
+  storageClassName: nfs-csi
