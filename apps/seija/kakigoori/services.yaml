@@ -15,3 +15,7 @@ spec:
       port: 80
       targetPort: 8080
       name: anubis
+    - protocol: TCP
+      port: 8002
+      targetPort: 8002
+      name: static

@@ -34,6 +34,11 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
+        - name: kakigoori-static
+          image: "git.prettysunflower.moe/prettysunflower/kakigoori-static:main"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8002
         - name: anubis
           image: ghcr.io/techarohq/anubis:v1.21.3
           env:
@@ -90,4 +95,4 @@ spec:
       dnsPolicy: "None"
       dnsConfig:
         nameservers:
-          - 100.96.226.96
+          - 100.94.59.38
