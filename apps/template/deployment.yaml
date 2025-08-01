@@ -66,4 +66,4 @@ spec:
       dnsPolicy: "ClusterFirst"
       dnsConfig:
         nameservers:
-          - 100.96.226.96
+          - 100.94.59.38

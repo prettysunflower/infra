@@ -21,7 +21,7 @@ spec:
       dnsPolicy: "None"
       dnsConfig:
         nameservers:
-          - 100.96.226.96
+          - 100.94.59.38
       containers:
         - image: docker.io/superseriousbusiness/gotosocial:0.19.1
           name: gotosocial
