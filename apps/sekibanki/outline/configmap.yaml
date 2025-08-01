@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: outline-config
+data:
+  NODE_ENV: production
+  PGSSLMODE: disable
+  REDIS_URL: redis://127.0.0.1:6379
+  URL: https://wiki.prettysunflower.moe
+  PORT: "3000"
+  FILE_STORAGE: s3
+  FILE_STORAGE_UPLOAD_MAX_SIZE: "262144000"
+  AWS_REGION: auto
+  AWS_S3_UPLOAD_BUCKET_URL: https://t3.storage.dev
+  AWS_S3_UPLOAD_BUCKET_NAME: prettysunflower-wiki
+  AWS_S3_FORCE_PATH_STYLE: "true"
+  AWS_S3_ACL: private
+  OIDC_AUTH_URI: https://auth.remilia.ch/authorize
+  OIDC_TOKEN_URI: https://auth.remilia.ch/api/oidc/token
+  OIDC_USERINFO_URI: https://auth.remilia.ch/api/oidc/userinfo
+  OIDC_LOGOUT_URI: https://auth.remilia.ch/api/oidc/end-session
+  OIDC_USERNAME_CLAIM: preferred_username
+  OIDC_DISPLAY_NAME: Auth prettysunflower
+  OIDC_SCOPES: openid profile email
+  DEFAULT_LANGUAGE: en_US
+  RATE_LIMITER_ENABLED: "true"
+  RATE_LIMITER_REQUESTS: "1000"
+  RATE_LIMITER_DURATION_WINDOW: "60"
+  FORCE_HTTPS: "false"
