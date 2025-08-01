@@ -1,4 +1,4 @@
-http://publicfiles.default.svc.yakumo.prettysunflower.moe, http://files.prettysunflower.moe {
+http://publicfiles.default.svc.sekibanki.prettysunflower.moe, http://files.prettysunflower.moe {
 	root * /srv
 
 	basic_auth /memberpress-basic-1.12.6.zip {
