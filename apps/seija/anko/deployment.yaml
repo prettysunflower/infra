@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anko
+  labels:
+    app.kubernetes.io/name: anko
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: anko
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: anko
+    spec:
+      containers:
+        - name: anko
+          image: "git.prettysunflower.moe/prettysunflower/anko:main"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+              name: http
+          volumeMounts:
+          - name: config
+            mountPath: /anko/anko/local_settings.py
+            subPath: local_settings.py
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+      volumes:
+      - name: config
+        configMap:
+          name: anko-config
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - 100.94.59.38
