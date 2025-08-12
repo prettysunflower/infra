@@ -24,7 +24,7 @@ spec:
             claimName: valkey-outline-pvc
       containers:
         - name: outline
-          image: docker.getoutline.com/outlinewiki/outline:0.86.0
+          image: docker.getoutline.com/outlinewiki/outline:0.86.1
           ports:
             - containerPort: 3000
               name: http
