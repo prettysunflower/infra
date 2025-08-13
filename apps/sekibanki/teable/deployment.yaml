@@ -21,7 +21,7 @@ spec:
         - "mail.prettysunflower.moe"
       initContainers:
         - name: db-migrate
-          image: ghcr.io/teableio/teable:a2e95e3a2d258af01eb3d4af118a2f88bbca1a42
+          image: ghcr.io/teableio/teable:ea6d3a9f49419fc4ecb871b0849a84df5fa76f30
           args:
             - migrate-only
           envFrom:
@@ -48,7 +48,7 @@ spec:
               type: RuntimeDefault
       containers:
         - name: teable
-          image: ghcr.io/teableio/teable:a2e95e3a2d258af01eb3d4af118a2f88bbca1a42
+          image: ghcr.io/teableio/teable:ea6d3a9f49419fc4ecb871b0849a84df5fa76f30
           args:
             - skip-migrate
           ports:
