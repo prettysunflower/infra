@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paperless
+  labels:
+    app.kubernetes.io/name: paperless
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: paperless
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: paperless
+    spec:
+      volumes:
+        - name: paperless-data
+          persistentVolumeClaim:
+            claimName: paperless-pvc
+      containers:
+        - name: paperless
+          image: ghcr.io/paperless-ngx/paperless-ngx:2.18.1
+          envFrom:
+            - configMapRef:
+                name: paperless-configmap
+            - secretRef:
+                name: paperless-secrets
+          ports:
+            - containerPort: 8000
+              name: http
+          volumeMounts:
+          - name: paperless-data
+            mountPath: "/usr/src/paperless/data"
+            subPath: "data"
+          - name: paperless-data
+            mountPath: "/usr/src/paperless/media"
+            subPath: "media"
+          - name: paperless-data
+            mountPath: "/usr/src/paperless/export"
+            subPath: "export"
+          - name: paperless-data
+            mountPath: "/usr/src/paperless/consume"
+            subPath: "consume"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            periodSeconds: 90
+          startupProbe:
+            httpGet:
+              path: /8000
+              port: 8000
+            failureThreshold: 30
+            periodSeconds: 10
+        - image: valkey/valkey:8.1.3-alpine
+          name: valkey
+          ports:
+            - containerPort: 6379
+              protocol: TCP
+          volumeMounts:
+          - name: paperless-data
+            mountPath: "/data"
+            subPath: "valkey"
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+        - image: docker.io/gotenberg/gotenberg:8.20
+          name: gotenberg
+          command: ["gotenberg", "--chromium-disable-javascript=true", "--chromium-allow-list=file:///tmp/.*"]
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+        - image: ghcr.io/paperless-ngx/tika:latest
+          name: tika
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+      dnsPolicy: "ClusterFirst"
+      dnsConfig:
+        nameservers:
+          - 100.94.59.38
