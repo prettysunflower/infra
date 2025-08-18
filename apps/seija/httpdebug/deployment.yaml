@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpdebug
+  labels:
+    app.kubernetes.io/name: httpdebug
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: httpdebug
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: httpdebug
+    spec:
+      containers:
+        - name: httpdebug
+          image: ghcr.io/xe/x/httpdebug:latest
+          ports:
+            - containerPort: 3000
+              name: http
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+      dnsPolicy: "ClusterFirst"
+      dnsConfig:
+        nameservers:
+          - 100.94.59.38
