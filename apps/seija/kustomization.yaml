@@ -1,0 +1,13 @@
+resources:
+- anko
+- docker-registry
+- httpdebug
+- kakigoori
+- mazonoke
+- ourfigurecollection
+- pocketid
+- prettysunflower-website
+- privatebin
+- uptime-kuma
+- youtubethumbnails
+- znc
