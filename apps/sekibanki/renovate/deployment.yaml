@@ -14,6 +14,10 @@ spec:
       labels:
         app.kubernetes.io/name: renovate-cache
     spec:
+      volumes:
+        - name: renovate-cache
+          persistentVolumeClaim:
+            claimName: renovate-cache-pvc
       containers:
         - image: valkey/valkey:8.1.3-alpine
           name: valkey
@@ -21,6 +25,9 @@ spec:
           ports:
             - containerPort: 6379
               protocol: TCP
+          volumeMounts:
+          - name: renovate-cache
+            mountPath: "/data"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
