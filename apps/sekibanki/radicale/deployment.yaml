@@ -58,8 +58,8 @@ spec:
             failureThreshold: 3
             successThreshold: 1
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
+            runAsUser: 2999
+            runAsGroup: 2999
             runAsNonRoot: true
             allowPrivilegeEscalation: false
             capabilities:
