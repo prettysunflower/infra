@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: docker-registry
-        image: mirror.gcr.io/library/registry:2
+        image: mirror.gcr.io/library/registry:3
         envFrom:
         - secretRef:
             name: docker-registry-config
