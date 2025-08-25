@@ -40,7 +40,7 @@ jobs:
           SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
  
       - name: Kubernetes context - Seija
-        uses: Azure/k8s-set-context@v1
+        uses: Azure/k8s-set-context@v4
         with:
           method: kubeconfig
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
@@ -52,7 +52,7 @@ jobs:
         run: kubectl apply -k .
 
       - name: Kubernetes context - Sekibanki
-        uses: Azure/k8s-set-context@v1
+        uses: Azure/k8s-set-context@v4
         with:
           method: kubeconfig
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
