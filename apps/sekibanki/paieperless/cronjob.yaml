@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: paieperless
+spec:
+  schedule: '* * * * *'
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          hostAliases:
+          - ip: "100.68.170.44"
+            hostnames:
+            - "papers.prettysunflower.moe"
+          dnsPolicy: "None"
+          dnsConfig:
+            nameservers:
+              - 100.94.59.38
+          containers:
+            - name: renovate
+              image: git.prettysunflower.moe/prettysunflower/paieperless:main
+              imagePullPolicy: Always
+              envFrom:
+                - secretRef:
+                    name: paieperless-secrets
+              env:
+              - name: GPG_CONTENT
+                valueFrom:
+                  secretKeyRef:
+                    name: gpg-key
+                    key: key.gpg
+
+          restartPolicy: Never
