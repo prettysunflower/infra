@@ -3,11 +3,10 @@ kind: Service
 metadata:
   name: app
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app.kubernetes.io/name: app
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 1234
-      name: http
+      targetPort: http
