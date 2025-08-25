@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tasktrove
+  labels:
+    app.kubernetes.io/name: tasktrove
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tasktrove
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tasktrove
+    spec:
+      volumes:
+        - name: tasktrove-data
+          persistentVolumeClaim:
+            claimName: tasktrove-pvc
+      containers:
+        - name: tasktrove
+          image: ghcr.io/dohsimpson/tasktrove:v0.1.0
+          ports:
+            - containerPort: 3000
+              name: http
+          volumeMounts:
+          - name: tasktrove-data
+            mountPath: "/app/data"
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+      dnsPolicy: "ClusterFirst"
+      dnsConfig:
+        nameservers:
+          - 100.94.59.38
