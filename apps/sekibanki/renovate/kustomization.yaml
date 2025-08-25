@@ -1,3 +1,5 @@
 resources:
   - cronjob.yaml
   - secrets.yaml
+  - svc.yaml
+  - deployment.yaml

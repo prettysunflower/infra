@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: renovate-cache
+  labels:
+    app.kubernetes.io/name: renovate-cache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: renovate-cache
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: renovate-cache
+    spec:
+      containers:
+        - image: valkey/valkey:8.1.3-alpine
+          name: valkey
+          command: ["valkey-server"]
+          ports:
+            - containerPort: 6379
+              protocol: TCP
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault

@@ -1,6 +1,6 @@
 {
   "extends": [
-    "config:recommended"
+    "config:recommended", ":prHourlyLimitNone"
   ],
   "kubernetes": {
     "managerFilePatterns": [
@@ -12,11 +12,6 @@
       "matchPackageNames": ["renovate/renovate"],
       "automerge": true,
       "ignoreTests": true
-    },
-    {
-      "matchDatasources": ["docker"],
-      "matchHost": "docker.io",
-      "registryUrls": ["https://registry.docker.sunflower.lgbt"]
     }
   ]
 }
