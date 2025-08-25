@@ -28,6 +28,9 @@ spec:
           volumeMounts:
           - name: renovate-cache
             mountPath: "/data"
+          env:
+            - name: VALKEY_EXTRA_FLAGS
+              value: "--save 60 1"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
