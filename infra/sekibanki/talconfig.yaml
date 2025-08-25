@@ -19,6 +19,21 @@ patches:
       path: /machine/features/hostDNS
       value:
         forwardKubeDNSToHost: false
+    - op: add
+      path: /machine/registries/mirrors
+      value:
+        docker.io:
+          endpoints:
+            - https://registry.docker.sunflower.lgbt
+        gcr.io:
+          endpoints:
+            - https://registry.docker.sunflower.lgbt
+        ghcr.io:
+          endpoints:
+            - https://registry.docker.sunflower.lgbt
+        registry.k8s.io:
+          endpoints:
+            - https://registry.docker.sunflower.lgbt
 nodes:
   - hostname: fulgora
     ipAddress: 10.0.0.32

@@ -24,6 +24,21 @@ patches:
       value:
         nameservers:
           - 100.94.59.38
+    - op: add
+      path: /machine/registries/mirrors
+      value:
+        docker.io:
+          endpoints:
+            - https://registry.docker.sunflower.lgbt
+        gcr.io:
+          endpoints:
+            - https://registry.docker.sunflower.lgbt
+        ghcr.io:
+          endpoints:
+            - https://registry.docker.sunflower.lgbt
+        registry.k8s.io:
+          endpoints:
+            - https://registry.docker.sunflower.lgbt
 nodes:
   - hostname: fulgora
     ipAddress: 10.11.0.2
