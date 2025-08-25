@@ -45,7 +45,7 @@ spec:
             - --remote-debugging-port=9222
             - --hide-scrollbars
         - name: meilisearch
-          image: getmeili/meilisearch:v1.18.0
+          image: getmeili/meilisearch:v1.19.0
           envFrom:
             - configMapRef:
                 name: karakeep-config
