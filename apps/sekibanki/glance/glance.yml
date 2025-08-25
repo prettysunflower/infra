@@ -66,9 +66,121 @@ pages:
             feeds:
               - url: https://dynasty-scans.com/feed
 
+          - type: html
+            source: |
+              <div class="widget widget-type-hacker-news">
+                  <div class="widget-header">
+                      <h2 class="uppercase">Currency conversion</h2>
+                  </div>
+                  <div class="widget-content">
+                      <div>
+                          <input type="text" inputmode="numeric" pattern="\d*" id="sourcecurrency">
+                          <select name="currency-select" id="currency-select">
+                            <option value="JPY">JPY</option>
+                            <option value="CNY">CNY</option>
+                            <option value="USD">USD</option>
+                          </select>
+                      </div>
+                      <div>
+                          <input type="text" id="targetcurrency" readonly>
+                          <select id="currency-select-cad" disabled>
+                            <option value="CAD">CAD</option>
+                          </select>
+                      </div>
+                  </div>
+
+                  <style>
+                      #sourcecurrency, #targetcurrency {
+                          color: var(--color-text-highlight);
+                          background: var(--color-widget-background);
+                          border-radius: var(--border-radius);
+                          border: 1px solid var(--color-widget-content-border);
+                          box-shadow: 0px 3px 0px 0px hsl(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl)) - 0.5%));
+                          padding: .5rem 1rem;
+                          width: auto;
+                      }
+
+                      #currency-select, #currency-select-cad {
+                          color: var(--color-text-highlight);
+                          background: var(--color-widget-background);
+                          border-radius: var(--border-radius);
+                          border: 1px solid var(--color-widget-content-border);
+                          box-shadow: 0px 3px 0px 0px hsl(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl)) - 0.5%));
+                          padding: .75rem 1rem;
+                          width: auto;
+                      }
+
+                      #currency-select {
+                          margin-bottom: 1rem;
+                      }
+                  </style>
+              </div>
+
 theme:
   light: true
   background-color: 0 0 95
   primary-color: 0 0 10
   positive-color: 175 59 40
   negative-color: 0 90 50
+
+document:
+  head: |
+     <script>
+        function waitForElm(selector) {
+            return new Promise(resolve => {
+                if (document.querySelector(selector)) {
+                    return resolve(document.querySelector(selector));
+                }
+
+                const observer = new MutationObserver(mutations => {
+                    if (document.querySelector(selector)) {
+                        observer.disconnect();
+                        resolve(document.querySelector(selector));
+                    }
+                });
+
+                // If you get "parameter 1 is not of type 'Node'" error, see https://stackoverflow.com/a/77855838/492336
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            });
+        }
+
+        console.log("a");
+        async function getData() {
+          const url = "https://currency.sunflower.lgbt/client/latest?apikey=bf783493-9044-45c2-a047-0006056b78a6&base_currency=CAD&currencies=usd,jpy,cny";
+            try {
+              const response = await fetch(url);
+              if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+              }
+
+              const result = await response.json();
+              waitForElm("#sourcecurrency").then(function() {
+                const sourceCurrencyField = document.getElementById("sourcecurrency");
+                const targetCurrencyField = document.getElementById("targetcurrency");
+                const currencySelectorField = document.getElementById("currency-select");
+
+                function updateTargetCurrency() {
+                  targetCurrencyField.value = Number.parseFloat(sourceCurrencyField.value * (1 / result.rates[currencySelectorField.value])).toFixed(2);
+                }
+
+                currencySelectorField.addEventListener("change", updateTargetCurrency)
+
+                sourceCurrencyField.addEventListener("input", updateTargetCurrency);
+              });
+            } catch (error) {
+              console.error(error.message);
+            }
+        }
+        function ready(fn) {
+          if (document.readyState !== 'loading') {
+            fn();
+          } else {
+            document.addEventListener('DOMContentLoaded', fn);
+          }
+        }
+
+        ready(getData);
+      </script>
