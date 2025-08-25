@@ -46,6 +46,7 @@ spec:
             - --hide-scrollbars
         - name: meilisearch
           image: getmeili/meilisearch:v1.19.0
+          command: ["meilisearch", "--experimental-dumpless-upgrade"]
           envFrom:
             - configMapRef:
                 name: karakeep-config
