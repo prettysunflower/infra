@@ -1,7 +1,7 @@
 ---
 clusterName: seija
-talosVersion: v1.10.6
-kubernetesVersion: v1.33.3
+talosVersion: v1.10.7
+kubernetesVersion: v1.33.4
 endpoint: https://10.11.0.2:6443
 domain: seija.prettysunflower.moe
 allowSchedulingOnControlPlanes: true
