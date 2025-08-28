@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: renovate-gitea
 spec:
-  schedule: '*/5 * * * *'
+  schedule: '*/15 * * * *'
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
@@ -13,16 +13,6 @@ spec:
           dnsConfig:
             nameservers:
               - 100.94.59.38
-          affinity:
-            nodeAffinity:
-              preferredDuringSchedulingIgnoredDuringExecution:
-              - weight: 1
-                preference:
-                  matchExpressions:
-                  - key: location
-                    operator: In
-                    values:
-                    - fsn
           containers:
             - name: renovate
               image: renovate/renovate:41.82.10
