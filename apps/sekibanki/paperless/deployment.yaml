@@ -74,7 +74,7 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
-        - image: docker.io/gotenberg/gotenberg:8.22
+        - image: docker.io/gotenberg/gotenberg:8.23
           name: gotenberg
           command: ["gotenberg", "--chromium-disable-javascript=true", "--chromium-allow-list=file:///tmp/.*"]
           securityContext:
