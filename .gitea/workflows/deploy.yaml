@@ -7,30 +7,13 @@ on:
 
 jobs:
   acls:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-prettysunflower
 
     steps:
       -
         name: Checkout
         uses: actions/checkout@v4
      
-      - name: Install kubectl
-        run: >
-          curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg &&
-          sudo chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg &&
-          echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list &&
-          sudo chmod 644 /etc/apt/sources.list.d/kubernetes.list &&
-          sudo apt-get update &&
-          sudo apt-get install -y kubectl
-
-      - name: Install fd-find
-        run: sudo apt-get install -y fd-find
-
-      - name: Install SOPS
-        run: >
-          curl -LO https://github.com/getsops/sops/releases/download/v3.10.2/sops_3.10.2_amd64.deb &&
-          sudo apt install -y ./sops_3.10.2_amd64.deb
-
       - name: Decrypt secrets
         run: >
           fdfind -I "secrets.sops.yaml" -x sops -d --encrypted-regex '^(data|stringData)$' --output {//}/secrets.yaml {} &&
