@@ -3,3 +3,4 @@ resources:
 - svc.yaml
 - secrets.yaml
 - configmap.yaml
+- cronjob.yaml

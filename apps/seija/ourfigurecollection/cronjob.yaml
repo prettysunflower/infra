@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ourfigurecollection-surugaya-price-tracking
+spec:
+  schedule: '0 3 * * *'
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          dnsPolicy: "None"
+          dnsConfig:
+            nameservers:
+              - 100.94.59.38
+          containers:
+            - name: ourfigurecollection
+              image: "git.prettysunflower.moe/prettysunflower/ourfigurecollection:main"
+              imagePullPolicy: Always
+              command: ["uv", "run", "manage.py", "track_prices_surugaya"]
+              envFrom:
+              - secretRef:
+                  name: ourfigurecollection-secrets
+              - configMapRef:
+                  name: ourfigurecollection-config
+              securityContext:
+                runAsUser: 1000
+                runAsGroup: 1000
+                runAsNonRoot: true
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                seccompProfile:
+                  type: RuntimeDefault
+          restartPolicy: Never
