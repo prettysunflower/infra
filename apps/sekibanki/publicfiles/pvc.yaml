@@ -1,0 +1,111 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: nfs.csi.k8s.io
+  name: publicfiles
+spec:
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-csi
+  mountOptions:
+    - nfsvers=4.1
+  csi:
+    driver: nfs.csi.k8s.io
+    # volumeHandle format: {nfs-server-address}#{sub-dir-name}#{share-name}
+    # make sure this value is unique for every share in the cluster
+    volumeHandle: 100.126.243.21/mnt/yuyuko/public_files##
+    volumeAttributes:
+      server: 100.126.243.21
+      share: mnt//yuyuko/public_files
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: publicfiles
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 50Gi
+  volumeName: publicfiles
+  storageClassName: nfs-csi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: nfs.csi.k8s.io
+  name: semipublicfiles
+spec:
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-csi
+  mountOptions:
+    - nfsvers=4.1
+  csi:
+    driver: nfs.csi.k8s.io
+    # volumeHandle format: {nfs-server-address}#{sub-dir-name}#{share-name}
+    # make sure this value is unique for every share in the cluster
+    volumeHandle: 100.126.243.21/mnt/yuyuko/semi_public_files##
+    volumeAttributes:
+      server: 100.126.243.21
+      share: mnt//yuyuko/semi_public_files
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: semipublicfiles
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 50Gi
+  volumeName: semipublicfiles
+  storageClassName: nfs-csi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: nfs.csi.k8s.io
+  name: yuyuko-games
+spec:
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-csi
+  mountOptions:
+    - nfsvers=4.1
+  csi:
+    driver: nfs.csi.k8s.io
+    # volumeHandle format: {nfs-server-address}#{sub-dir-name}#{share-name}
+    # make sure this value is unique for every share in the cluster
+    volumeHandle: 100.126.243.21/mnt/yuyuko/games##
+    volumeAttributes:
+      server: 100.126.243.21
+      share: mnt//yuyuko/games
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: yuyuko-games
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 50Gi
+  volumeName: yuyuko-games
+  storageClassName: nfs-csi

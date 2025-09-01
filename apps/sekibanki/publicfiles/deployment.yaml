@@ -18,6 +18,12 @@ spec:
         - name: publicfiles
           persistentVolumeClaim:
             claimName: publicfiles
+        - name: semipublicfiles
+          persistentVolumeClaim:
+            claimName: semipublicfiles
+        - name: games
+          persistentVolumeClaim:
+            claimName: yuyuko-games
         - name: config
           configMap:
             name: publicfiles-caddy-config
@@ -31,5 +37,9 @@ spec:
           volumeMounts:
           - name: publicfiles
             mountPath: "/srv"
+          - name: semipublicfiles
+            mountPath: "/srvsemipublic"
+          - name: games
+            mountPath: "/mnt/yuyuko/games"
           - name: config
             mountPath: /etc/caddy
