@@ -14,16 +14,6 @@ spec:
       labels:
         app.kubernetes.io/name: etherpad
     spec:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 1
-            preference:
-              matchExpressions:
-              - key: location
-                operator: In
-                values:
-                - fsn
       containers:
         - name: etherpad
           image: etherpad/etherpad:2.5.0

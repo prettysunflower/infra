@@ -14,16 +14,6 @@ spec:
       labels:
         app.kubernetes.io/name: vaultwarden
     spec:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 1
-            preference:
-              matchExpressions:
-              - key: location
-                operator: In
-                values:
-                - fsn
       volumes:
         - name: vaultwarden-data
           persistentVolumeClaim:
