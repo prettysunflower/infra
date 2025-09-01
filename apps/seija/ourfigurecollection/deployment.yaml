@@ -14,26 +14,17 @@ spec:
       labels:
         app.kubernetes.io/name: ourfigurecollection
     spec:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 1
-            preference:
-              matchExpressions:
-              - key: location
-                operator: In
-                values:
-                - fsn
       containers:
         - name: ourfigurecollection-django
           image: "git.prettysunflower.moe/prettysunflower/ourfigurecollection:main"
           imagePullPolicy: Always
           ports:
             - containerPort: 8001
-          volumeMounts:
-          - name: config
-            mountPath: /ourfigurecollection/ourfigurecollection/local_settings.py
-            subPath: local_settings.py
+          envFrom:
+          - secretRef:
+              name: ourfigurecollection-secrets
+          - configMapRef:
+              name: ourfigurecollection-config
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000

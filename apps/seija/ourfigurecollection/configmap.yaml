@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ourfigurecollection-config
+data:
+  ALLOWED_HOSTS: ourfigurecollection.moe
+  DEBUG: "False"
+  OIDC_DISCOVERY_URL: https://auth.remilia.ch/.well-known/openid-configuration
