@@ -21,7 +21,6 @@ spec:
       containers:
         - name: pocketid
           image: ghcr.io/pocket-id/pocket-id:v1.10.0-distroless
-          imagePullPolicy: Always
           ports:
             - containerPort: 1411
           envFrom:
@@ -48,10 +47,3 @@ spec:
             initialDelaySeconds: 10
             failureThreshold: 3
             periodSeconds: 90
-          startupProbe:
-            exec:
-              command:
-              - /app/pocket-id
-              - healthcheck
-            failureThreshold: 30
-            periodSeconds: 10
