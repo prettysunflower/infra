@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vlmcsd
+  labels:
+    app.kubernetes.io/name: vlmcsd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vlmcsd
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vlmcsd
+    spec:
+      containers:
+        - name: vlmcsd
+          image: mikolatero/vlmcsd@sha256:217a03280410aa06bca7dd1b4e3e206317ba740a990d90683462fb21b17c9e7d
+          ports:
+            - containerPort: 1688
+              name: kms
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+      dnsPolicy: "ClusterFirst"
+      dnsConfig:
+        nameservers:
+          - 100.94.59.38
