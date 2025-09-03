@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: actual
+  labels:
+    app.kubernetes.io/name: actual
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: actual
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: actual
+    spec:
+      enableServiceLinks: false
+      volumes:
+        - name: actual-data
+          persistentVolumeClaim:
+            claimName: actual-pvc
+      containers:
+        - name: actual
+          image: actualbudget/actual-server:latest
+          ports:
+            - containerPort: 5006
+              name: http
+          volumeMounts:
+          - name: actual-data
+            mountPath: "/data"
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+      dnsPolicy: "ClusterFirst"
+      dnsConfig:
+        nameservers:
+          - 100.94.59.38

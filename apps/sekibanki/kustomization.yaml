@@ -1,4 +1,5 @@
 resources:
+- actual
 - autoupdate-teable-figurines-currencies
 - etherpad
 - gitea
