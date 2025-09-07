@@ -1,45 +1,97 @@
-# Infra
+# prettysunflower's infra
 
-The cluster is formed by three Proxmox hosts, hosting in total 6 Talos virtual machines. All of them are linked through Wireguard and kubespan. They're also connected to Tailscale to allow accessing other hosts.
+The prettysunflower's infra is divided in two main clusters.
 
-## Host `yuyuko`
+- Cluster `sekibanki`: The main cluster, (self-)hosting most components of this infra
+- Cluster `seija`: The "this is important and I really everything to be up anytime" cluster, hosted by Hetzner in Falkenstein
 
-The main server. It also contains most of the computer power and most of the storage (a ZFS array with 64.56 TiB of raw storage!). This is also the most painful to upgrade things on / reboot due to... reasons.
+## Clusters
 
-**Location**: Montréal (Home)
+### Cluster sekibanki
 
-**Virtual machines**:
-- yukari (controlplane)
-	- Address: 10.0.0.240
-- ran (worker)
-	- Address: 10.0.0.241
+**Host:** Yuyuko<br>
+**k8s storage:** NFS \
+**Talos VMs:** 3 - Gleba, Vulcanus, Fulgora (All are controlplane and workers)
 
-### Internal gateway `suika`
+#### Database
 
-Outside of the Kubernetes cluster is the `suika` virtual machine. I didn't want to fiddle around _too_ much with MetalLB and Load Balancers, so this virtual machine runs NGINX as a way to provide HTTPS service to the cluster with more memorable names (because ``.
+##### PostgreSQL
 
-## Host `niwatori`
+TODO: Move that to CloudNativePG
 
-The 30$ eBay computer. It's mainly there to provide some redundency and a bit of storage (a 1TB SSD is in there)
+**Postgres version:** 17<br>
+**IP address:** 100.110.40.2 (tailscale)
 
-**Location**: Montréal (Home)
+### Cluster seija
 
-**Virtual machines**:
-- fujiwara-no-mokou (worker)
-	- Address: 10.0.0.245
+**Location:** Falkenstein (DE)<br>
+**Host:** Hetzner VMs
+**k8s storage:** hcloud-csi
+**Talos VMs:** 3 - Gleba, Vulcanus, Fulgora (All are controlplane and workers)
 
-## Host `yuuma`
+#### Database
 
-Hetzner's server auctions are great! This is my offsite server to provide a stable endpoint in Europe.
+##### PostgreSQL
 
-**Location**: Falkenstein
+TODO: Move that to CloudNativePG
 
-**Virtual machines**:
-- yukari (controlplane)
-	- Address: 10.0.0.240
-- ran (worker)
-	- Address: 10.0.0.241
+**Postgres version:** 17<br>
+**IP address:** 100.68.170.44 (tailscale)
 
-### External gateway `okina`
+## Hosts
 
-Outside of the Kubernetes cluster is the `okina` virtual machine. Same reasons as for `suika`, but for outside people to my infra. It runs Caddy to do that.
+### Host yuyuko
+
+**Location:** Montréal (CA_QC)
+**OS:** Proxmox 9.0.5
+
+#### ZFS pool
+
+    yuyuko
+    |
+    |-- raidz1-0
+    |---|
+    |---|-- 18 TB WDC WD181KFGX-68
+    |---|-- 18 TB WDC WD181KFGX-68
+    |---|-- 18 TB WDC WD181KFGX-68
+    |---|-- 18 TB TOSHIBA MG09ACA1
+    |
+    |-- raidz1-1
+    |---|
+    |---|-- 8 TB WDC WD8003FFBX-6
+    |---|-- 8 TB WDC WD8003FFBX-6
+    |---|-- 4 TB WDC WD40EFZX-68A
+    |---|-- 8 TB WDC WD80EFZZ-68B
+    |
+    |-- special
+    |---|
+    |---|-- mirror-2
+    |---|---|
+    |---|---|-- 1 TB Samsung SSD 870
+    |---|---|-- 1 TB Samsung SSD 870
+
+#### Backups
+
+Backups are done hourly with Restic to a Hetzner Storage Box
+
+## Gateways
+
+We're using VMs with Caddy / HAProxy as gateways to the infra. Convention for naming them are `<3 letters code of gateway location><optional: number if multiple gateway somewhere>.okina.prettysunflower.moe`
+
+### fsn.okina
+
+**Type:** Hetzner VM<br>
+**Location:** Falkenstein (DE)
+**IP addresses:**<br>
+- 91.99.183.134
+- 2a01:4f8:c013:c026::1
+- 10.11.0.5 (Hetzner bridge)
+- 100.68.170.44 (tailscale)
+
+### yul.okina
+
+**Type:** Koumbit VPS
+**Location:** Montréal (CA_QC)
+**IP addresses:**<br>
+- 199.58.81.150
+- 100.94.59.38 (tailscale)
