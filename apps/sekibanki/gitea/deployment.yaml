@@ -22,9 +22,8 @@ spec:
           persistentVolumeClaim:
             claimName: gitea-config-pvc
         - name: valkey
-          emptyDir:
-            sizeLimit: 128Mi
-            medium: Memory
+          persistentVolumeClaim:
+            claimName: gitea-valkey
       dnsPolicy: "None"
       dnsConfig:
         nameservers:

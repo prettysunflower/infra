@@ -22,3 +22,15 @@ spec:
     requests:
       storage: 64M
   storageClassName: nfs-csi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitea-valkey
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1G
+  storageClassName: nfs-csi
