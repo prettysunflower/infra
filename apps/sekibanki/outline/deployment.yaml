@@ -17,7 +17,7 @@ spec:
       hostAliases:
         - ip: "100.113.193.5"
           hostnames:
-          - "mail.prettysunflower.moe"
+            - "mail.prettysunflower.moe"
       volumes:
         - name: valkey-data
           persistentVolumeClaim:
@@ -60,5 +60,5 @@ spec:
             seccompProfile:
               type: RuntimeDefault
           volumeMounts:
-          - name: valkey-data
-            mountPath: "/data"
+            - name: valkey-data
+              mountPath: "/data"

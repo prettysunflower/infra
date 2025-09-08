@@ -40,7 +40,7 @@ data:
   GITEA__storage__MINIO_ACCESS_KEY_ID: tid_uCZAvxLOlpVdEusuMYvVmsOvMgVccrwxGJwqauuhSucI_MwddN
   GITEA__storage__MINIO_BUCKET: prettysunflower-gitea
   GITEA__storage__MINIO_LOCATION: auto
-  GITEA__storage__MINIO_USE_SSL : "true"
+  GITEA__storage__MINIO_USE_SSL: "true"
   GITEA__storage__SERVE_DIRECT: "true"
   GITEA__service__REGISTER_EMAIL_CONFIRM: "false"
   GITEA__service__ENABLE_NOTIFY_MAIL: "false"

@@ -27,8 +27,8 @@ spec:
             - configMapRef:
                 name: pocketid-config
           volumeMounts:
-          - name: pocketid-data
-            mountPath: "/app/data"
+            - name: pocketid-data
+              mountPath: "/app/data"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -42,8 +42,8 @@ spec:
           livenessProbe:
             exec:
               command:
-              - /app/pocket-id
-              - healthcheck
+                - /app/pocket-id
+                - healthcheck
             initialDelaySeconds: 10
             failureThreshold: 3
             periodSeconds: 90

@@ -1,4 +1,4 @@
 resources:
-- deployment.yaml
-- services.yaml
-- pvc.yaml
+  - deployment.yaml
+  - services.yaml
+  - pvc.yaml

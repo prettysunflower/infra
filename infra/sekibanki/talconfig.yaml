@@ -55,22 +55,22 @@ controlPlane:
   extraManifests:
     - tailscale.patch.yaml
   schematic:
-      customization:
-        systemExtensions:
-            officialExtensions:
-                - siderolabs/iscsi-tools
-                - siderolabs/qemu-guest-agent
-                - siderolabs/tailscale
-                - siderolabs/util-linux-tools
+    customization:
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/iscsi-tools
+          - siderolabs/qemu-guest-agent
+          - siderolabs/tailscale
+          - siderolabs/util-linux-tools
 
 worker:
   extraManifests:
     - tailscale.patch.yaml
   schematic:
-      customization:
-        systemExtensions:
-            officialExtensions:
-                - siderolabs/iscsi-tools
-                - siderolabs/qemu-guest-agent
-                - siderolabs/tailscale
-                - siderolabs/util-linux-tools
+    customization:
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/iscsi-tools
+          - siderolabs/qemu-guest-agent
+          - siderolabs/tailscale
+          - siderolabs/util-linux-tools

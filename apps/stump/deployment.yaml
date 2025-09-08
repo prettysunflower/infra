@@ -28,14 +28,14 @@ spec:
             - containerPort: 10801
               name: http
           volumeMounts:
-          - name: stump-config
-            mountPath: "/config"
-          - name: stump-data
-            mountPath: "/data"
+            - name: stump-config
+              mountPath: "/config"
+            - name: stump-data
+              mountPath: "/data"
           env:
             - name: PUID
-              value: '1000'
+              value: "1000"
             - name: PGID
-              value: '1000'
+              value: "1000"
             - name: STUMP_PORT
               value: "10801"

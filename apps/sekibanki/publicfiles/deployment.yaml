@@ -35,11 +35,11 @@ spec:
             - containerPort: 80
               protocol: TCP
           volumeMounts:
-          - name: publicfiles
-            mountPath: "/srv"
-          - name: semipublicfiles
-            mountPath: "/srvsemipublic"
-          - name: games
-            mountPath: "/mnt/yuyuko/games"
-          - name: config
-            mountPath: /etc/caddy
+            - name: publicfiles
+              mountPath: "/srv"
+            - name: semipublicfiles
+              mountPath: "/srvsemipublic"
+            - name: games
+              mountPath: "/mnt/yuyuko/games"
+            - name: config
+              mountPath: /etc/caddy

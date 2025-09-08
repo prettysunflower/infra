@@ -26,8 +26,8 @@ spec:
             - containerPort: 8080
               protocol: TCP
           volumeMounts:
-          - name: privatebin-data
-            mountPath: "/srv/data"
+            - name: privatebin-data
+              mountPath: "/srv/data"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -42,10 +42,10 @@ spec:
           image: ghcr.io/techarohq/anubis:v1.22.0
           imagePullPolicy: Always
           envFrom:
-          - secretRef:
-              name: anubis-thoth
-          - secretRef:
-              name: privatebin-anubis-key
+            - secretRef:
+                name: anubis-thoth
+            - secretRef:
+                name: privatebin-anubis-key
           env:
             - name: "BIND"
               value: ":8081"

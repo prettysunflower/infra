@@ -29,7 +29,7 @@ spec:
             - containerPort: 80
               protocol: TCP
           volumeMounts:
-          - name: prettysunflower-staticwebsites
-            mountPath: "/srv/prettysunflower-staticwebsites"
-          - name: config
-            mountPath: /etc/caddy
+            - name: prettysunflower-staticwebsites
+              mountPath: "/srv/prettysunflower-staticwebsites"
+            - name: config
+              mountPath: /etc/caddy

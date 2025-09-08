@@ -21,10 +21,10 @@ spec:
           ports:
             - containerPort: 8001
           envFrom:
-          - secretRef:
-              name: ourfigurecollection-secrets
-          - configMapRef:
-              name: ourfigurecollection-config
+            - secretRef:
+                name: ourfigurecollection-secrets
+            - configMapRef:
+                name: ourfigurecollection-config
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -43,10 +43,10 @@ spec:
         - name: anubis
           image: ghcr.io/techarohq/anubis:v1.22.0
           envFrom:
-          - secretRef:
-              name: anubis-thoth
-          - secretRef:
-              name: anubis-ourfigurecollection-key
+            - secretRef:
+                name: anubis-thoth
+            - secretRef:
+                name: anubis-ourfigurecollection-key
           env:
             - name: "BIND"
               value: ":8080"
@@ -80,9 +80,9 @@ spec:
             seccompProfile:
               type: RuntimeDefault
       volumes:
-      - name: config
-        configMap:
-          name: ourfigurecollection-config
+        - name: config
+          configMap:
+            name: ourfigurecollection-config
       dnsPolicy: "None"
       dnsConfig:
         nameservers:

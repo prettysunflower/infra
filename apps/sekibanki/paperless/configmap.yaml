@@ -14,7 +14,7 @@ data:
   PAPERLESS_EMAIL_TASK_CRON: "* * * * *"
   PAPERLESS_APPS: allauth.socialaccount.providers.openid_connect
   PAPERLESS_DISABLE_REGULAR_LOGIN: "True"
-  PAPERLESS_OCR_USER_ARGS: "{\"invalidate_digital_signatures\": true}"
+  PAPERLESS_OCR_USER_ARGS: '{"invalidate_digital_signatures": true}'
   GRANIAN_PORT: "8000"
   USERMAP_UID: "1000"
   USERMAP_GID: "1000"

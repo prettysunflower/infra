@@ -29,7 +29,7 @@ spec:
         nameservers:
           - 100.94.59.38
       containers:
-        - image: docker.gitea.com/gitea:1.24.5-rootless 
+        - image: docker.gitea.com/gitea:1.24.5-rootless
           name: gitea
           ports:
             - containerPort: 3000
@@ -39,10 +39,10 @@ spec:
               protocol: TCP
               name: ssh
           volumeMounts:
-          - name: data
-            mountPath: /var/lib/gitea
-          - name: config
-            mountPath: /etc/gitea
+            - name: data
+              mountPath: /var/lib/gitea
+            - name: config
+              mountPath: /etc/gitea
           envFrom:
             - configMapRef:
                 name: gitea-config
@@ -77,8 +77,8 @@ spec:
             - name: VALKEY_EXTRA_FLAGS
               value: "--save 60 1"
           volumeMounts:
-          - name: valkey
-            mountPath: "/data"
+            - name: valkey
+              mountPath: "/data"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000

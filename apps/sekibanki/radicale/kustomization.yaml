@@ -3,6 +3,6 @@ resources:
   - pvc.yaml
   - svc.yaml
 configMapGenerator:
-- name: radicale-config
-  files:
-  - config
+  - name: radicale-config
+    files:
+      - config

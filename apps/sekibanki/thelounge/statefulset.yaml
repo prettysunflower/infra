@@ -29,5 +29,5 @@ spec:
           ports:
             - containerPort: 9000
           volumeMounts:
-          - name: thelounge-data
-            mountPath: "/var/opt/thelounge"
+            - name: thelounge-data
+              mountPath: "/var/opt/thelounge"

@@ -22,9 +22,9 @@ spec:
             - containerPort: 8000
               name: http
           volumeMounts:
-          - name: config
-            mountPath: /anko/anko/local_settings.py
-            subPath: local_settings.py
+            - name: config
+              mountPath: /anko/anko/local_settings.py
+              subPath: local_settings.py
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -36,9 +36,9 @@ spec:
             seccompProfile:
               type: RuntimeDefault
       volumes:
-      - name: config
-        configMap:
-          name: anko-config
+        - name: config
+          configMap:
+            name: anko-config
       dnsPolicy: "None"
       dnsConfig:
         nameservers:

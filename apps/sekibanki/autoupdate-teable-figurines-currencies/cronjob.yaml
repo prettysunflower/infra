@@ -9,10 +9,10 @@ spec:
       template:
         spec:
           containers:
-          - name: autoupdate-teable-figurines-currencies
-            image: git.prettysunflower.moe/prettysunflower/autoupdate-teable-figurines-currencies:main
-            imagePullPolicy: Always
-            envFrom:
-            - secretRef:
-                name: autoupdate-teable-figurines-currencies-secret
+            - name: autoupdate-teable-figurines-currencies
+              image: git.prettysunflower.moe/prettysunflower/autoupdate-teable-figurines-currencies:main
+              imagePullPolicy: Always
+              envFrom:
+                - secretRef:
+                    name: autoupdate-teable-figurines-currencies-secret
           restartPolicy: OnFailure

@@ -1,2 +1,2 @@
 resources:
-- secrets.yaml
+  - secrets.yaml

@@ -26,13 +26,13 @@ spec:
             - secretRef:
                 name: etherpad-secrets
           volumeMounts:
-          - name: etherpad-images
-            mountPath: /opt/etherpad-lite/src/static/skins/colibris/images
+            - name: etherpad-images
+              mountPath: /opt/etherpad-lite/src/static/skins/colibris/images
       dnsPolicy: "None"
       dnsConfig:
         nameservers:
           - 100.94.59.38
       volumes:
-      - name: etherpad-images
-        persistentVolumeClaim:
-          claimName: etherpad-images-pvc
+        - name: etherpad-images
+          persistentVolumeClaim:
+            claimName: etherpad-images-pvc

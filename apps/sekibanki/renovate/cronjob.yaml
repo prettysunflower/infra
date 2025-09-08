@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: renovate-gitea
 spec:
-  schedule: '*/15 * * * *'
+  schedule: "*/15 * * * *"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:

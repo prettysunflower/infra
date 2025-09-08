@@ -1,16 +1,16 @@
 resources:
-- ../common
-- anko
-- docker-registry
-- httpdebug
-- kakigoori
-- mazanoke
-- miniqr
-- ourfigurecollection
-- pocketid
-- prettysunflower-website
-- privatebin
-- uptime-kuma
-- vlmcsd
-- youtubethumbnails
-- znc
+  - ../common
+  - anko
+  - docker-registry
+  - httpdebug
+  - kakigoori
+  - mazanoke
+  - miniqr
+  - ourfigurecollection
+  - pocketid
+  - prettysunflower-website
+  - privatebin
+  - uptime-kuma
+  - vlmcsd
+  - youtubethumbnails
+  - znc

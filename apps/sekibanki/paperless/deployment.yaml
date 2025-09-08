@@ -30,18 +30,18 @@ spec:
             - containerPort: 8000
               name: http
           volumeMounts:
-          - name: paperless-data
-            mountPath: "/usr/src/paperless/data"
-            subPath: "data"
-          - name: paperless-data
-            mountPath: "/usr/src/paperless/media"
-            subPath: "media"
-          - name: paperless-data
-            mountPath: "/usr/src/paperless/export"
-            subPath: "export"
-          - name: paperless-data
-            mountPath: "/usr/src/paperless/consume"
-            subPath: "consume"
+            - name: paperless-data
+              mountPath: "/usr/src/paperless/data"
+              subPath: "data"
+            - name: paperless-data
+              mountPath: "/usr/src/paperless/media"
+              subPath: "media"
+            - name: paperless-data
+              mountPath: "/usr/src/paperless/export"
+              subPath: "export"
+            - name: paperless-data
+              mountPath: "/usr/src/paperless/consume"
+              subPath: "consume"
           livenessProbe:
             httpGet:
               path: /
@@ -61,9 +61,9 @@ spec:
             - containerPort: 6379
               protocol: TCP
           volumeMounts:
-          - name: paperless-data
-            mountPath: "/data"
-            subPath: "valkey"
+            - name: paperless-data
+              mountPath: "/data"
+              subPath: "valkey"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -76,7 +76,12 @@ spec:
               type: RuntimeDefault
         - image: docker.io/gotenberg/gotenberg:8.23
           name: gotenberg
-          command: ["gotenberg", "--chromium-disable-javascript=true", "--chromium-allow-list=file:///tmp/.*"]
+          command:
+            [
+              "gotenberg",
+              "--chromium-disable-javascript=true",
+              "--chromium-allow-list=file:///tmp/.*",
+            ]
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000

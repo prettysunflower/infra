@@ -30,9 +30,9 @@ spec:
             - containerPort: 3000
               name: http
           volumeMounts:
-          - name: karakeep-data
-            mountPath: "/data"
-            subPath: "karakeep"
+            - name: karakeep-data
+              mountPath: "/data"
+              subPath: "karakeep"
         - name: chrome
           image: gcr.io/zenika-hub/alpine-chrome:124
           command:
@@ -53,9 +53,9 @@ spec:
             - secretRef:
                 name: karakeep-secrets
           volumeMounts:
-          - name: karakeep-data
-            mountPath: "/meili_data"
-            subPath: "melisearch"
+            - name: karakeep-data
+              mountPath: "/meili_data"
+              subPath: "melisearch"
       dnsPolicy: "ClusterFirst"
       dnsConfig:
         nameservers:

@@ -26,8 +26,8 @@ spec:
           ports:
             - containerPort: 4921
           volumeMounts:
-          - name: znc-config
-            mountPath: "/znc-data"
+            - name: znc-config
+              mountPath: "/znc-data"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000

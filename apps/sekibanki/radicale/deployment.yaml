@@ -23,7 +23,7 @@ spec:
           #   medium: Memory
         - name: radicale-config
           configMap:
-              name: radicale-config
+            name: radicale-config
         - name: cache-volume
           emptyDir:
             sizeLimit: 50Mi
@@ -35,12 +35,12 @@ spec:
             - containerPort: 5232
               name: http
           volumeMounts:
-          - name: radicale-data
-            mountPath: "/data"
-          - name: radicale-config
-            mountPath: "/config"
-          - name: cache-volume
-            mountPath: "/cache"
+            - name: radicale-data
+              mountPath: "/data"
+            - name: radicale-config
+              mountPath: "/config"
+            - name: cache-volume
+              mountPath: "/cache"
           resources:
             requests:
               cpu: 200m

@@ -25,19 +25,19 @@ spec:
             - containerPort: 4567
               name: http
           env:
-          - name: "TZ"
-            value: "America/Toronto"
-          - name: "DOWNLOAD_AS_CBZ"
-            value: "true"
-          - name: "EXTENSION_REPOS"
-            value: "[\"https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json\"]"
-          - name: "AUTO_DOWNLOAD_CHAPTERS"
-            value: "true"
-          - name: "BASIC_AUTH_ENABLED"
-            value: "false"
+            - name: "TZ"
+              value: "America/Toronto"
+            - name: "DOWNLOAD_AS_CBZ"
+              value: "true"
+            - name: "EXTENSION_REPOS"
+              value: '["https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json"]'
+            - name: "AUTO_DOWNLOAD_CHAPTERS"
+              value: "true"
+            - name: "BASIC_AUTH_ENABLED"
+              value: "false"
           volumeMounts:
-          - name: data
-            mountPath: "/home/suwayomi/.local/share/Tachidesk"
+            - name: data
+              mountPath: "/home/suwayomi/.local/share/Tachidesk"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000

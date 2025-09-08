@@ -17,7 +17,7 @@ spec:
       hostAliases:
         - ip: "100.113.193.5"
           hostnames:
-          - "mail.prettysunflower.moe"
+            - "mail.prettysunflower.moe"
       volumes:
         - name: uptime-kuma-data
           persistentVolumeClaim:
@@ -28,5 +28,5 @@ spec:
           ports:
             - containerPort: 3001
           volumeMounts:
-          - name: uptime-kuma-data
-            mountPath: "/app/data"
+            - name: uptime-kuma-data
+              mountPath: "/app/data"

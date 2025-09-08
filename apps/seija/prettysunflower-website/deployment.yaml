@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: website
-          image: 'git.prettysunflower.moe/prettysunflower/prettysunflower-website:latest'
+          image: "git.prettysunflower.moe/prettysunflower/prettysunflower-website:latest"
           imagePullPolicy: Always
           envFrom:
             - secretRef:
@@ -24,7 +24,7 @@ spec:
           ports:
             - containerPort: 3334
         - name: website-static
-          image: 'git.prettysunflower.moe/prettysunflower/prettysunflower-website-static:main'
+          image: "git.prettysunflower.moe/prettysunflower/prettysunflower-website-static:main"
           imagePullPolicy: Always
           ports:
             - containerPort: 8001
@@ -32,10 +32,10 @@ spec:
           image: ghcr.io/techarohq/anubis:v1.22.0
           imagePullPolicy: Always
           envFrom:
-          - secretRef:
-              name: anubis-thoth
-          - secretRef:
-              name: anubis-prettysunflower-website-key
+            - secretRef:
+                name: anubis-thoth
+            - secretRef:
+                name: anubis-prettysunflower-website-key
           env:
             - name: "BIND"
               value: ":8080"

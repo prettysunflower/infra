@@ -21,9 +21,9 @@ spec:
           ports:
             - containerPort: 8001
           volumeMounts:
-          - name: config
-            mountPath: /kakigoori/kakigoori/local_settings.py
-            subPath: local_settings.py
+            - name: config
+              mountPath: /kakigoori/kakigoori/local_settings.py
+              subPath: local_settings.py
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -42,10 +42,10 @@ spec:
         - name: anubis
           image: ghcr.io/techarohq/anubis:v1.22.0
           envFrom:
-          - secretRef:
-              name: anubis-thoth
-          - secretRef:
-              name: anubis-kakigoori-key
+            - secretRef:
+                name: anubis-thoth
+            - secretRef:
+                name: anubis-kakigoori-key
           env:
             - name: "BIND"
               value: ":8080"
@@ -79,9 +79,9 @@ spec:
             seccompProfile:
               type: RuntimeDefault
       volumes:
-      - name: config
-        configMap:
-          name: kakigoori-config
+        - name: config
+          configMap:
+            name: kakigoori-config
       dnsPolicy: "None"
       dnsConfig:
         nameservers:

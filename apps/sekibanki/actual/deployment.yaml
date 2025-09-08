@@ -26,8 +26,8 @@ spec:
             - containerPort: 5006
               name: http
           volumeMounts:
-          - name: actual-data
-            mountPath: "/data"
+            - name: actual-data
+              mountPath: "/data"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000

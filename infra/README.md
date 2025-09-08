@@ -83,6 +83,7 @@ We're using VMs with Caddy / HAProxy as gateways to the infra. Convention for na
 **Type:** Hetzner VM<br>
 **Location:** Falkenstein (DE)
 **IP addresses:**<br>
+
 - 91.99.183.134
 - 2a01:4f8:c013:c026::1
 - 10.11.0.5 (Hetzner bridge)
@@ -93,5 +94,6 @@ We're using VMs with Caddy / HAProxy as gateways to the infra. Convention for na
 **Type:** Koumbit VPS
 **Location:** Montréal (CA_QC)
 **IP addresses:**<br>
+
 - 199.58.81.150
 - 100.94.59.38 (tailscale)

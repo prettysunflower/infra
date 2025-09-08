@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: ourfigurecollection-surugaya-price-tracking
 spec:
-  schedule: '0 3 * * *'
+  schedule: "0 3 * * *"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
@@ -19,10 +19,10 @@ spec:
               imagePullPolicy: Always
               command: ["uv", "run", "manage.py", "track_prices_surugaya"]
               envFrom:
-              - secretRef:
-                  name: ourfigurecollection-secrets
-              - configMapRef:
-                  name: ourfigurecollection-config
+                - secretRef:
+                    name: ourfigurecollection-secrets
+                - configMapRef:
+                    name: ourfigurecollection-config
               securityContext:
                 runAsUser: 1000
                 runAsGroup: 1000

@@ -1,21 +1,21 @@
 resources:
-- ../common
-- actual
-- autoupdate-teable-figurines-currencies
-- etherpad
-- gitea
-- glance
-- gotosocial
-- karakeep
-- opengist
-- outline
-- paieperless
-- paperless
-- publicfiles
-- radicale
-- renovate
-- suwayomi
-- tasktrove
-- teable
-- thelounge
-- vaultwarden
+  - ../common
+  - actual
+  - autoupdate-teable-figurines-currencies
+  - etherpad
+  - gitea
+  - glance
+  - gotosocial
+  - karakeep
+  - opengist
+  - outline
+  - paieperless
+  - paperless
+  - publicfiles
+  - radicale
+  - renovate
+  - suwayomi
+  - tasktrove
+  - teable
+  - thelounge
+  - vaultwarden

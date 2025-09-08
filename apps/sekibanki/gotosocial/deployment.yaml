@@ -30,8 +30,8 @@ spec:
               protocol: TCP
               name: http
           volumeMounts:
-          - name: data
-            mountPath: /gotosocial/storage
+            - name: data
+              mountPath: /gotosocial/storage
           envFrom:
             - configMapRef:
                 name: gotosocial-config

@@ -13,17 +13,17 @@ spec:
         app: docker-registry
     spec:
       containers:
-      - name: docker-registry
-        image: mirror.gcr.io/library/registry:3
-        envFrom:
-        - secretRef:
-            name: docker-registry-config
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "1"
-        ports:
-        - containerPort: 5000
+        - name: docker-registry
+          image: mirror.gcr.io/library/registry:3
+          envFrom:
+            - secretRef:
+                name: docker-registry-config
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "1"
+          ports:
+            - containerPort: 5000

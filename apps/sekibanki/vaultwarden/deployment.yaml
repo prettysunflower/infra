@@ -21,7 +21,7 @@ spec:
       hostAliases:
         - ip: "100.113.193.5"
           hostnames:
-          - "mail.prettysunflower.moe"
+            - "mail.prettysunflower.moe"
       containers:
         - name: teable
           image: vaultwarden/server:1.34.3
@@ -34,8 +34,8 @@ spec:
             - secretRef:
                 name: vaultwarden-secrets
           volumeMounts:
-          - name: vaultwarden-data
-            mountPath: "/data"
+            - name: vaultwarden-data
+              mountPath: "/data"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000

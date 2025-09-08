@@ -26,8 +26,8 @@ spec:
             - containerPort: 8080
               protocol: TCP
           volumeMounts:
-          - name: config
-            mountPath: /app/config
+            - name: config
+              mountPath: /app/config
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000

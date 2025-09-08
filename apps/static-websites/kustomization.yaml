@@ -3,6 +3,6 @@ resources:
   - pvc.yaml
   - services.yaml
 configMapGenerator:
-- name: static-websites-caddy-config
-  files:
-  - Caddyfile
+  - name: static-websites-caddy-config
+    files:
+      - Caddyfile

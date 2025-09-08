@@ -26,8 +26,8 @@ spec:
             - containerPort: 6379
               protocol: TCP
           volumeMounts:
-          - name: renovate-cache
-            mountPath: "/data"
+            - name: renovate-cache
+              mountPath: "/data"
           env:
             - name: VALKEY_EXTRA_FLAGS
               value: "--save 60 1"

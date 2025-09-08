@@ -24,8 +24,8 @@ spec:
           ports:
             - containerPort: 6157
           volumeMounts:
-          - name: opengist-data
-            mountPath: "/opengist"
+            - name: opengist-data
+              mountPath: "/opengist"
           envFrom:
             - secretRef:
                 name: opengist-secret

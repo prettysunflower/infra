@@ -3,16 +3,16 @@ kind: CronJob
 metadata:
   name: paieperless
 spec:
-  schedule: '* * * * *'
+  schedule: "* * * * *"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       template:
         spec:
           hostAliases:
-          - ip: "100.68.170.44"
-            hostnames:
-            - "papers.prettysunflower.moe"
+            - ip: "100.68.170.44"
+              hostnames:
+                - "papers.prettysunflower.moe"
           dnsPolicy: "None"
           dnsConfig:
             nameservers:
@@ -25,10 +25,10 @@ spec:
                 - secretRef:
                     name: paieperless-secrets
               env:
-              - name: GPG_CONTENT
-                valueFrom:
-                  secretKeyRef:
-                    name: gpg-key
-                    key: key.gpg
+                - name: GPG_CONTENT
+                  valueFrom:
+                    secretKeyRef:
+                      name: gpg-key
+                      key: key.gpg
 
           restartPolicy: Never

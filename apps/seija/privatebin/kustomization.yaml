@@ -1,5 +1,5 @@
 resources:
-- pvc.yaml
-- deployment.yaml
-- services.yaml
-- secrets.yaml
+  - pvc.yaml
+  - deployment.yaml
+  - services.yaml
+  - secrets.yaml

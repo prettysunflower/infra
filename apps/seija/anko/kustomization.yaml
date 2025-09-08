@@ -1,7 +1,7 @@
 resources:
-- deployment.yaml
-- services.yaml
+  - deployment.yaml
+  - services.yaml
 configMapGenerator:
-- name: anko-config
-  files:
-  - local_settings.py
+  - name: anko-config
+    files:
+      - local_settings.py

@@ -25,18 +25,18 @@ spec:
             - containerPort: 1337
               name: http
           volumeMounts:
-          - name: planka-data
-            subPath: favicons
-            mountPath: "/app/public/favicons/"
-          - name: planka-data
-            subPath: user-avatars
-            mountPath: "/app/public/user-avatars/"
-          - name: planka-data
-            subPath: background-images
-            mountPath: "/app/public/background-images/"
-          - name: planka-data
-            subPath: attachments
-            mountPath: "/app/private/attachments/"
+            - name: planka-data
+              subPath: favicons
+              mountPath: "/app/public/favicons/"
+            - name: planka-data
+              subPath: user-avatars
+              mountPath: "/app/public/user-avatars/"
+            - name: planka-data
+              subPath: background-images
+              mountPath: "/app/public/background-images/"
+            - name: planka-data
+              subPath: attachments
+              mountPath: "/app/private/attachments/"
           envFrom:
             - configMapRef:
                 name: planka-config

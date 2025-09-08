@@ -125,62 +125,62 @@ theme:
 
 document:
   head: |
-     <script>
-        function waitForElm(selector) {
-            return new Promise(resolve => {
-                if (document.querySelector(selector)) {
-                    return resolve(document.querySelector(selector));
-                }
+    <script>
+       function waitForElm(selector) {
+           return new Promise(resolve => {
+               if (document.querySelector(selector)) {
+                   return resolve(document.querySelector(selector));
+               }
 
-                const observer = new MutationObserver(mutations => {
-                    if (document.querySelector(selector)) {
-                        observer.disconnect();
-                        resolve(document.querySelector(selector));
-                    }
-                });
+               const observer = new MutationObserver(mutations => {
+                   if (document.querySelector(selector)) {
+                       observer.disconnect();
+                       resolve(document.querySelector(selector));
+                   }
+               });
 
-                // If you get "parameter 1 is not of type 'Node'" error, see https://stackoverflow.com/a/77855838/492336
-                observer.observe(document.body, {
-                    childList: true,
-                    subtree: true
-                });
-            });
-        }
+               // If you get "parameter 1 is not of type 'Node'" error, see https://stackoverflow.com/a/77855838/492336
+               observer.observe(document.body, {
+                   childList: true,
+                   subtree: true
+               });
+           });
+       }
 
-        console.log("a");
-        async function getData() {
-          const url = "https://currency.sunflower.lgbt/client/latest?apikey=bf783493-9044-45c2-a047-0006056b78a6&base_currency=CAD&currencies=usd,jpy,cny";
-            try {
-              const response = await fetch(url);
-              if (!response.ok) {
-                throw new Error(`Response status: ${response.status}`);
-              }
+       console.log("a");
+       async function getData() {
+         const url = "https://currency.sunflower.lgbt/client/latest?apikey=bf783493-9044-45c2-a047-0006056b78a6&base_currency=CAD&currencies=usd,jpy,cny";
+           try {
+             const response = await fetch(url);
+             if (!response.ok) {
+               throw new Error(`Response status: ${response.status}`);
+             }
 
-              const result = await response.json();
-              waitForElm("#sourcecurrency").then(function() {
-                const sourceCurrencyField = document.getElementById("sourcecurrency");
-                const targetCurrencyField = document.getElementById("targetcurrency");
-                const currencySelectorField = document.getElementById("currency-select");
+             const result = await response.json();
+             waitForElm("#sourcecurrency").then(function() {
+               const sourceCurrencyField = document.getElementById("sourcecurrency");
+               const targetCurrencyField = document.getElementById("targetcurrency");
+               const currencySelectorField = document.getElementById("currency-select");
 
-                function updateTargetCurrency() {
-                  targetCurrencyField.value = Number.parseFloat(sourceCurrencyField.value * (1 / result.rates[currencySelectorField.value])).toFixed(2);
-                }
+               function updateTargetCurrency() {
+                 targetCurrencyField.value = Number.parseFloat(sourceCurrencyField.value * (1 / result.rates[currencySelectorField.value])).toFixed(2);
+               }
 
-                currencySelectorField.addEventListener("change", updateTargetCurrency)
+               currencySelectorField.addEventListener("change", updateTargetCurrency)
 
-                sourceCurrencyField.addEventListener("input", updateTargetCurrency);
-              });
-            } catch (error) {
-              console.error(error.message);
-            }
-        }
-        function ready(fn) {
-          if (document.readyState !== 'loading') {
-            fn();
-          } else {
-            document.addEventListener('DOMContentLoaded', fn);
-          }
-        }
+               sourceCurrencyField.addEventListener("input", updateTargetCurrency);
+             });
+           } catch (error) {
+             console.error(error.message);
+           }
+       }
+       function ready(fn) {
+         if (document.readyState !== 'loading') {
+           fn();
+         } else {
+           document.addEventListener('DOMContentLoaded', fn);
+         }
+       }
 
-        ready(getData);
-      </script>
+       ready(getData);
+     </script>

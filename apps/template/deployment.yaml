@@ -30,13 +30,13 @@ spec:
             - containerPort: 1234
               name: http
           volumeMounts:
-          - name: mountName
-            mountPath: "/"
+            - name: mountName
+              mountPath: "/"
           livenessProbe:
             exec:
               command:
-              - /app/pocket-id
-              - healthcheck
+                - /app/pocket-id
+                - healthcheck
             httpGet:
               path: /healthz
               port: 8080
@@ -46,8 +46,8 @@ spec:
           startupProbe:
             exec:
               command:
-              - /app/pocket-id
-              - healthcheck
+                - /app/pocket-id
+                - healthcheck
             httpGet:
               path: /healthz
               port: 8080
