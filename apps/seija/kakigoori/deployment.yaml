@@ -41,26 +41,16 @@ spec:
             - containerPort: 8002
         - name: anubis
           image: ghcr.io/techarohq/anubis:v1.22.0
+          envFrom:
+          - secretRef:
+              name: anubis-thoth
+          - secretRef:
+              name: anubis-kakigoori-key
           env:
             - name: "BIND"
               value: ":8080"
             - name: "DIFFICULTY"
               value: "4"
-            - name: ED25519_PRIVATE_KEY_HEX
-              valueFrom:
-                secretKeyRef:
-                  name: anubis-kakigoori-key
-                  key: ED25519_PRIVATE_KEY_HEX
-            - name: "THOTH_URL"
-              valueFrom:
-                secretKeyRef:
-                  name: anubis-kakigoori-key
-                  key: THOTH_URL
-            - name: "THOTH_TOKEN"
-              valueFrom:
-                secretKeyRef:
-                  name: anubis-kakigoori-key
-                  key: THOTH_TOKEN
             - name: "METRICS_BIND"
               value: ":9090"
             - name: "SERVE_ROBOTS_TXT"

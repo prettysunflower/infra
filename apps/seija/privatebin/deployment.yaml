@@ -41,16 +41,16 @@ spec:
         - name: anubis
           image: ghcr.io/techarohq/anubis:v1.22.0
           imagePullPolicy: Always
+          envFrom:
+          - secretRef:
+              name: anubis-thoth
+          - secretRef:
+              name: privatebin-anubis-key
           env:
             - name: "BIND"
               value: ":8081"
             - name: "DIFFICULTY"
               value: "3"
-            - name: ED25519_PRIVATE_KEY_HEX
-              valueFrom:
-                secretKeyRef:
-                  name: anubis-key
-                  key: ED25519_PRIVATE_KEY_HEX
             - name: "METRICS_BIND"
               value: ":9090"
             - name: "SERVE_ROBOTS_TXT"

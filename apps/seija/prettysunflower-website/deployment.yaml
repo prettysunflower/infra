@@ -31,16 +31,16 @@ spec:
         - name: anubis
           image: ghcr.io/techarohq/anubis:v1.22.0
           imagePullPolicy: Always
+          envFrom:
+          - secretRef:
+              name: anubis-thoth
+          - secretRef:
+              name: anubis-prettysunflower-website-key
           env:
             - name: "BIND"
               value: ":8080"
             - name: "DIFFICULTY"
               value: "4"
-            - name: ED25519_PRIVATE_KEY_HEX
-              valueFrom:
-                secretKeyRef:
-                  name: anubis-prettysunflower-website-key
-                  key: ED25519_PRIVATE_KEY_HEX
             - name: "METRICS_BIND"
               value: ":9090"
             - name: "SERVE_ROBOTS_TXT"
@@ -51,16 +51,6 @@ spec:
               value: "true"
             - name: "OG_EXPIRY_TIME"
               value: "24h"
-            - name: "THOTH_URL"
-              valueFrom:
-                secretKeyRef:
-                  name: anubis-prettysunflower-website-key
-                  key: THOTH_URL
-            - name: "THOTH_TOKEN"
-              valueFrom:
-                secretKeyRef:
-                  name: anubis-prettysunflower-website-key
-                  key: THOTH_TOKEN
           resources:
             limits:
               cpu: 750m
