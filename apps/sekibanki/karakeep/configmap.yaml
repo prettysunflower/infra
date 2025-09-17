@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: karakeep-config
 data:
-  MEILI_ADDR: http://127.0.0.1:7700
+  MEILI_ADDR: http://karakeep-meilisearch.default.svc.sekibanki.prettysunflower.moe:7700
   MEILI_NO_ANALYTICS: "true"
   BROWSER_WEB_URL: http://127.0.0.1:9222
   DATA_DIR: /data

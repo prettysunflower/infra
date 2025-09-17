@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: karakeep
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app.kubernetes.io/name: karakeep
   ports:
@@ -11,3 +11,16 @@ spec:
       port: 80
       targetPort: http
       name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: karakeep-meilisearch
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: karakeep-meilisearch
+  ports:
+    - protocol: TCP
+      port: 7700
+      targetPort: 7700
