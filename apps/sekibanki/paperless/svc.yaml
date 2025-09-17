@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: paperless
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app.kubernetes.io/name: paperless
   ports:

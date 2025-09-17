@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: httpdebug
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app.kubernetes.io/name: httpdebug
   ports:

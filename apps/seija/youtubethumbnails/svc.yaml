@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: youtubethumbnails
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app.kubernetes.io/name: youtubethumbnails
   ports:

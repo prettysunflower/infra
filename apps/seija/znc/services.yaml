@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: znc
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app.kubernetes.io/name: znc
   ports:
