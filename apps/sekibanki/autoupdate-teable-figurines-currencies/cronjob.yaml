@@ -15,4 +15,11 @@ spec:
               envFrom:
                 - secretRef:
                     name: autoupdate-teable-figurines-currencies-secret
+              resources:
+                limits:
+                  cpu: 500m
+                  memory: 256Mi
+                requests:
+                  cpu: 250m
+                  memory: 128Mi
           restartPolicy: OnFailure
