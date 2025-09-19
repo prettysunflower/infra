@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: gitea-config
+  namespace: gitea
 data:
   GITEA__DEFAULT__RUN_USER: git
   GITEA__DEFAULT__RUN_MODE: prod
@@ -13,7 +14,7 @@ data:
   GITEA__server__STATIC_ROOT_PATH: /usr/share/webapps/gitea
   GITEA__server__APP_DATA_PATH: /var/lib/gitea/data
   GITEA__server__LFS_START_SERVER: "true"
-  GITEA__server__SSH_DOMAIN: git.default.svc.sekibanki.prettysunflower.moe
+  GITEA__server__SSH_DOMAIN: gitea.gitea.svc.sekibanki.prettysunflower.moe
   GITEA__server__DOMAIN: git.prettysunflower.moe
   GITEA__server__HTTP_PORT: "3000"
   GITEA__server__ROOT_URL: https://git.prettysunflower.moe/
@@ -28,6 +29,7 @@ data:
   GITEA__database__SCHEMA: public
   GITEA__database__LOG_SQL: "false"
   GITEA__session__PROVIDER: redis
+  GITEA__session__PROVIDER_CONFIG: redis://valkey.gitea.svc.sekibanki.prettysunflower.moe:6379/2
   GITEA__log__MODE: console
   GITEA__log__LEVEL: info
   GITEA__mailer__ENABLED: "true"
@@ -60,5 +62,4 @@ data:
   GITEA__security__INSTALL_LOCK: "true"
   GITEA__security__PASSWORD_HASH_ALGO: argon2
   GITEA__cache__ADAPTER: redis
-  GITEA__cache__HOST: redis://127.0.0.1:6379/0
-  GITEA__cache_0X2E_last_commit__COMMITS_COUNT: "1"
+  GITEA__cache__HOST: redis://valkey.gitea.svc.sekibanki.prettysunflower.moe:6379/0

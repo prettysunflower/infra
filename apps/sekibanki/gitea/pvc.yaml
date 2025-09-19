@@ -2,7 +2,8 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: gitea-pvc
+  name: gitea-data-pvc
+  namespace: gitea
 spec:
   accessModes:
     - ReadWriteMany
@@ -15,6 +16,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: gitea-config-pvc
+  namespace: gitea
 spec:
   accessModes:
     - ReadWriteMany
@@ -26,7 +28,8 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: gitea-valkey
+  name: valkey
+  namespace: gitea
 spec:
   accessModes:
     - ReadWriteMany
