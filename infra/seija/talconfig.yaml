@@ -20,10 +20,14 @@ patches:
       value:
         forwardKubeDNSToHost: false
     - op: add
-      path: /machine/network
+      path: /machine/kubelet/extraArgs
       value:
-        nameservers:
-          - 100.94.59.38
+        rotate-server-certificates: "true"
+    - op: add
+      path: /cluster/extraManifests
+      value:
+        - ../common/kubelet-serving-cert-approver.yaml
+        - ../common/metrics-server.yaml
     - op: add
       path: /machine/registries/mirrors
       value:
