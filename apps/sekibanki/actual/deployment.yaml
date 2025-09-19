@@ -40,10 +40,10 @@ spec:
               type: RuntimeDefault
           resources:
             limits:
-              cpu: 1
+              cpu: 500m
               memory: 512Mi
             requests:
-              cpu: 250m
+              cpu: 100m
               memory: 128Mi
       dnsPolicy: "ClusterFirst"
       dnsConfig:

@@ -36,10 +36,10 @@ spec:
           resources:
             limits:
               cpu: 2
-              memory: 1Gi
+              memory: 2Gi
             requests:
               cpu: 1
-              memory: 256Mi
+              memory: 512Mi
         - name: chrome
           image: gcr.io/zenika-hub/alpine-chrome:124
           command:
