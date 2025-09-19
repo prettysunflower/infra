@@ -28,6 +28,14 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
+              name: http
           volumeMounts:
             - name: thelounge-data
               mountPath: "/var/opt/thelounge"
+          resources:
+            limits:
+              cpu: 1
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 128Mi

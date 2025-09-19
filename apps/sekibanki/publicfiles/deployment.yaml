@@ -34,6 +34,7 @@ spec:
           ports:
             - containerPort: 80
               protocol: TCP
+              name: http
           volumeMounts:
             - name: publicfiles
               mountPath: "/srv"
@@ -43,3 +44,10 @@ spec:
               mountPath: "/mnt/yuyuko/games"
             - name: config
               mountPath: /etc/caddy
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 250m
+              memory: 128Mi

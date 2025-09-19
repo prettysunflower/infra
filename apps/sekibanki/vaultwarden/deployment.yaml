@@ -23,7 +23,7 @@ spec:
           hostnames:
             - "mail.prettysunflower.moe"
       containers:
-        - name: teable
+        - name: vaultwarden
           image: vaultwarden/server:1.34.3
           ports:
             - containerPort: 80
@@ -46,3 +46,10 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
+          resources:
+            limits:
+              cpu: 1
+              memory: 256Mi
+            requests:
+              cpu: 250m
+              memory: 128Mi

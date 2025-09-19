@@ -28,6 +28,13 @@ spec:
           volumeMounts:
             - name: etherpad-images
               mountPath: /opt/etherpad-lite/src/static/skins/colibris/images
+          resources:
+            limits:
+              cpu: 1
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 128Mi
       dnsPolicy: "None"
       dnsConfig:
         nameservers:
