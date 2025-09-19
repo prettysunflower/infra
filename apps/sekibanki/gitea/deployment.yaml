@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gitea
+  namespace: gitea
   labels:
     app.kubernetes.io/name: gitea
 spec:
@@ -17,13 +18,10 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: gitea-pvc
+            claimName: gitea-data-pvc
         - name: config
           persistentVolumeClaim:
             claimName: gitea-config-pvc
-        - name: valkey
-          persistentVolumeClaim:
-            claimName: gitea-valkey
       dnsPolicy: "None"
       dnsConfig:
         nameservers:
@@ -67,18 +65,126 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             failureThreshold: 10
+          resources:
+            limits:
+              cpu: 2
+              memory: 2Gi
+            requests:
+              cpu: 1
+              memory: 512Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: valkey
+  namespace: gitea
+  labels:
+    app.kubernetes.io/name: valkey
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: valkey
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: valkey
+    spec:
+      volumes:
+        - name: valkey
+          persistentVolumeClaim:
+            claimName: valkey
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - 100.94.59.38
+      containers:
         - image: valkey/valkey:alpine
           name: valkey
           command: ["valkey-server"]
           ports:
             - containerPort: 6379
               protocol: TCP
+              name: valkey
           env:
             - name: VALKEY_EXTRA_FLAGS
               value: "--save 60 1"
           volumeMounts:
             - name: valkey
               mountPath: "/data"
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 250m
+              memory: 64Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea
+  namespace: anubis
+  labels:
+    app.kubernetes.io/name: anubis-gitea
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: anubis-gitea
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: anubis-gitea
+    spec:
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - 100.94.59.38
+      volumes:
+        - name: config
+          configMap:
+            name: gitea-anubis-config
+      containers:
+        - name: anubis
+          image: ghcr.io/techarohq/anubis:v1.22.0
+          envFrom:
+            - secretRef:
+                name: thoth
+            - secretRef:
+                name: gitea
+          volumeMounts:
+            - name: config
+              mountPath: /data/cfg/botPolicy.yaml
+              subPath: anubis-config.yaml
+          env:
+            - name: BIND
+              value: ":8923"
+            - name: TARGET
+              value: "http://gitea.gitea.svc.sekibanki.prettysunflower.moe"
+            - name: WEBMASTER_EMAIL
+              value: "me@prettysunflower.moe"
+          ports:
+            - containerPort: 8923
+              protocol: TCP
+              name: http
+          resources:
+            limits:
+              cpu: 750m
+              memory: 256Mi
+            requests:
+              cpu: 250m
+              memory: 64Mi
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000

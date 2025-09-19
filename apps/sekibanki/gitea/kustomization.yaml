@@ -4,3 +4,9 @@ resources:
   - svc.yaml
   - secrets.yaml
   - configmap.yaml
+  - namespace.yaml
+configMapGenerator:
+  - name: gitea-anubis-config
+    namespace: anubis
+    files:
+      - anubis-config.yaml
