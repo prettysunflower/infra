@@ -10,7 +10,7 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 3000
+      targetPort: http
       name: http
 ---
 apiVersion: v1
@@ -25,4 +25,4 @@ spec:
   ports:
     - protocol: TCP
       port: 6379
-      targetPort: 6379
+      targetPort: valkey
