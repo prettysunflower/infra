@@ -42,6 +42,19 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            periodSeconds: 90
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
       dnsPolicy: "None"
       dnsConfig:
         nameservers:
