@@ -40,6 +40,19 @@ spec:
             requests:
               cpu: 1
               memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            periodSeconds: 90
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
         - name: chrome
           image: gcr.io/zenika-hub/alpine-chrome:124
           command:
@@ -58,6 +71,16 @@ spec:
             requests:
               cpu: 500m
               memory: 128Mi
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
       dnsPolicy: "ClusterFirst"
       dnsConfig:
         nameservers:
