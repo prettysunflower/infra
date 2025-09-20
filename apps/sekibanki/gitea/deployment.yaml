@@ -170,6 +170,8 @@ spec:
           env:
             - name: BIND
               value: ":8923"
+            - name: METRICS_BIND
+              value: ":9090"
             - name: TARGET
               value: "http://gitea.gitea.svc.sekibanki.prettysunflower.moe"
             - name: WEBMASTER_EMAIL
@@ -178,6 +180,9 @@ spec:
             - containerPort: 8923
               protocol: TCP
               name: http
+            - containerPort: 9090
+              protocol: TCP
+              name: metrics
           resources:
             limits:
               cpu: 750m
@@ -195,3 +200,15 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: metrics
+            initialDelaySeconds: 1
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: metrics
+            initialDelaySeconds: 10
+            periodSeconds: 20
