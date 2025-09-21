@@ -20,7 +20,7 @@ spec:
             claimName: tasktrove-pvc
       containers:
         - name: tasktrove
-          image: ghcr.io/dohsimpson/tasktrove:v0.2.0
+          image: ghcr.io/dohsimpson/tasktrove:v0.6.0
           ports:
             - containerPort: 3000
               name: http
