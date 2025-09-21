@@ -4,3 +4,9 @@ resources:
   - secrets.yaml
   - configmap.yaml
   - cronjob.yaml
+  - namespace.yaml
+configMapGenerator:
+  - name: ourfigurecollection-anubis-config
+    namespace: anubis
+    files:
+      - anubis-config.yaml

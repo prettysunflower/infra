@@ -38,6 +38,26 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            periodSeconds: 90
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
       dnsPolicy: "ClusterFirst"
       dnsConfig:
         nameservers:

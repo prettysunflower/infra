@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: ourfigurecollection-config
+  namespace: ourfigurecollection
 data:
   ALLOWED_HOSTS: ourfigurecollection.moe
   DEBUG: "False"

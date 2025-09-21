@@ -39,6 +39,13 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
           livenessProbe:
             exec:
               command:
@@ -47,3 +54,18 @@ spec:
             initialDelaySeconds: 10
             failureThreshold: 3
             periodSeconds: 90
+          readinessProbe:
+            exec:
+              command:
+                - /app/pocket-id
+                - healthcheck
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
+          startupProbe:
+            exec:
+              command:
+                - /app/pocket-id
+                - healthcheck
+            failureThreshold: 30
+            periodSeconds: 10

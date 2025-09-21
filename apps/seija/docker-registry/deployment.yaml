@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: docker-registry
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: docker-registry
@@ -20,10 +20,43 @@ spec:
                 name: docker-registry-config
           resources:
             requests:
-              memory: "128Mi"
-              cpu: "250m"
+              memory: 128Mi
+              cpu: 250m
             limits:
-              memory: "512Mi"
-              cpu: "1"
+              memory: 512Mi
+              cpu: 1
+          livenessProbe:
+            httpGet:
+              path: /debug/health
+              port: debug
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /debug/health
+              port: debug
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /debug/health
+              port: debug
+            failureThreshold: 30
+            periodSeconds: 10
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
           ports:
             - containerPort: 5000
+              name: http
+            - containerPort: 5001
+              name: debug

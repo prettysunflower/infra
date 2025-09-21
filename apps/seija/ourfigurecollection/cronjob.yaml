@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: ourfigurecollection-surugaya-price-tracking
+  namespace: ourfigurecollection
 spec:
   schedule: "0 3 * * *"
   concurrencyPolicy: Forbid

@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: etherpad
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app.kubernetes.io/name: etherpad
@@ -25,14 +25,37 @@ spec:
                 name: etherpad-config
             - secretRef:
                 name: etherpad-secrets
-          volumeMounts:
-            - name: etherpad-images
-              mountPath: /opt/etherpad-lite/src/static/skins/colibris/images
+          resources:
+            limits:
+              cpu: 1
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          securityContext:
+            runAsUser: 5001
+            runAsGroup: 5001
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            periodSeconds: 90
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
       dnsPolicy: "None"
       dnsConfig:
         nameservers:
           - 100.94.59.38
-      volumes:
-        - name: etherpad-images
-          persistentVolumeClaim:
-            claimName: etherpad-images-pvc

@@ -18,6 +18,10 @@ spec:
         - name: paperless-data
           persistentVolumeClaim:
             claimName: paperless-pvc
+        - name: run
+          emptyDir:
+            sizeLimit: 500Mi
+            medium: Memory
       containers:
         - name: paperless
           image: ghcr.io/paperless-ngx/paperless-ngx:2.18.4
@@ -26,6 +30,11 @@ spec:
                 name: paperless-configmap
             - secretRef:
                 name: paperless-secrets
+          env:
+            - name: S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES
+              value: "1"
+            - name: S6_READ_ONLY_ROOT
+              value: "1"
           ports:
             - containerPort: 8000
               name: http
@@ -42,24 +51,44 @@ spec:
             - name: paperless-data
               mountPath: "/usr/src/paperless/consume"
               subPath: "consume"
+            - name: run
+              mountPath: /run
           livenessProbe:
             httpGet:
               path: /
-              port: 8000
+              port: http
             initialDelaySeconds: 10
             failureThreshold: 3
             periodSeconds: 90
           startupProbe:
             httpGet:
-              path: /8000
-              port: 8000
+              path: /
+              port: http
             failureThreshold: 30
             periodSeconds: 10
+          resources:
+            limits:
+              cpu: 1
+              memory: 2Gi
+            requests:
+              cpu: 500m
+              memory: 1024Mi
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
         - image: valkey/valkey:8.1.3-alpine
           name: valkey
           ports:
             - containerPort: 6379
               protocol: TCP
+              name: valkey
           volumeMounts:
             - name: paperless-data
               mountPath: "/data"
@@ -74,6 +103,13 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 250m
+              memory: 128Mi
         - image: docker.io/gotenberg/gotenberg:8.23
           name: gotenberg
           command:
@@ -92,6 +128,13 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
+          resources:
+            limits:
+              cpu: 1
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 128Mi
         - image: ghcr.io/paperless-ngx/tika:latest
           name: tika
           securityContext:
@@ -104,6 +147,13 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
+          resources:
+            limits:
+              cpu: 1
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 256Mi
       dnsPolicy: "ClusterFirst"
       dnsConfig:
         nameservers:

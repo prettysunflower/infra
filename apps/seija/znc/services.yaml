@@ -9,9 +9,9 @@ spec:
   ports:
     - protocol: TCP
       port: 4921
-      targetPort: 4921
+      targetPort: https
       name: https
     - protocol: TCP
       port: 4922
-      targetPort: 4922
+      targetPort: http
       name: http

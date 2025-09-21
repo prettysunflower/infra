@@ -74,3 +74,10 @@ spec:
             timeoutSeconds: 5
             failureThreshold: 3
             successThreshold: 1
+          resources:
+            limits:
+              cpu: 750m
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 256Mi

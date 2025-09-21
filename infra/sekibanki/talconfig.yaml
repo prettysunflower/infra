@@ -20,6 +20,15 @@ patches:
       value:
         forwardKubeDNSToHost: false
     - op: add
+      path: /machine/kubelet/extraArgs
+      value:
+        rotate-server-certificates: "true"
+    - op: add
+      path: /cluster/extraManifests
+      value:
+        - ../common/kubelet-serving-cert-approver.yaml
+        - ../common/metrics-server.yaml
+    - op: add
       path: /machine/registries/mirrors
       value:
         docker.io:

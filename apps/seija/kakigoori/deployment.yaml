@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kakigoori
+  namespace: kakigoori
   labels:
     app.kubernetes.io/name: kakigoori
 spec:
@@ -20,10 +21,16 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8001
+              name: http
           volumeMounts:
             - name: config
               mountPath: /kakigoori/kakigoori/local_settings.py
               subPath: local_settings.py
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -34,40 +41,66 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: 1
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 256Mi
         - name: kakigoori-static
           image: "git.prettysunflower.moe/prettysunflower/kakigoori-static:main"
           imagePullPolicy: Always
           ports:
             - containerPort: 8002
-        - name: anubis
-          image: ghcr.io/techarohq/anubis:v1.22.0
-          envFrom:
-            - secretRef:
-                name: anubis-thoth
-            - secretRef:
-                name: anubis-kakigoori-key
-          env:
-            - name: "BIND"
-              value: ":8080"
-            - name: "DIFFICULTY"
-              value: "4"
-            - name: "METRICS_BIND"
-              value: ":9090"
-            - name: "SERVE_ROBOTS_TXT"
-              value: "true"
-            - name: "TARGET"
-              value: "http://localhost:8001"
-            - name: "OG_PASSTHROUGH"
-              value: "true"
-            - name: "OG_EXPIRY_TIME"
-              value: "24h"
+              name: static
+          livenessProbe:
+            httpGet:
+              path: /css/index.css
+              port: static
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /css/index.css
+              port: static
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /css/index.css
+              port: static
+            failureThreshold: 30
+            periodSeconds: 10
           resources:
             limits:
-              cpu: 750m
+              cpu: 500m
               memory: 256Mi
             requests:
-              cpu: 250m
-              memory: 256Mi
+              cpu: 50m
+              memory: 64Mi
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -76,6 +109,8 @@ spec:
             capabilities:
               drop:
                 - ALL
+              add:
+                - NET_BIND_SERVICE
             seccompProfile:
               type: RuntimeDefault
       volumes:
@@ -86,3 +121,144 @@ spec:
       dnsConfig:
         nameservers:
           - 100.94.59.38
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: valkey
+  namespace: kakigoori
+  labels:
+    app.kubernetes.io/name: valkey
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: valkey
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: valkey
+    spec:
+      volumes:
+        - name: valkey
+          emptyDir:
+            sizeLimit: 256Mi
+            medium: Memory
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - 100.94.59.38
+      containers:
+        - image: valkey/valkey:alpine
+          name: valkey
+          command: ["valkey-server"]
+          ports:
+            - containerPort: 6379
+              protocol: TCP
+              name: valkey
+          env:
+            - name: VALKEY_EXTRA_FLAGS
+              value: "--save 60 1"
+          volumeMounts:
+            - name: valkey
+              mountPath: "/data"
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 250m
+              memory: 64Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kakigoori
+  namespace: anubis
+  labels:
+    app.kubernetes.io/name: anubis-kakigoori
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: anubis-kakigoori
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: anubis-kakigoori
+    spec:
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - 100.94.59.38
+      volumes:
+        - name: config
+          configMap:
+            name: kakigoori-anubis-config
+      containers:
+        - name: anubis
+          image: ghcr.io/techarohq/anubis:v1.22.0
+          envFrom:
+            - secretRef:
+                name: thoth
+            - secretRef:
+                name: kakigoori
+          volumeMounts:
+            - name: config
+              mountPath: /data/cfg/botPolicy.yaml
+              subPath: anubis-config.yaml
+          env:
+            - name: BIND
+              value: ":8923"
+            - name: METRICS_BIND
+              value: ":9090"
+            - name: TARGET
+              value: "http://kakigoori.kakigoori.svc.sekibanki.prettysunflower.moe"
+            - name: WEBMASTER_EMAIL
+              value: "me@prettysunflower.moe"
+          ports:
+            - containerPort: 8923
+              protocol: TCP
+              name: http
+            - containerPort: 9090
+              protocol: TCP
+              name: metrics
+          resources:
+            limits:
+              cpu: 750m
+              memory: 256Mi
+            requests:
+              cpu: 250m
+              memory: 64Mi
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: metrics
+            initialDelaySeconds: 1
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: metrics
+            initialDelaySeconds: 10
+            periodSeconds: 20

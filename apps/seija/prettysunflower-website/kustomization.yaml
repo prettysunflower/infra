@@ -2,3 +2,9 @@ resources:
   - deployment.yaml
   - services.yaml
   - secrets.yaml
+  - namespace.yaml
+configMapGenerator:
+  - name: prettysunflower-website-anubis-config
+    namespace: anubis
+    files:
+      - anubis-config.yaml

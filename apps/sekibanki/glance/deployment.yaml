@@ -25,6 +25,7 @@ spec:
           ports:
             - containerPort: 8080
               protocol: TCP
+              name: http
           volumeMounts:
             - name: config
               mountPath: /app/config
@@ -38,3 +39,10 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 250m
+              memory: 128Mi

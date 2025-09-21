@@ -2,20 +2,62 @@ apiVersion: v1
 kind: Service
 metadata:
   name: kakigoori
+  namespace: kakigoori
 spec:
   type: ClusterIP
   selector:
     app.kubernetes.io/name: kakigoori
   ports:
     - protocol: TCP
-      port: 8001
-      targetPort: 8001
+      port: 80
+      targetPort: http
       name: kakigoori
     - protocol: TCP
-      port: 80
-      targetPort: 8080
-      name: anubis
-    - protocol: TCP
       port: 8002
-      targetPort: 8002
+      targetPort: static
       name: static
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: static
+  namespace: kakigoori
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: kakigoori
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: static
+      name: static
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: valkey
+  namespace: kakigoori
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: valkey
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: valkey
+      name: valkey
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kakigoori
+  namespace: anubis
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: anubis-kakigoori
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http
+      name: http

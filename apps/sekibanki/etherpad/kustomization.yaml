@@ -3,4 +3,3 @@ resources:
   - configmap.yaml
   - secrets.yaml
   - svc.yaml
-  - pvc.yaml

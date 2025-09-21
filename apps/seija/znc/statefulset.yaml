@@ -25,6 +25,9 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 4921
+              name: https
+            - containerPort: 4922
+              name: http
           volumeMounts:
             - name: znc-config
               mountPath: "/znc-data"

@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: youtubethumbnails
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app.kubernetes.io/name: youtubethumbnails
@@ -30,6 +30,13 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
       dnsPolicy: "ClusterFirst"
       dnsConfig:
         nameservers:
