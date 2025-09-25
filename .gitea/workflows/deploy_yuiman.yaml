@@ -1,19 +1,18 @@
-name: Deploy main branch to clusters
+name: Deploy main branch to yuiman
 
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   acls:
     runs-on: ubuntu-latest-prettysunflower
 
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v4
-     
+
       - name: Decrypt secrets
         run: >
           fdfind -I "secrets.sops.yaml" -x sops -d --encrypted-regex '^(data|stringData)$' --output {//}/secrets.yaml {} &&
@@ -21,27 +20,15 @@ jobs:
           fdfind -I "key.sops.gpg" -x sops -d --output {//}/key.gpg {}
         env:
           SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
- 
-      - name: Kubernetes context - Seija
+
+      - name: Kubernetes context - Yuiman
         uses: Azure/k8s-set-context@v4
         with:
           method: kubeconfig
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
           namespace: default
-          context: admin@seija
-   
-      - name: Deploy Seija
-        working-directory: ./apps/seija
-        run: kubectl apply -k .
+          context: yuiman
 
-      - name: Kubernetes context - Sekibanki
-        uses: Azure/k8s-set-context@v4
-        with:
-          method: kubeconfig
-          kubeconfig: ${{ secrets.KUBE_CONFIG }}
-          namespace: default
-          context: admin@sekibanki
-
-      - name: Deploy Sekibanki
-        working-directory: ./apps/sekibanki
+      - name: Deploy Yuiman
+        working-directory: ./apps/yuiman
         run: kubectl apply -k .

@@ -1,14 +1,14 @@
 ---
-clusterName: seija
+clusterName: yuiman
 talosVersion: v1.11.1
 kubernetesVersion: v1.34.0
-endpoint: https://10.11.0.2:6443
-domain: seija.prettysunflower.moe
+endpoint: https://10.0.12.10:6443
+domain: yuiman.prettysunflower.moe
 allowSchedulingOnControlPlanes: true
 clusterPodNets:
-  - 10.215.0.0/16
+  - 10.219.0.0/16
 clusterSvcNets:
-  - 10.216.0.0/16
+  - 10.220.0.0/16
 patches:
   - |-
     - op: add
@@ -26,8 +26,8 @@ patches:
     - op: add
       path: /cluster/extraManifests
       value:
-        - ../common/kubelet-serving-cert-approver.yaml
-        - ../common/metrics-server.yaml
+        - https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml
+        - https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
     - op: add
       path: /machine/registries/mirrors
       value:
@@ -45,17 +45,17 @@ patches:
             - https://registry.docker.sunflower.lgbt
 nodes:
   - hostname: fulgora
-    ipAddress: 10.11.0.2
+    ipAddress: 10.0.12.10
     controlPlane: true
     arch: amd64
     installDisk: /dev/sda
   - hostname: gleba
-    ipAddress: 10.11.0.3
+    ipAddress: 10.0.12.11
     controlPlane: true
     arch: amd64
     installDisk: /dev/sda
   - hostname: vulcanus
-    ipAddress: 10.11.0.4
+    ipAddress: 10.0.12.12
     controlPlane: true
     arch: amd64
     installDisk: /dev/sda

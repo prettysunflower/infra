@@ -1,11 +1,12 @@
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: znc-pvc
+  name: privatebin-data-pvc
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 5Gi
-  storageClassName: hcloud-volumes
+  storageClassName: nfs-csi

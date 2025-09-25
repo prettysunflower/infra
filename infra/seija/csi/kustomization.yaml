@@ -1,3 +1,0 @@
-resources:
-  - secrets.yaml
-  - hcloud-csi.yaml

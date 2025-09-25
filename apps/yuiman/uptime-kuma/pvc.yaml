@@ -5,7 +5,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: hcloud-volumes
+  storageClassName: nfs-csi
   resources:
     requests:
       storage: 3Gi

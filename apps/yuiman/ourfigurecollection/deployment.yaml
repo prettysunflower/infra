@@ -224,7 +224,7 @@ spec:
             - name: METRICS_BIND
               value: ":9090"
             - name: TARGET
-              value: "http://ourfigurecollection.ourfigurecollection.svc.seija.prettysunflower.moe"
+              value: "http://ourfigurecollection.ourfigurecollection.svc.yuiman.prettysunflower.moe"
             - name: WEBMASTER_EMAIL
               value: "me@prettysunflower.moe"
           ports:
