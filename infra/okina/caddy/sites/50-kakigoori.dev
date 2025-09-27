@@ -8,7 +8,9 @@ kakigoori.dev, www.kakigoori.dev {
 	}
 
 	handle /.within.website/* {
-		reverse_proxy kakigoori.anubis.svc.yuiman.prettysunflower.moe
+		reverse_proxy kakigoori.anubis.svc.yuiman.prettysunflower.moe {
+			header_up X-Real-Ip {remote_host}
+		}
 	}
 
 	@image_path {

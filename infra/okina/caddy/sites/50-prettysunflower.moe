@@ -18,8 +18,8 @@ prettysunflower.moe, www.prettysunflower.moe {
 		reverse_proxy static.prettysunflower-website.svc.yuiman.prettysunflower.moe
 	}
 
-	reverse_proxy prettysunflower-website.anubis.svc.yuiman.prettysunflower.moe {
-		header_up X-Real-Ip {remote_host}
+	handle {
+		reverse_proxy prettysunflower-website.anubis.svc.yuiman.prettysunflower.moe
 	}
 }
 
