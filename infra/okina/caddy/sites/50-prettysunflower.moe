@@ -10,6 +10,10 @@ prettysunflower.moe, www.prettysunflower.moe {
 		redir https://fedi.prettysunflower.moe{uri} permanent
 	}
 
+	handle /.within.website/* {
+		reverse_proxy prettysunflower-website.anubis.svc.yuiman.prettysunflower.moe
+	}
+
 	handle_path /static/* {
 		reverse_proxy static.prettysunflower-website.svc.yuiman.prettysunflower.moe
 	}
@@ -36,6 +40,10 @@ git.prettysunflower.moe {
 
 	import tailscale {
 		reverse_proxy gitea.gitea.svc.sekibanki.prettysunflower.moe
+	}
+
+	handle /.within.website/* {
+		reverse_proxy gitea.anubis.svc.sekibanki.prettysunflower.moe
 	}
 
 	handle {
