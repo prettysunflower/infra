@@ -1,7 +1,7 @@
 ---
 clusterName: yuiman
-talosVersion: v1.11.1
-kubernetesVersion: v1.34.0
+talosVersion: v1.11.2
+kubernetesVersion: v1.34.1
 endpoint: https://10.0.12.10:6443
 domain: yuiman.prettysunflower.moe
 allowSchedulingOnControlPlanes: true
