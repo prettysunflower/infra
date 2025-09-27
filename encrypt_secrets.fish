@@ -6,7 +6,6 @@ function encrypt_file -a filename outfile_filename
 
 	if test "$file_md5" != "$old_file_md5"
 		echo "Re-encrypting file $filename"
-		echo "sops -e --output $outfile_filename $filename"
 		sops -e --output $outfile_filename $filename
 		set old_json (cat .encryption_cache.json)
 		echo $old_json | jq (string join '' ".\"" $filename "\" = \"" (md5sum $filename | awk '{ print $1 }') "\"")  > .encryption_cache.json
