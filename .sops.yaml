@@ -1,3 +1,9 @@
 creation_rules:
-    - age: >-
-        age1r0tjhg6uexyj0p7fp0ftv5h7r7e3ptzkk2797pznfvrvsm576u0s37yyaw
+  - path_regex: .*/okina/.*
+    age: age1gm0fkr6aza89cuq85p735juvy7va22wfz7d2ds9ws7ru7t84fqwqw3ez6j
+
+  - path_regex: .*secrets\.yaml$
+    encrypted_regex: "^(data|stringData)$"
+    age: age1r0tjhg6uexyj0p7fp0ftv5h7r7e3ptzkk2797pznfvrvsm576u0s37yyaw
+
+  - age: age1r0tjhg6uexyj0p7fp0ftv5h7r7e3ptzkk2797pznfvrvsm576u0s37yyaw

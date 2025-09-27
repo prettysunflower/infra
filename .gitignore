@@ -2,3 +2,4 @@ secrets.yaml
 !apps/template/secrets.yaml
 infra/*/tailscale.patch.yaml
 .DS_Store
+.encryption_cache.json
