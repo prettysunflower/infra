@@ -27,7 +27,7 @@ jobs:
           method: kubeconfig
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
           namespace: default
-          context: admin@sekibanki
+          context: sekibanki
 
       - name: Deploy Sekibanki
         working-directory: ./apps/sekibanki
