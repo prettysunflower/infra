@@ -10,6 +10,7 @@ function encrypt_file -a filename outfile_filename
 		sops -e --output $outfile_filename $filename
 		set old_json (cat .encryption_cache.json)
 		echo $old_json | jq (string join '' ".\"" $filename "\" = \"" (md5sum $filename | awk '{ print $1 }') "\"")  > .encryption_cache.json
+		git add $outfile_filename
 	end
 end
 
