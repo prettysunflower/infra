@@ -1,0 +1,7 @@
+ourfigurecollection.moe {
+	handle_path /static/* {
+		reverse_proxy static.ourfigurecollection.svc.yuiman.prettysunflower.moe
+	}
+
+	reverse_proxy ourfigurecollection.anubis.svc.yuiman.prettysunflower.moe
+}

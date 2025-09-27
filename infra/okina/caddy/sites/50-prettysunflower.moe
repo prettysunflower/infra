@@ -1,0 +1,184 @@
+prettysunflower.moe, www.prettysunflower.moe {
+	import porkbun
+
+	@fedi_path {
+		path /.well-known/host-meta
+		path /.well-known/nodeinfo
+		path /.well-known/webfinger
+	}
+	handle @fedi_path {
+		redir https://fedi.prettysunflower.moe{uri} permanent
+	}
+
+	handle_path /static/* {
+		reverse_proxy static.prettysunflower-website.svc.yuiman.prettysunflower.moe
+	}
+
+	reverse_proxy prettysunflower-website.anubis.svc.yuiman.prettysunflower.moe {
+		header_up X-Real-Ip {remote_host}
+	}
+}
+
+actual.prettysunflower.moe {
+	import porkbun
+
+	import tailscale {
+		reverse_proxy actual.default.svc.sekibanki.prettysunflower.moe
+	}
+
+	handle {
+		abort
+	}
+}
+
+git.prettysunflower.moe {
+	import porkbun
+
+	import tailscale {
+		reverse_proxy gitea.gitea.svc.sekibanki.prettysunflower.moe
+	}
+
+	handle {
+		reverse_proxy gitea.anubis.svc.sekibanki.prettysunflower.moe
+	}
+}
+
+data.prettysunflower.moe {
+	import porkbun
+
+	reverse_proxy teable.teable.svc.sekibanki.prettysunflower.moe
+}
+
+dns.prettysunflower.moe {
+	import porkbun
+
+	import tailscale {
+		reverse_proxy 100.94.59.38:5380
+	}
+
+	handle {
+		abort
+	}
+}
+
+passwords.prettysunflower.moe {
+	import porkbun
+
+	import tailscale {
+		reverse_proxy vaultwarden.default.svc.sekibanki.prettysunflower.moe
+	}
+
+	handle {
+		abort
+	}
+}
+
+caldav.prettysunflower.moe {
+	import porkbun
+
+	import tailscale {
+		reverse_proxy caldav.default.svc.sekibanki.prettysunflower.moe
+	}
+
+	handle {
+		abort
+	}
+}
+
+kanban.prettysunflower.moe {
+	import porkbun
+
+	import tailscale {
+		reverse_proxy planka.default.svc.sekibanki.prettysunflower.moe
+	}
+
+	handle {
+		abort
+	}
+}
+
+irc.prettysunflower.moe {
+	import porkbun
+
+	import tailscale {
+		reverse_proxy thelounge.default.svc.sekibanki.prettysunflower.moe
+	}
+
+	handle {
+		abort
+	}
+}
+
+gist.prettysunflower.moe {
+	import porkbun
+
+	reverse_proxy opengist.default.svc.sekibanki.prettysunflower.moe
+}
+
+uptime.prettysunflower.moe {
+	import porkbun
+
+	import tailscale {
+		reverse_proxy uptime-kuma.default.svc.yuiman.prettysunflower.moe
+	}
+
+	handle {
+		abort
+	}
+}
+
+qr.prettysunflower.moe {
+	import porkbun
+
+	reverse_proxy miniqr.default.svc.yuiman.prettysunflower.moe
+}
+
+files.prettysunflower.moe {
+	import porkbun
+
+	reverse_proxy publicfiles.default.svc.sekibanki.prettysunflower.moe
+}
+
+invidious.prettysunflower.moe {
+	import porkbun
+
+	reverse_proxy 100.105.17.105:4039
+}
+
+karakeep.prettysunflower.moe {
+	import porkbun
+
+	reverse_proxy karakeep.default.svc.sekibanki.prettysunflower.moe
+}
+
+papers.prettysunflower.moe {
+	import porkbun
+
+	import tailscale {
+		reverse_proxy paperless.default.svc.sekibanki.prettysunflower.moe
+	}
+
+	handle {
+		abort
+	}
+}
+
+youtubethumbnails.prettysunflower.moe {
+	import porkbun
+
+	reverse_proxy youtubethumbnails.default.svc.yuiman.prettysunflower.moe
+}
+
+fedi.prettysunflower.moe {
+	import porkbun
+
+	reverse_proxy gotosocial.default.svc.sekibanki.prettysunflower.moe
+}
+
+wiki.prettysunflower.moe {
+	import porkbun
+
+	reverse_proxy outline.default.svc.sekibanki.prettysunflower.moe {
+		header_up Host "wiki.prettysunflower.moe"
+	}
+}

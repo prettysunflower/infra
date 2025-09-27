@@ -1,0 +1,9 @@
+llm.ecdfeaa2.moe {
+	import porkbun
+
+	handle_path /api/* {
+		reverse_proxy 100.76.0.86:3000
+	}
+
+	reverse_proxy 100.76.0.86:3000
+}

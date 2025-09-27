@@ -1,0 +1,63 @@
+sunflower.lgbt, www.sunflower.lgbt, http://http.sunflower.lgbt {
+	import porkbun
+
+	handle_path /static/* {
+		reverse_proxy static.prettysunflower-website.svc.yuiman.prettysunflower.moe
+	}
+
+	handle {
+		reverse_proxy prettysunflower-website.anubis.svc.yuiman.prettysunflower.moe {
+			header_up X-Real-Ip {remote_host}
+		}
+	}
+}
+
+currency.sunflower.lgbt {
+	import porkbun
+	reverse_proxy https://api.ratesexchange.eu {
+		header_up -Host
+		header_down +Access-Control-Allow-Origin "*"
+	}
+}
+
+photos.sunflower.lgbt {
+	import porkbun
+
+	reverse_proxy 100.105.17.105:2283
+}
+
+git.sunflower.lgbt {
+	import porkbun
+
+	import tailscale {
+		reverse_proxy gitea.gitea.svc.sekibanki.prettysunflower.moe
+	}
+
+	handle {
+		reverse_proxy gitea.anubis.svc.sekibanki.prettysunflower.moe
+	}
+}
+
+pad.sunflower.lgbt {
+	import porkbun
+
+	reverse_proxy etherpad.default.svc.sekibanki.prettysunflower.moe
+}
+
+data.sunflower.lgbt {
+	import porkbun
+
+	reverse_proxy teable.teable.svc.sekibanki.prettysunflower.moe
+}
+
+registry.docker.sunflower.lgbt {
+	import porkbun
+
+	import tailscale {
+		reverse_proxy docker-registry.default.svc.yuiman.prettysunflower.moe
+	}
+
+	handle {
+		abort
+	}
+}

@@ -1,0 +1,44 @@
+kakigoori.dev, www.kakigoori.dev {
+	import porkbun
+
+	encode zstd gzip
+
+	handle_path /static/* {
+		reverse_proxy static.kakigoori.svc.yuiman.prettysunflower.moe
+	}
+
+	handle /.within.website/* {
+		reverse_proxy kakigoori.anubis.svc.yuiman.prettysunflower.moe
+	}
+
+	@image_path {
+		path_regexp /[\w\d]{8}-[\w\d]{4}-[\w\d]{4}-[\w\d]{4}-[\w\d]{12}/.*$
+	}
+
+	@knownAIBots header_regexp User-Agent AI2Bot|Ai2Bot-Dolma|Amazonbot|anthropic-ai|Applebot|Applebot-Extended|Brightbot 1.0|Bytespider|CCBot|ChatGPT-User|Claude-Web|ClaudeBot|cohere-ai|cohere-training-data-crawler|Crawlspace|Diffbot|DuckAssistBot|FacebookBot|FriendlyCrawler|Google-Extended|GoogleOther|GoogleOther-Image|GoogleOther-Video|GPTBot|iaskspider/2.0|ICC-Crawler|ImagesiftBot|img2dataset|ISSCyberRiskCrawler|Kangaroo Bot|Meta-ExternalAgent|Meta-ExternalFetcher|OAI-SearchBot|omgili|omgilibot|PanguBot|Perplexity-User|PerplexityBot|PetalBot|Scrapy|SemrushBot-OCOB|SemrushBot-SWA|Sidetrade indexer bot|Timpibot|VelenPublicWebCrawler|Webzio-Extended|YouBot
+	@htmlAccept header_regexp Accept text/html
+	@imageAccept header_regexp Accept image/(png|webp|avif)
+
+	handle @image_path {
+		reverse_proxy @knownAIBots kakigoori.anubis.svc.yuiman.prettysunflower.moe {
+			header_up X-Real-Ip {remote_host}
+		}
+		reverse_proxy @htmlAccept kakigoori.anubis.svc.yuiman.prettysunflower.moe {
+			header_up X-Real-Ip {remote_host}
+		}
+		reverse_proxy @imageAccept kakigoori.kakigoori.svc.yuiman.prettysunflower.moe
+		reverse_proxy kakigoori.anubis.svc.yuiman.prettysunflower.moe {
+			header_up X-Real-Ip {remote_host}
+		}
+	}
+
+	handle {
+		reverse_proxy kakigoori.kakigoori.svc.yuiman.prettysunflower.moe {
+			header_up X-Real-Ip {remote_host}
+		}
+	}
+}
+
+status.kakigoori.dev {
+	import porkbun
+}

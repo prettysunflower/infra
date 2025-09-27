@@ -1,0 +1,5 @@
+anko.dev, www.anko.dev {
+	import porkbun
+
+	reverse_proxy anko.default.svc.yuiman.prettysunflower.moe
+}
