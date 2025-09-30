@@ -11,6 +11,9 @@ FROM alpine:3.22
 EXPOSE 80/tcp
 EXPOSE 443/tcp
 EXPOSE 443/udp
+EXPOSE 25/tcp
+EXPOSE 1688/tcp
+EXPOSE 4922/tcp
 
 COPY --from=caddy-builder /usr/bin/caddy /usr/bin/caddy
 

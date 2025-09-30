@@ -11,7 +11,9 @@ prettysunflower.moe, www.prettysunflower.moe {
 	}
 
 	handle /.within.website/* {
-		reverse_proxy prettysunflower-website.anubis.svc.yuiman.prettysunflower.moe
+		reverse_proxy prettysunflower-website.anubis.svc.yuiman.prettysunflower.moe {
+			header_up X-Real-Ip {remote_host}
+		}
 	}
 
 	handle_path /static/* {
@@ -19,7 +21,9 @@ prettysunflower.moe, www.prettysunflower.moe {
 	}
 
 	handle {
-		reverse_proxy prettysunflower-website.anubis.svc.yuiman.prettysunflower.moe
+		reverse_proxy prettysunflower-website.anubis.svc.yuiman.prettysunflower.moe {
+			header_up X-Real-Ip {remote_host}
+		}
 	}
 }
 
@@ -43,11 +47,15 @@ git.prettysunflower.moe {
 	}
 
 	handle /.within.website/* {
-		reverse_proxy gitea.anubis.svc.sekibanki.prettysunflower.moe
+		reverse_proxy gitea.anubis.svc.sekibanki.prettysunflower.moe {
+			header_up X-Real-Ip {remote_host}
+		}
 	}
 
 	handle {
-		reverse_proxy gitea.anubis.svc.sekibanki.prettysunflower.moe
+		reverse_proxy gitea.anubis.svc.sekibanki.prettysunflower.moe {
+			header_up X-Real-Ip {remote_host}
+		}
 	}
 }
 
