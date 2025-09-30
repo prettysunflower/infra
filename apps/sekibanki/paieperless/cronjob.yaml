@@ -10,7 +10,7 @@ spec:
       template:
         spec:
           hostAliases:
-            - ip: "100.68.170.44"
+            - ip: "100.108.98.123"
               hostnames:
                 - "papers.prettysunflower.moe"
           dnsPolicy: "None"
