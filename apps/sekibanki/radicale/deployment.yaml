@@ -30,7 +30,7 @@ spec:
             medium: Memory
       containers:
         - name: radicale
-          image: tomsquest/docker-radicale:3.5.6.0
+          image: tomsquest/docker-radicale:3.5.7.0
           ports:
             - containerPort: 5232
               name: http
