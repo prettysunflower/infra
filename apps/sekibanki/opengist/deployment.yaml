@@ -20,7 +20,7 @@ spec:
             claimName: opengist-data-pvc
       containers:
         - name: opengist
-          image: ghcr.io/thomiceli/opengist:1.10
+          image: ghcr.io/thomiceli/opengist:1.11
           command:
             - /app/opengist/opengist
             - --config
