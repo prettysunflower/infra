@@ -1,11 +1,7 @@
 {
-  "extends": [
-    "config:recommended", ":prHourlyLimitNone"
-  ],
+  "extends": ["config:recommended", ":prHourlyLimitNone"],
   "kubernetes": {
-    "managerFilePatterns": [
-      "/\\.yaml$/"
-    ]
+    "managerFilePatterns": ["/\\.yaml$/"]
   },
   "packageRules": [
     {
@@ -13,5 +9,8 @@
       "automerge": true,
       "ignoreTests": true
     }
-  ]
+  ],
+  "registryAliases": {
+    "ghcr.io": "registry.docker.sunflower.lgbt"
+  }
 }
