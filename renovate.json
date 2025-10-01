@@ -9,8 +9,5 @@
       "automerge": true,
       "ignoreTests": true
     }
-  ],
-  "registryAliases": {
-    "ghcr.io": "registry.docker.sunflower.lgbt"
-  }
+  ]
 }
