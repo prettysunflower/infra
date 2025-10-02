@@ -50,6 +50,20 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: rabbitmq
+  namespace: kakigoori
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: rabbitmq
+  ports:
+    - protocol: TCP
+      port: 5672
+      targetPort: rabbitmq
+---
+apiVersion: v1
+kind: Service
+metadata:
   name: kakigoori
   namespace: anubis
 spec:

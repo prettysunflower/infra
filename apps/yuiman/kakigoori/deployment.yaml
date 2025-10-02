@@ -125,6 +125,52 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: rabbitmq
+  namespace: kakigoori
+  labels:
+    app.kubernetes.io/name: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: rabbitmq
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: rabbitmq
+    spec:
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - 100.94.59.38
+      containers:
+        - image: rabbitmq:4.1.4
+          name: rabbitmq
+          ports:
+            - containerPort: 5672
+              protocol: TCP
+              name: rabbitmq
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 250m
+              memory: 64Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
   name: valkey
   namespace: kakigoori
   labels:
@@ -179,6 +225,49 @@ spec:
             requests:
               cpu: 250m
               memory: 64Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: avif-worker
+  namespace: kakigoori
+  labels:
+    app.kubernetes.io/name: avif-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: avif-worker
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: avif-worker
+    spec:
+      containers:
+        - image: git.prettysunflower.moe/prettysunflower/kakigoori-avif-worker:main
+          name: kakigoori-avif-worker
+          env:
+            - name: RABBITMQ_HOST
+              value: rabbitmq.kakigoori.svc.yuiman.prettysunflower.moe
+            - name: RABBITMQ_PORT
+              value: "5672"
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 250m
+              memory: 128Mi
 ---
 apiVersion: apps/v1
 kind: Deployment
