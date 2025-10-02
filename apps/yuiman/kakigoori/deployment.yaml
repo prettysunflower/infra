@@ -31,6 +31,10 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
+            - name: RABBITMQ_HOST
+              value: rabbitmq.kakigoori.svc.yuiman.prettysunflower.moe
+            - name: RABBITMQ_PORT
+              value: "5672"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -229,6 +233,64 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: worker-results-processing
+  namespace: kakigoori
+  labels:
+    app.kubernetes.io/name: worker-results-processing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: worker-results-processing
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: worker-results-processing
+    spec:
+      volumes:
+        - name: config
+          configMap:
+            name: kakigoori-config
+      containers:
+        - name: kakigoori
+          image: "git.prettysunflower.moe/prettysunflower/kakigoori:main"
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: config
+              mountPath: /kakigoori/kakigoori/local_settings.py
+              subPath: local_settings.py
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: RABBITMQ_HOST
+              value: rabbitmq.kakigoori.svc.yuiman.prettysunflower.moe
+            - name: RABBITMQ_PORT
+              value: "5672"
+          command: ["uv"]
+          args: ["run", "manage.py", "worker_results_processing"]
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 250m
+              memory: 64Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
   name: avif-worker
   namespace: kakigoori
   labels:
@@ -246,6 +308,7 @@ spec:
       containers:
         - image: git.prettysunflower.moe/prettysunflower/kakigoori-avif-worker:main
           name: kakigoori-avif-worker
+          imagePullPolicy: Always
           env:
             - name: RABBITMQ_HOST
               value: rabbitmq.kakigoori.svc.yuiman.prettysunflower.moe
@@ -264,10 +327,9 @@ spec:
           resources:
             limits:
               cpu: 500m
-              memory: 256Mi
             requests:
               cpu: 250m
-              memory: 128Mi
+              memory: 512Mi
 ---
 apiVersion: apps/v1
 kind: Deployment
