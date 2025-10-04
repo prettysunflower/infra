@@ -4,10 +4,6 @@ resources:
   - secrets.yaml
   - namespace.yaml
 configMapGenerator:
-  - name: kakigoori-config
-    namespace: kakigoori
-    files:
-      - local_settings.py
   - name: kakigoori-anubis-config
     namespace: anubis
     files:

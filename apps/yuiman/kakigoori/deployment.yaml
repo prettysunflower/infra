@@ -22,19 +22,14 @@ spec:
           ports:
             - containerPort: 8001
               name: http
-          volumeMounts:
-            - name: config
-              mountPath: /kakigoori/kakigoori/local_settings.py
-              subPath: local_settings.py
+          envFrom:
+            - secretRef:
+                name: kakigoori-config
           env:
-            - name: POD_IP
+            - name: KUBERNETES_POD_ID
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
-            - name: RABBITMQ_HOST
-              value: rabbitmq.kakigoori.svc.yuiman.prettysunflower.moe
-            - name: RABBITMQ_PORT
-              value: "5672"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -247,27 +242,13 @@ spec:
       labels:
         app.kubernetes.io/name: worker-results-processing
     spec:
-      volumes:
-        - name: config
-          configMap:
-            name: kakigoori-config
       containers:
         - name: kakigoori
           image: "git.prettysunflower.moe/prettysunflower/kakigoori:main"
           imagePullPolicy: Always
-          volumeMounts:
-            - name: config
-              mountPath: /kakigoori/kakigoori/local_settings.py
-              subPath: local_settings.py
-          env:
-            - name: POD_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.podIP
-            - name: RABBITMQ_HOST
-              value: rabbitmq.kakigoori.svc.yuiman.prettysunflower.moe
-            - name: RABBITMQ_PORT
-              value: "5672"
+          envFrom:
+            - secretRef:
+                name: kakigoori-config
           command: ["uv"]
           args: ["run", "manage.py", "worker_results_processing"]
           securityContext:
@@ -283,7 +264,7 @@ spec:
           resources:
             limits:
               cpu: 500m
-              memory: 256Mi
+              memory: 512Mi
             requests:
               cpu: 250m
               memory: 64Mi
@@ -291,29 +272,30 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: avif-worker
+  name: avif-image-worker
   namespace: kakigoori
   labels:
-    app.kubernetes.io/name: avif-worker
+    app.kubernetes.io/name: avif-image-worker
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app.kubernetes.io/name: avif-worker
+      app.kubernetes.io/name: avif-image-worker
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: avif-worker
+        app.kubernetes.io/name: avif-image-worker
     spec:
       containers:
-        - image: git.prettysunflower.moe/prettysunflower/kakigoori-avif-worker:main
-          name: kakigoori-avif-worker
+        - image: git.prettysunflower.moe/prettysunflower/kakigoori-worker:main
+          name: kakigoori-worker
           imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: kakigoori-config
           env:
-            - name: RABBITMQ_HOST
-              value: rabbitmq.kakigoori.svc.yuiman.prettysunflower.moe
-            - name: RABBITMQ_PORT
-              value: "5672"
+            - name: WORKER_FILE_TYPES
+              value: "avif"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -326,10 +308,55 @@ spec:
               type: RuntimeDefault
           resources:
             limits:
-              cpu: 500m
+              cpu: 2
             requests:
               cpu: 250m
               memory: 512Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webp-image-worker
+  namespace: kakigoori
+  labels:
+    app.kubernetes.io/name: webp-image-worker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: webp-image-worker
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: webp-image-worker
+    spec:
+      containers:
+        - image: git.prettysunflower.moe/prettysunflower/kakigoori-worker:main
+          name: kakigoori-worker
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: kakigoori-config
+          env:
+            - name: WORKER_FILE_TYPES
+              value: "webp"
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            limits:
+              cpu: 2
+            requests:
+              cpu: 250m
+              memory: 512Mi
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -339,7 +366,7 @@ metadata:
   labels:
     app.kubernetes.io/name: anubis-kakigoori
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: anubis-kakigoori
