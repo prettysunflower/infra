@@ -20,7 +20,7 @@ spec:
             claimName: suwayomi-pvc
       containers:
         - name: suwayomi
-          image: ghcr.io/suwayomi/suwayomi-server:v2.1.1947
+          image: ghcr.io/suwayomi/suwayomi-server:v2.1.1959
           ports:
             - containerPort: 4567
               name: http
