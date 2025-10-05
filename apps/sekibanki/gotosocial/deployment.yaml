@@ -23,7 +23,7 @@ spec:
         nameservers:
           - 100.94.59.38
       containers:
-        - image: docker.io/superseriousbusiness/gotosocial:0.20.0-rc1
+        - image: docker.io/superseriousbusiness/gotosocial:0.20.0-rc2
           name: gotosocial
           ports:
             - containerPort: 8080
