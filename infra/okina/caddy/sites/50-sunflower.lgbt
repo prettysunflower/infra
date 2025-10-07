@@ -61,3 +61,11 @@ registry.docker.sunflower.lgbt {
 		abort
 	}
 }
+
+schedule.sunflower.lgbt {
+	import porkbun
+
+	handle {
+		reverse_proxy rallly.default.svc.yuiman.prettysunflower.moe
+	}
+}
