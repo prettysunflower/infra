@@ -1,0 +1,60 @@
+name: Deploy main branch to k8s clusters
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+
+jobs:
+  sekibanki:
+    runs-on: ubuntu-latest-prettysunflower
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Decrypt secrets
+        run: >
+          fdfind -I "secrets.sops.yaml" -x sops -d --encrypted-regex '^(data|stringData)$' --output {//}/secrets.yaml {} &&
+          fdfind -I "local_settings.sops.py" -x sops -d --output {//}/local_settings.py {} &&
+          fdfind -I "key.sops.gpg" -x sops -d --output {//}/key.gpg {}
+        env:
+          SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
+
+      - name: Kubernetes context - Sekibanki
+        uses: Azure/k8s-set-context@v4
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+          namespace: default
+          context: sekibanki
+
+      - name: Deploy sekibanki
+        working-directory: ./apps/sekibanki
+        run: kubectl apply -k .
+  yuiman:
+    runs-on: ubuntu-latest-prettysunflower
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Decrypt secrets
+        run: >
+          fdfind -I "secrets.sops.yaml" -x sops -d --encrypted-regex '^(data|stringData)$' --output {//}/secrets.yaml {} &&
+          fdfind -I "local_settings.sops.py" -x sops -d --output {//}/local_settings.py {} &&
+          fdfind -I "key.sops.gpg" -x sops -d --output {//}/key.gpg {}
+        env:
+          SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
+
+      - name: Kubernetes context - Yuiman
+        uses: Azure/k8s-set-context@v4
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+          namespace: default
+          context: yuiman
+
+      - name: Deploy yuiman
+        working-directory: ./apps/yuiman
+        run: kubectl apply -k .
