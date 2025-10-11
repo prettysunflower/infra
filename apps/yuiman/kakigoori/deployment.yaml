@@ -242,7 +242,7 @@ spec:
     spec:
       containers:
         - name: kakigoori
-          image: "git.prettysunflower.moe/prettysunflower/kakigoori:2.0.0"
+          image: git.prettysunflower.moe/prettysunflower/kakigoori:main@sha256:55083457154550690251007ac99e525432ce58ca793e66c2d87b22138508725e
           envFrom:
             - secretRef:
                 name: kakigoori-config
@@ -284,7 +284,7 @@ spec:
         app.kubernetes.io/name: avif-image-worker
     spec:
       containers:
-        - image: git.prettysunflower.moe/prettysunflower/kakigoori-worker:2.0.0
+        - image: git.prettysunflower.moe/prettysunflower/kakigoori-worker@sha256:19088d99351c6d5be294fe2c6fcfeef6a1e09e556f700cbf948d9e7986022c57
           name: kakigoori-worker
           envFrom:
             - secretRef:
@@ -327,7 +327,7 @@ spec:
         app.kubernetes.io/name: webp-image-worker
     spec:
       containers:
-        - image: git.prettysunflower.moe/prettysunflower/kakigoori-worker:2.0.0
+        - image: git.prettysunflower.moe/prettysunflower/kakigoori-worker@sha256:19088d99351c6d5be294fe2c6fcfeef6a1e09e556f700cbf948d9e7986022c57
           name: kakigoori-worker
           envFrom:
             - secretRef:
