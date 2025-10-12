@@ -19,7 +19,7 @@ spec:
           persistentVolumeClaim:
             claimName: privatebin-data-pvc
       containers:
-        - image: privatebin/nginx-fpm-alpine:2.0.0
+        - image: privatebin/nginx-fpm-alpine:2.0.1
           name: privatebin
           imagePullPolicy: Always
           ports:
