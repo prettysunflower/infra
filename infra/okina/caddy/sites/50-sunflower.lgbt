@@ -69,3 +69,15 @@ schedule.sunflower.lgbt {
 		reverse_proxy rallly.default.svc.yuiman.prettysunflower.moe
 	}
 }
+
+n8n.sunflower.lgbt {
+	import porkbun
+
+	import tailscale {
+		reverse_proxy n8n.n8n.svc.sekibanki.prettysunflower.moe
+	}
+
+	handle {
+		abort
+	}
+}

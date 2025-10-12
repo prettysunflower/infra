@@ -1,0 +1,7 @@
+resources:
+  - deployment.yaml
+  - svc.yaml
+  - pvc.yaml
+  - secrets.yaml
+  - configmap.yaml
+  - namespace.yaml
