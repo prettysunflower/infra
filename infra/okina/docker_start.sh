@@ -8,4 +8,8 @@ cd /etc/caddy
 fd -I ".sops" -x sops -d --output {.} {}
 fd -I ".sops" -x rm {}
 
-caddy run --config /etc/caddy/Caddyfile
+if [[ $1 == "validate" ]]; then
+	caddy validate --config /etc/caddy/Caddyfile
+elif [[ $1 == "run" ]]; then
+	caddy run --config /etc/caddy/Caddyfile
+fi

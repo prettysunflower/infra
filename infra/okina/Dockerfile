@@ -4,6 +4,7 @@ FROM caddy:2.10.2-builder AS caddy-builder
 
 RUN xcaddy build \
     --with github.com/caddy-dns/porkbun \
+    --with github.com/caddy-dns/bunny \
     --with github.com/mholt/caddy-l4
 
 FROM alpine:3.22
@@ -36,4 +37,5 @@ WORKDIR /root
 
 COPY docker_start.sh .
 
-CMD ["sh", "docker_start.sh"]
+ENTRYPOINT ["sh", "docker_start.sh"]
+CMD ["run"]
