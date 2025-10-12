@@ -178,7 +178,7 @@ metadata:
   labels:
     app.kubernetes.io/name: anubis-prettysunflower-website
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: anubis-prettysunflower-website
