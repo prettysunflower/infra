@@ -1,2 +1,4 @@
 *.nocopy
 age_private.key
+publish.fish
+validate.fish

@@ -1,5 +1,6 @@
 resources:
   - ../common
+  - ../../infra/common/csi-driver-nfs
   - anko
   - docker-registry
   - httpdebug

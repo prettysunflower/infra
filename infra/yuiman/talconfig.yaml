@@ -47,17 +47,14 @@ nodes:
   - hostname: fulgora
     ipAddress: 10.0.12.10
     controlPlane: true
-    arch: amd64
     installDisk: /dev/sda
   - hostname: gleba
     ipAddress: 10.0.12.11
     controlPlane: true
-    arch: amd64
     installDisk: /dev/sda
   - hostname: vulcanus
     ipAddress: 10.0.12.12
     controlPlane: true
-    arch: amd64
     installDisk: /dev/sda
 
 controlPlane:
