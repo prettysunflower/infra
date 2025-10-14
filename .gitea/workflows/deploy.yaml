@@ -58,3 +58,21 @@ jobs:
       - name: Deploy yuiman
         working-directory: ./apps/yuiman
         run: kubectl apply -k .
+
+  dns:
+    runs-on: ubuntu-latest-prettysunflower
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Decrypt secrets
+        working-directory: ./infra/dns
+        run: >
+          sops -d --output-type json --output creds.json creds.json.sops
+        env:
+          SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
+
+      - name: Check DNS config
+        working-directory: ./infra/dns
+        run: dnscontrol check && dnscontrol push

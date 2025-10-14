@@ -14,6 +14,7 @@ function encrypt_file -a filename outfile_filename
 end
 
 encrypt_file infra/okina/caddy/certs/pad.koumbit.net/cert.pem.nocopy infra/okina/caddy/certs/pad.koumbit.net/cert.pem.sops
+encrypt_file infra/dns/creds.json infra/dns/creds.json.sops
 
 for file in **/secrets.yaml;
 	encrypt_file \
