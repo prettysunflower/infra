@@ -207,4 +207,5 @@ D(
   A("currency", internal_okina),
   A("registry.docker", internal_okina),
   A("n8n", internal_okina),
+  A("admin.status", internal_okina),
 );

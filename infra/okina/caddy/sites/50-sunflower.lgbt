@@ -1,5 +1,5 @@
 sunflower.lgbt, www.sunflower.lgbt, http://http.sunflower.lgbt {
-	import porkbun
+	import bunny
 
 	handle_path /static/* {
 		reverse_proxy static.prettysunflower-website.svc.yuiman.prettysunflower.moe
@@ -13,7 +13,7 @@ sunflower.lgbt, www.sunflower.lgbt, http://http.sunflower.lgbt {
 }
 
 currency.sunflower.lgbt {
-	import porkbun
+	import bunny
 	reverse_proxy https://api.ratesexchange.eu {
 		header_up -Host
 		header_down +Access-Control-Allow-Origin "*"
@@ -21,13 +21,13 @@ currency.sunflower.lgbt {
 }
 
 photos.sunflower.lgbt {
-	import porkbun
+	import bunny
 
 	reverse_proxy 100.105.17.105:2283
 }
 
 git.sunflower.lgbt {
-	import porkbun
+	import bunny
 
 	import tailscale {
 		reverse_proxy gitea.gitea.svc.sekibanki.prettysunflower.moe
@@ -39,19 +39,19 @@ git.sunflower.lgbt {
 }
 
 pad.sunflower.lgbt {
-	import porkbun
+	import bunny
 
 	reverse_proxy etherpad.default.svc.sekibanki.prettysunflower.moe
 }
 
 data.sunflower.lgbt {
-	import porkbun
+	import bunny
 
 	reverse_proxy teable.teable.svc.sekibanki.prettysunflower.moe
 }
 
 registry.docker.sunflower.lgbt {
-	import porkbun
+	import bunny
 
 	import tailscale {
 		reverse_proxy docker-registry.default.svc.yuiman.prettysunflower.moe
@@ -63,7 +63,7 @@ registry.docker.sunflower.lgbt {
 }
 
 schedule.sunflower.lgbt {
-	import porkbun
+	import bunny
 
 	handle {
 		reverse_proxy rallly.default.svc.yuiman.prettysunflower.moe
@@ -71,10 +71,22 @@ schedule.sunflower.lgbt {
 }
 
 n8n.sunflower.lgbt {
-	import porkbun
+	import bunny
 
 	import tailscale {
 		reverse_proxy n8n.n8n.svc.sekibanki.prettysunflower.moe
+	}
+
+	handle {
+		abort
+	}
+}
+
+admin.status.sunflower.lgbt {
+	import bunny
+
+	import tailscale {
+		reverse_proxy 10.0.12.112:3001
 	}
 
 	handle {
