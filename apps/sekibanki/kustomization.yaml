@@ -8,6 +8,7 @@ resources:
   - glance
   - gotosocial
   - karakeep
+  - n8n
   - opengist
   - outline
   - paieperless
