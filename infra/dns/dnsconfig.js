@@ -111,8 +111,8 @@ D(
   A("znc", internal_okina),
   A("kube-dns.kube-system.svc.sekibanki", "10.218.0.10"),
   A("kube-dns.kube-system.svc.yuiman", "10.220.0.10"),
-  NS("sekibanki", "kube-dns.kube-system.svc.sekibanki.prettysunflower.moe."), // kube-dns.kube-system.svc.sekibanki.prettysunflower.moe
-  NS("yuiman", "kube-dns.kube-system.svc.sekibanki.yuiman.moe."), // kube-dns.kube-system.svc.yuiman.prettysunflower.moe
+  NS("sekibanki", "kube-dns.kube-system.svc.sekibanki.prettysunflower.moe."),
+  NS("yuiman", "kube-dns.kube-system.svc.yuiman.prettysunflower.moe."),
 );
 
 D(
