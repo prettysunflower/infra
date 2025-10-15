@@ -99,3 +99,15 @@ jackett.sunflower.lgbt {
 
 	reverse_proxy jackett.default.svc.sekibanki.prettysunflower.moe
 }
+
+flaresolverr.sunflower.lgbt {
+	import bunny
+
+	import tailscale {
+		reverse_proxy flaresolverr.default.svc.yuiman.prettysunflower.moe
+	}
+
+	handle {
+		abort
+	}
+}

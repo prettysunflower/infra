@@ -210,4 +210,5 @@ D(
   A("registry.docker", internal_okina),
   A("n8n", internal_okina),
   A("admin.status", internal_okina),
+  A("flaresolverr", internal_okina),
 );
