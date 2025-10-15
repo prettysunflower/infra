@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jackett-config
+data:
+  AUTO_UPDATE: "true"
+  PUID: "1000"
+  GUID: "1000"
+  TZ: America/Toronto

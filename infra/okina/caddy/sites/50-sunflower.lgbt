@@ -93,3 +93,9 @@ admin.status.sunflower.lgbt {
 		abort
 	}
 }
+
+jackett.sunflower.lgbt {
+	import bunny
+
+	reverse_proxy jackett.default.svc.sekibanki.prettysunflower.moe
+}

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jackett
+  labels:
+    app.kubernetes.io/name: jackett
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: jackett
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: jackett
+    spec:
+      volumes:
+        - name: jackett-data
+          persistentVolumeClaim:
+            claimName: jackett-pvc
+        - name: jackett-torrent-blackhole
+          emptyDir:
+            sizeLimit: 128Mi
+            medium: Memory
+      containers:
+        - name: jackett
+          image: lscr.io/linuxserver/jackett:latest
+          envFrom:
+            - configMapRef:
+                name: jackett-config
+          ports:
+            - containerPort: 9117
+              name: http
+          volumeMounts:
+            - name: jackett-data
+              mountPath: "/config"
+            - name: jackett-torrent-blackhole
+              mountPath: "/downloads"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            periodSeconds: 90
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
+      dnsPolicy: "ClusterFirst"
+      dnsConfig:
+        nameservers:
+          - 100.94.59.38
