@@ -3,13 +3,13 @@
 The prettysunflower's infra is divided in two main clusters.
 
 - Cluster `sekibanki`: The main cluster, (self-)hosting most components of this infra
-- Cluster `seija`: The "this is important and I really everything to be up anytime" cluster, hosted by Hetzner in Falkenstein
+- Cluster `yuiman`: The "this is important and I really everything to be up anytime" cluster, hosted by Hetzner in Falkenstein
 
 ## Clusters
 
 ### Cluster sekibanki
 
-**Host:** Yuyuko<br>
+**Host:** Proxmox Bare Metal - yuyuko.prettysunflower.moe<br>
 **k8s storage:** NFS \
 **Talos VMs:** 3 - Gleba, Vulcanus, Fulgora (All are controlplane and workers)
 
@@ -22,11 +22,11 @@ TODO: Move that to CloudNativePG
 **Postgres version:** 17<br>
 **IP address:** 100.110.40.2 (tailscale)
 
-### Cluster seija
+### Cluster yuiman
 
 **Location:** Falkenstein (DE)<br>
-**Host:** Hetzner VMs
-**k8s storage:** hcloud-csi
+**Host:** Proxmox Auction Server - iwanagi.prettysunflower.moe
+**k8s storage:** NFS
 **Talos VMs:** 3 - Gleba, Vulcanus, Fulgora (All are controlplane and workers)
 
 #### Database
@@ -84,10 +84,9 @@ We're using VMs with Caddy / HAProxy as gateways to the infra. Convention for na
 **Location:** Falkenstein (DE)
 **IP addresses:**<br>
 
-- 91.99.183.134
-- 2a01:4f8:c013:c026::1
-- 10.11.0.5 (Hetzner bridge)
-- 100.68.170.44 (tailscale)
+- 23.88.71.121 (NAT opéré par OPNsense)
+- 2a01:4f8:272:ea00:be24:11ff:fe33:fa90
+- 100.108.98.123 (tailscale)
 
 ### yul.okina
 

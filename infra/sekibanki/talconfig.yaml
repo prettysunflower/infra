@@ -1,6 +1,6 @@
 ---
 clusterName: sekibanki
-talosVersion: v1.11.2
+talosVersion: v1.11.3
 kubernetesVersion: v1.34.1
 endpoint: https://10.0.0.32:6443
 domain: sekibanki.prettysunflower.moe
@@ -10,39 +10,33 @@ clusterPodNets:
 clusterSvcNets:
   - 10.218.0.0/16
 patches:
+  - "@./tailscale.patch.yaml"
   - |-
-    - op: add
-      path: /machine/network/kubespan
-      value:
-        enabled: true
-    - op: add
-      path: /machine/features/hostDNS
-      value:
-        forwardKubeDNSToHost: false
-    - op: add
-      path: /machine/kubelet/extraArgs
-      value:
-        rotate-server-certificates: "true"
-    - op: add
-      path: /cluster/extraManifests
-      value:
-        - https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml
-        - https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
-    - op: add
-      path: /machine/registries/mirrors
-      value:
-        docker.io:
-          endpoints:
-            - https://registry.docker.sunflower.lgbt
-        gcr.io:
-          endpoints:
-            - https://registry.docker.sunflower.lgbt
-        ghcr.io:
-          endpoints:
-            - https://registry.docker.sunflower.lgbt
-        registry.k8s.io:
-          endpoints:
-            - https://registry.docker.sunflower.lgbt
+    machine:
+      network:
+        kubespan:
+          enabled: true
+      features:
+        hostDNS:
+          forwardKubeDNSToHost: false
+      kubelet:
+        extraArgs:
+          rotate-server-certificates: true
+      registries:
+        mirrors:
+          docker.io:
+            endpoints:
+              - https://registry.docker.sunflower.lgbt
+          gcr.io:
+            endpoints:
+              - https://registry.docker.sunflower.lgbt
+          ghcr.io:
+            endpoints:
+              - https://registry.docker.sunflower.lgbt
+          registry.k8s.io:
+            endpoints:
+              - https://registry.docker.sunflower.lgbt
+
 nodes:
   - hostname: fulgora
     ipAddress: 10.0.0.32
@@ -58,8 +52,6 @@ nodes:
     installDisk: /dev/sda
 
 controlPlane:
-  extraManifests:
-    - tailscale.patch.yaml
   schematic:
     customization:
       systemExtensions:
@@ -70,8 +62,6 @@ controlPlane:
           - siderolabs/util-linux-tools
 
 worker:
-  extraManifests:
-    - tailscale.patch.yaml
   schematic:
     customization:
       systemExtensions:
