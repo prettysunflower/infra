@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: miniqr
-          image: ghcr.io/lyqht/mini-qr:v0.26.2
+          image: ghcr.io/lyqht/mini-qr:v0.26.3
           ports:
             - containerPort: 8080
               name: http
