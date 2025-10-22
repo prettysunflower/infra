@@ -15,9 +15,9 @@ jobs:
 
       - name: Decrypt secrets
         run: >
-          fdfind -I "secrets.sops.yaml" -x sops -d --encrypted-regex '^(data|stringData)$' --output {//}/secrets.yaml {} &&
-          fdfind -I "local_settings.sops.py" -x sops -d --output {//}/local_settings.py {} &&
-          fdfind -I "key.sops.gpg" -x sops -d --output {//}/key.gpg {}
+          fdfind -I "secrets.sops.yaml" -x echo "Decrypting {}" && sops -d --encrypted-regex '^(data|stringData)$' --output {//}/secrets.yaml {} &&
+          fdfind -I "local_settings.sops.py" -x echo "Decrypting {}" && sops -d --output {//}/local_settings.py {} &&
+          fdfind -I "key.sops.gpg" -x echo "Decrypting {}" && sops -d --output {//}/key.gpg {}
         env:
           SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
 
@@ -41,9 +41,9 @@ jobs:
 
       - name: Decrypt secrets
         run: >
-          fdfind -I "secrets.sops.yaml" -x sops -d --encrypted-regex '^(data|stringData)$' --output {//}/secrets.yaml {} &&
-          fdfind -I "local_settings.sops.py" -x sops -d --output {//}/local_settings.py {} &&
-          fdfind -I "key.sops.gpg" -x sops -d --output {//}/key.gpg {}
+          fdfind -I "secrets.sops.yaml" -x echo "Decrypting {}" && sops -d --encrypted-regex '^(data|stringData)$' --output {//}/secrets.yaml {} &&
+          fdfind -I "local_settings.sops.py" -x echo "Decrypting {}" && sops -d --output {//}/local_settings.py {} &&
+          fdfind -I "key.sops.gpg" -x echo "Decrypting {}" && sops -d --output {//}/key.gpg {}
         env:
           SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
 
