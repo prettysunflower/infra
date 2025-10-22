@@ -19,7 +19,7 @@ spec:
           persistentVolumeClaim:
             claimName: renovate-cache-pvc
       containers:
-        - image: valkey/valkey:8.1.4-alpine
+        - image: valkey/valkey:9.0.0-alpine
           name: valkey
           command: ["valkey-server"]
           ports:
