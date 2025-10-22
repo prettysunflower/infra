@@ -1,5 +1,5 @@
 creation_rules:
-  - path_regex: .*/okina/.*
+  - path_regex: .*/infra/infra/okina/.*
     age: age1gm0fkr6aza89cuq85p735juvy7va22wfz7d2ds9ws7ru7t84fqwqw3ez6j
 
   - path_regex: .*secrets\.yaml$
