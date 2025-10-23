@@ -24,7 +24,7 @@ spec:
             medium: Memory
       containers:
         - name: paperless
-          image: ghcr.io/paperless-ngx/paperless-ngx:2.19.0
+          image: ghcr.io/paperless-ngx/paperless-ngx:2.19.2
           envFrom:
             - configMapRef:
                 name: paperless-configmap
