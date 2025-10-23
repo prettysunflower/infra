@@ -14,15 +14,6 @@ metadata:
     pod-security.kubernetes.io/warn-version: latest
 ---
 apiVersion: v1
-kind: Secret
-metadata:
-  name: operator-oauth
-  namespace: tailscale
-stringData:
-  client_id: k6iBjNeq1B21CNTRL
-  client_secret: tskey-client-k6iBjNeq1B21CNTRL-iCz9BzFqHrF46ng8ThLmrFbbHzysBR5T3
----
-apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: operator
