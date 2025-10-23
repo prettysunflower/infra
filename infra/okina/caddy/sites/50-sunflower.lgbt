@@ -50,11 +50,11 @@ data.sunflower.lgbt {
 	reverse_proxy teable.teable.svc.sekibanki.prettysunflower.moe
 }
 
-registry.docker.sunflower.lgbt {
+mirror.container.sunflower.lgbt {
 	import bunny
 
 	import tailscale {
-		reverse_proxy docker-registry.default.svc.yuiman.prettysunflower.moe
+		reverse_proxy container-mirror.default.svc.yuiman.prettysunflower.moe
 	}
 
 	handle {
@@ -65,9 +65,7 @@ registry.docker.sunflower.lgbt {
 schedule.sunflower.lgbt {
 	import bunny
 
-	handle {
-		reverse_proxy rallly.default.svc.yuiman.prettysunflower.moe
-	}
+	reverse_proxy rallly.default.svc.yuiman.prettysunflower.moe
 }
 
 n8n.sunflower.lgbt {

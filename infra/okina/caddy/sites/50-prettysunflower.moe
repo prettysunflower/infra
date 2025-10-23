@@ -214,3 +214,15 @@ plex.prettysunflower.moe {
 		abort
 	}
 }
+
+certs.prettysunflower.moe {
+	import bunny
+
+	import tailscale {
+		reverse_proxy 100.105.17.105:4050
+	}
+
+	handle {
+		abort
+	}
+}

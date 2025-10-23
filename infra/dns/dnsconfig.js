@@ -208,8 +208,8 @@ D(
   DnsProvider(DSP_BIND9),
   INCLUDE("sunflower.lgbt!public"),
   A("currency", internal_okina),
-  A("registry.docker", internal_okina),
   A("n8n", internal_okina),
+  A("mirror.container", internal_okina),
   A("admin.status", internal_okina),
   A("flaresolverr", internal_okina),
 );

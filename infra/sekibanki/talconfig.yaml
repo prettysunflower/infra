@@ -26,16 +26,16 @@ patches:
         mirrors:
           docker.io:
             endpoints:
-              - https://registry.docker.sunflower.lgbt
+              - https://mirror.container.sunflower.lgbt
           gcr.io:
             endpoints:
-              - https://registry.docker.sunflower.lgbt
+              - https://mirror.container.sunflower.lgbt
           ghcr.io:
             endpoints:
-              - https://registry.docker.sunflower.lgbt
+              - https://mirror.container.sunflower.lgbt
           registry.k8s.io:
             endpoints:
-              - https://registry.docker.sunflower.lgbt
+              - https://mirror.container.sunflower.lgbt
 
 nodes:
   - hostname: fulgora
