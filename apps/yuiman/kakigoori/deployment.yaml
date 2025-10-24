@@ -258,7 +258,7 @@ spec:
     spec:
       containers:
         - name: kakigoori
-          image: git.prettysunflower.moe/prettysunflower/kakigoori:main@sha256:55083457154550690251007ac99e525432ce58ca793e66c2d87b22138508725e
+          image: git.prettysunflower.moe/prettysunflower/kakigoori:main@sha256:b6fad49a4ca9b44f08d35de67e0142bdc808833b57c2ae9a1bfdddaa8f99e318
           envFrom:
             - secretRef:
                 name: kakigoori-config
