@@ -1,23 +1,87 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: docker-registry
+  name: container-registry
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: docker-registry
+      app: container-registry
   template:
     metadata:
       labels:
-        app: docker-registry
+        app: container-registry
     spec:
+      volumes:
       containers:
-        - name: docker-registry
+        - name: container-registry
           image: mirror.gcr.io/library/registry:3
           envFrom:
             - secretRef:
-                name: docker-registry-config
+                name: container-registry-config
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 250m
+            limits:
+              memory: 512Mi
+              cpu: 1
+          livenessProbe:
+            httpGet:
+              path: /debug/health
+              port: debug
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /debug/health
+              port: debug
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /debug/health
+              port: debug
+            failureThreshold: 30
+            periodSeconds: 10
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          ports:
+            - containerPort: 5000
+              name: http
+            - containerPort: 5001
+              name: debug
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: container-mirror
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: container-mirror
+  template:
+    metadata:
+      labels:
+        app: container-mirror
+    spec:
+      containers:
+        - name: container-mirror
+          image: mirror.gcr.io/library/registry:3
+          envFrom:
+            - secretRef:
+                name: container-mirror-config
           resources:
             requests:
               memory: 128Mi
