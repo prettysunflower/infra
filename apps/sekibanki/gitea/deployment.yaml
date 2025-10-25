@@ -27,7 +27,7 @@ spec:
         nameservers:
           - 100.94.59.38
       containers:
-        - image: docker.gitea.com/gitea:1.24.6-rootless
+        - image: docker.gitea.com/gitea:1.24.7-rootless
           name: gitea
           ports:
             - containerPort: 3000
