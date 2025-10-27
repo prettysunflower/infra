@@ -15,7 +15,7 @@ spec:
               - 100.94.59.38
           containers:
             - name: renovate
-              image: renovate/renovate:41.162.1
+              image: renovate/renovate:41.162.2
               env:
                 - name: LOG_LEVEL
                   value: debug
