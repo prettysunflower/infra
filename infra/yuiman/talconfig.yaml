@@ -1,6 +1,6 @@
 ---
 clusterName: yuiman
-talosVersion: v1.11.3
+talosVersion: v1.11.3-tailscale-1.90.2
 kubernetesVersion: v1.34.1
 endpoint: https://10.0.12.10:6443
 domain: yuiman.prettysunflower.moe
@@ -16,9 +16,11 @@ patches:
       network:
         kubespan:
           enabled: true
+        nameservers:
+          - 100.94.59.38
       features:
         hostDNS:
-          forwardKubeDNSToHost: false
+          forwardKubeDNSToHost: true
       kubelet:
         extraArgs:
           rotate-server-certificates: true
@@ -46,31 +48,14 @@ nodes:
     ipAddress: 10.0.12.10
     controlPlane: true
     installDisk: /dev/sda
+    talosImageURL: git.prettysunflower.moe/prettysunflower/talos
   - hostname: gleba
     ipAddress: 10.0.12.11
     controlPlane: true
     installDisk: /dev/sda
+    talosImageURL: git.prettysunflower.moe/prettysunflower/talos
   - hostname: vulcanus
     ipAddress: 10.0.12.12
     controlPlane: true
     installDisk: /dev/sda
-
-controlPlane:
-  schematic:
-    customization:
-      systemExtensions:
-        officialExtensions:
-          - siderolabs/iscsi-tools
-          - siderolabs/qemu-guest-agent
-          - siderolabs/tailscale
-          - siderolabs/util-linux-tools
-
-worker:
-  schematic:
-    customization:
-      systemExtensions:
-        officialExtensions:
-          - siderolabs/iscsi-tools
-          - siderolabs/qemu-guest-agent
-          - siderolabs/tailscale
-          - siderolabs/util-linux-tools
+    talosImageURL: git.prettysunflower.moe/prettysunflower/talos
