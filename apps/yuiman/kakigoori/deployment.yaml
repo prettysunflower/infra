@@ -138,6 +138,45 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: dev
+  namespace: kakigoori
+  labels:
+    app.kubernetes.io/name: kakigoori-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kakigoori-dev
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kakigoori-dev
+    spec:
+      containers:
+        - name: kakigoori
+          image: "git.prettysunflower.moe/prettysunflower/kakigoori:rust-dev"
+          ports:
+            - containerPort: 8000
+              name: http
+          envFrom:
+            - secretRef:
+                name: kakigoori-config
+            - secretRef:
+                name: postgres-app
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
   name: rabbitmq
   namespace: kakigoori
   labels:

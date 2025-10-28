@@ -4,6 +4,7 @@
 var REG_NONE = NewRegistrar("none");
 var DSP_BUNNY = NewDnsProvider("bunny");
 var DSP_BIND9 = NewDnsProvider("bind9");
+var DSP_PORKBUN = NewDnsProvider("porkbun");
 
 var fsn_okina = "23.88.71.121";
 var fsn_okina_ipv6 = "2a01:4f8:272:ea00:be24:11ff:fe33:fa90";
@@ -212,4 +213,14 @@ D(
   A("mirror.container", internal_okina),
   A("admin.status", internal_okina),
   A("flaresolverr", internal_okina),
+);
+
+D(
+  "kakigoori.dev",
+  REG_NONE,
+  DnsProvider(DSP_PORKBUN),
+  okina("@"),
+  okina("www"),
+  CNAME("images", "kakigoori.fly.storage.tigris.dev."),
+  okina("dev"),
 );

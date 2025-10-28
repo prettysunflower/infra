@@ -20,6 +20,21 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: dev
+  namespace: kakigoori
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: kakigoori-dev
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http
+      name: kakigoori
+---
+apiVersion: v1
+kind: Service
+metadata:
   name: static
   namespace: kakigoori
 spec:

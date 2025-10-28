@@ -41,6 +41,14 @@ kakigoori.dev, www.kakigoori.dev {
 	}
 }
 
+dev.kakigoori.dev {
+	import porkbun
+
+	encode zstd gzip
+
+	reverse_proxy dev.kakigoori.svc.yuiman.prettysunflower.moe
+}
+
 status.kakigoori.dev {
 	import porkbun
 }
