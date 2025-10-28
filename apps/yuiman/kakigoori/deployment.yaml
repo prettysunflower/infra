@@ -157,7 +157,7 @@ spec:
         nameservers:
           - 100.94.59.38
       containers:
-        - image: rabbitmq:4.1.4
+        - image: rabbitmq:4.2.0
           name: rabbitmq
           ports:
             - containerPort: 5672
