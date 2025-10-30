@@ -22,6 +22,7 @@ pages:
               - url: https://www.reddit.com/user/AzulCrescent/submitted/.rss
               - url: https://www.reddit.com/user/TheArchiveTerminal/submitted/.rss
               - url: https://blog.gitea.com/rss.xml
+              - url: https://gitea.com/gitea/act_runner/releases.rss
 
           - type: twitch-channels
             channels:
