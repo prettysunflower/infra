@@ -208,7 +208,7 @@ spec:
             name: ourfigurecollection-anubis-config
       containers:
         - name: anubis
-          image: ghcr.io/techarohq/anubis:v1.22.0
+          image: ghcr.io/techarohq/anubis:v1.23.0
           envFrom:
             - secretRef:
                 name: thoth

@@ -67,7 +67,7 @@ spec:
             failureThreshold: 30
             periodSeconds: 10
         - name: anubis
-          image: ghcr.io/techarohq/anubis:v1.22.0
+          image: ghcr.io/techarohq/anubis:v1.23.0
           imagePullPolicy: Always
           ports:
             - containerPort: 8081
