@@ -1,0 +1,45 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich
+  namespace: immich
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: immich
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: machine-learning
+  namespace: immich
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: immich-machine-learning
+  ports:
+    - protocol: TCP
+      port: 2283
+      targetPort: http
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: valkey
+  namespace: immich
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: valkey
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: valkey
+      name: valkey

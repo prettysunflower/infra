@@ -23,7 +23,7 @@ currency.sunflower.lgbt {
 photos.sunflower.lgbt {
 	import bunny
 
-	reverse_proxy 100.105.17.105:2283
+	reverse_proxy immich.immich.svc.sekibanki.prettysunflower.moe
 }
 
 git.sunflower.lgbt {

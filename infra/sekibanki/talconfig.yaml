@@ -1,6 +1,6 @@
 ---
 clusterName: sekibanki
-talosVersion: v1.11.3-tailscale-1.90.4
+talosVersion: v1.11.3-tailscale-1.90.6
 kubernetesVersion: v1.34.1
 endpoint: https://10.0.0.32:6443
 domain: sekibanki.prettysunflower.moe
@@ -23,6 +23,7 @@ patches:
           forwardKubeDNSToHost: true
       kubelet:
         extraArgs:
+          feature-gates: ImageVolume=true
           rotate-server-certificates: true
       registries:
         mirrors:
@@ -38,6 +39,10 @@ patches:
           registry.k8s.io:
             endpoints:
               - https://mirror.container.sunflower.lgbt
+    cluster:
+      apiServer:
+        extraArgs:
+          feature-gates: ImageVolume=true
 
 nodes:
   - hostname: fulgora
