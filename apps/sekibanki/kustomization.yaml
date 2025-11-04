@@ -7,6 +7,7 @@ resources:
   - gitea
   - glance
   - gotosocial
+  - immich
   - karakeep
   - n8n
   - opengist
