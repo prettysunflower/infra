@@ -18,6 +18,7 @@ spec:
       containers:
         - name: kakigoori
           image: "git.prettysunflower.moe/prettysunflower/kakigoori:main"
+          imagePullPolicy: Always
           ports:
             - containerPort: 8001
               name: http
