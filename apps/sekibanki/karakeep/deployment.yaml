@@ -20,7 +20,7 @@ spec:
             claimName: karakeep-pvc
       containers:
         - name: karakeep
-          image: ghcr.io/karakeep-app/karakeep:0.27.1
+          image: ghcr.io/karakeep-app/karakeep:0.28.0
           envFrom:
             - configMapRef:
                 name: karakeep-config
