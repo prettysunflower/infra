@@ -19,7 +19,7 @@ spec:
         nameservers:
           - 100.94.59.38
       containers:
-        - image: lukevella/rallly:4.5.0
+        - image: lukevella/rallly:4.5.1
           name: rallly
           envFrom:
             - secretRef:
