@@ -57,7 +57,3 @@ spec:
             requests:
               cpu: 50m
               memory: 128Mi
-      dnsPolicy: "ClusterFirst"
-      dnsConfig:
-        nameservers:
-          - 100.94.59.38

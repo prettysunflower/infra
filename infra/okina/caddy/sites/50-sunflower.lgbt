@@ -84,7 +84,7 @@ admin.status.sunflower.lgbt {
 	import bunny
 
 	import tailscale {
-		reverse_proxy 10.0.12.112:3001
+		reverse_proxy uptime-kuma.default.svc.yuiman.prettysunflower.moe
 	}
 
 	handle {

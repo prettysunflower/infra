@@ -14,10 +14,6 @@ spec:
       labels:
         app.kubernetes.io/name: thelounge
     spec:
-      dnsPolicy: "None"
-      dnsConfig:
-        nameservers:
-          - 100.94.59.38
       volumes:
         - name: thelounge-data
           persistentVolumeClaim:

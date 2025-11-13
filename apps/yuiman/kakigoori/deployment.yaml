@@ -192,10 +192,6 @@ spec:
       labels:
         app.kubernetes.io/name: rabbitmq
     spec:
-      dnsPolicy: "None"
-      dnsConfig:
-        nameservers:
-          - 100.94.59.38
       containers:
         - image: rabbitmq:4.2.0
           name: rabbitmq
@@ -243,10 +239,6 @@ spec:
           emptyDir:
             sizeLimit: 256Mi
             medium: Memory
-      dnsPolicy: "None"
-      dnsConfig:
-        nameservers:
-          - 100.94.59.38
       containers:
         - image: valkey/valkey:alpine
           name: valkey
@@ -448,10 +440,6 @@ spec:
       labels:
         app.kubernetes.io/name: anubis-kakigoori
     spec:
-      dnsPolicy: "None"
-      dnsConfig:
-        nameservers:
-          - 100.94.59.38
       volumes:
         - name: config
           configMap:

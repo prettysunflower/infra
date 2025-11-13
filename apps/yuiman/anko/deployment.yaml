@@ -71,7 +71,3 @@ spec:
         - name: config
           configMap:
             name: anko-config
-      dnsPolicy: "None"
-      dnsConfig:
-        nameservers:
-          - 100.94.59.38

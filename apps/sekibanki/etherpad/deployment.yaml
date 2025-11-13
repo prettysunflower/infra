@@ -55,7 +55,3 @@ spec:
               port: http
             failureThreshold: 30
             periodSeconds: 10
-      dnsPolicy: "None"
-      dnsConfig:
-        nameservers:
-          - 100.94.59.38

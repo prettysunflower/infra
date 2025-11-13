@@ -18,10 +18,6 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: gotosocial-pvc
-      dnsPolicy: "None"
-      dnsConfig:
-        nameservers:
-          - 100.94.59.38
       containers:
         - image: docker.io/superseriousbusiness/gotosocial:0.20.1
           name: gotosocial

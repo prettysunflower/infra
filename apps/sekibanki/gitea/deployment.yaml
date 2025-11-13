@@ -22,10 +22,6 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: gitea-config-pvc
-      dnsPolicy: "None"
-      dnsConfig:
-        nameservers:
-          - 100.94.59.38
       containers:
         - image: docker.gitea.com/gitea:1.25.1-rootless
           name: gitea
@@ -94,10 +90,6 @@ spec:
         - name: valkey
           persistentVolumeClaim:
             claimName: valkey
-      dnsPolicy: "None"
-      dnsConfig:
-        nameservers:
-          - 100.94.59.38
       containers:
         - image: valkey/valkey:alpine
           name: valkey
@@ -147,10 +139,6 @@ spec:
       labels:
         app.kubernetes.io/name: anubis-gitea
     spec:
-      dnsPolicy: "None"
-      dnsConfig:
-        nameservers:
-          - 100.94.59.38
       volumes:
         - name: config
           configMap:

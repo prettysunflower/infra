@@ -1,6 +1,6 @@
 ---
 clusterName: sekibanki
-talosVersion: v1.11.3-tailscale-1.90.6
+talosVersion: v1.11.5-tailscale-1.90.6
 kubernetesVersion: v1.34.1
 endpoint: https://10.0.0.32:6443
 domain: sekibanki.prettysunflower.moe
@@ -17,7 +17,7 @@ patches:
         kubespan:
           enabled: true
         nameservers:
-          - 100.94.59.38
+          - 100.70.67.89
       features:
         hostDNS:
           forwardKubeDNSToHost: true

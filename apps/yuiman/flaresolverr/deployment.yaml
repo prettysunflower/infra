@@ -48,7 +48,3 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
-      dnsPolicy: "ClusterFirst"
-      dnsConfig:
-        nameservers:
-          - 100.94.59.38
