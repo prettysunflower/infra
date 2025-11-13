@@ -8,7 +8,6 @@ var DSP_PORKBUN = NewDnsProvider("porkbun");
 
 var fsn_okina = "23.88.71.121";
 var fsn_okina_ipv6 = "2a01:4f8:272:ea00:be24:11ff:fe33:fa90";
-var yul_okina = "199.58.81.150";
 var internal_okina = "100.108.98.123";
 var mx = [
   MX("@", 10, "okina.prettysunflower.moe."),
@@ -37,11 +36,7 @@ var mx = [
 ];
 
 function okina(subdomain) {
-  return [
-    A(subdomain, fsn_okina),
-    A(subdomain, yul_okina),
-    AAAA(subdomain, fsn_okina_ipv6),
-  ];
+  return [A(subdomain, fsn_okina), AAAA(subdomain, fsn_okina_ipv6)];
 }
 
 D(
@@ -51,7 +46,6 @@ D(
   okina("www"),
   A("fsn.okina", fsn_okina),
   AAAA("fsn.okina", fsn_okina_ipv6),
-  A("yul.okina", yul_okina),
   okina("okina"),
   okina("qr"),
   okina("smtp"),

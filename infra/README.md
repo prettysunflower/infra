@@ -84,15 +84,6 @@ We're using VMs with Caddy / HAProxy as gateways to the infra. Convention for na
 **Location:** Falkenstein (DE)
 **IP addresses:**<br>
 
-- 23.88.71.121 (NAT opéré par OPNsense)
+- 23.88.71.121 (NAT operated by OPNsense)
 - 2a01:4f8:272:ea00:be24:11ff:fe33:fa90
 - 100.108.98.123 (tailscale)
-
-### yul.okina
-
-**Type:** Koumbit VPS
-**Location:** Montréal (CA_QC)
-**IP addresses:**<br>
-
-- 199.58.81.150
-- 100.94.59.38 (tailscale)
