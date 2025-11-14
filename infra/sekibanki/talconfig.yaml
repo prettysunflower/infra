@@ -17,7 +17,7 @@ patches:
         kubespan:
           enabled: true
         nameservers:
-          - 100.70.67.89
+          - 100.74.71.91
       features:
         hostDNS:
           forwardKubeDNSToHost: true
