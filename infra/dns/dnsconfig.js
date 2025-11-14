@@ -76,6 +76,7 @@ D(
   INCLUDE("prettysunflower.moe!common"),
   okina("karakeep"),
   okina("git"),
+  okina("papers"),
 );
 
 D(
@@ -87,7 +88,6 @@ D(
   A("actual", internal_okina),
   A("caldav", internal_okina),
   A("dns", internal_okina),
-  A("irc", internal_okina),
   A("iwanaga", "100.72.25.2"),
   A("firewall.iwanaga", "10.0.12.1"),
   A("git", internal_okina),
@@ -103,7 +103,6 @@ D(
   A("shinmyoumaru", "100.105.17.105"),
   A("suika", "100.75.185.8"),
   A("yuyuko", "100.126.243.21"),
-  A("znc", internal_okina),
   A("certs", internal_okina),
   A("kube-dns.kube-system.svc.sekibanki", "10.218.0.10"),
   A("kube-dns.kube-system.svc.yuiman", "10.220.0.10"),

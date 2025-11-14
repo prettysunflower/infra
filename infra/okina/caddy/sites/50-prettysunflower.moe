@@ -113,18 +113,6 @@ kanban.prettysunflower.moe {
 	}
 }
 
-irc.prettysunflower.moe {
-	import bunny
-
-	import tailscale {
-		reverse_proxy thelounge.default.svc.sekibanki.prettysunflower.moe
-	}
-
-	handle {
-		abort
-	}
-}
-
 gist.prettysunflower.moe {
 	import bunny
 
@@ -171,6 +159,10 @@ papers.prettysunflower.moe {
 	import bunny
 
 	import tailscale {
+		reverse_proxy paperless.default.svc.sekibanki.prettysunflower.moe
+	}
+
+	handle /share/* {
 		reverse_proxy paperless.default.svc.sekibanki.prettysunflower.moe
 	}
 
