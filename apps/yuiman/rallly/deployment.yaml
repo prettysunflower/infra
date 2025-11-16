@@ -15,7 +15,7 @@ spec:
         app.kubernetes.io/name: rallly
     spec:
       containers:
-        - image: lukevella/rallly:4.5.1
+        - image: lukevella/rallly:4.5.3
           name: rallly
           envFrom:
             - secretRef:
