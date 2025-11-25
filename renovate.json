@@ -5,9 +5,9 @@
   },
   "packageRules": [
     {
-      "matchPackageNames": ["renovate/renovate"],
-      "automerge": true,
-      "ignoreTests": true
+      "matchPackageNames": "*",
+      "minimumReleaseAge": "1 day",
+      "automerge": true
     }
   ]
 }
