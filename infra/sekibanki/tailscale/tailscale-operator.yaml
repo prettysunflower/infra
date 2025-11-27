@@ -5,13 +5,6 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: tailscale
-  labels:
-    pod-security.kubernetes.io/enforce: privileged
-    pod-security.kubernetes.io/enforce-version: latest
-    pod-security.kubernetes.io/audit: privileged
-    pod-security.kubernetes.io/audit-version: latest
-    pod-security.kubernetes.io/warn: privileged
-    pod-security.kubernetes.io/warn-version: latest
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -428,6 +421,49 @@ spec:
                         tag:
                           description: Tag defaults to unstable.
                           type: string
+                      type: object
+                    pod:
+                      description: Pod configuration.
+                      properties:
+                        tolerations:
+                          description: If specified, applies tolerations to the pods deployed by the DNSConfig resource.
+                          items:
+                            description: |-
+                              The pod this Toleration is attached to tolerates any taint that matches
+                              the triple <key,value,effect> using the matching operator <operator>.
+                            properties:
+                              effect:
+                                description: |-
+                                  Effect indicates the taint effect to match. Empty means match all taint effects.
+                                  When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
+                                type: string
+                              key:
+                                description: |-
+                                  Key is the taint key that the toleration applies to. Empty means match all taint keys.
+                                  If the key is empty, operator must be Exists; this combination means to match all values and all keys.
+                                type: string
+                              operator:
+                                description: |-
+                                  Operator represents a key's relationship to the value.
+                                  Valid operators are Exists and Equal. Defaults to Equal.
+                                  Exists is equivalent to wildcard for value, so that a pod can
+                                  tolerate all taints of a particular category.
+                                type: string
+                              tolerationSeconds:
+                                description: |-
+                                  TolerationSeconds represents the period of time the toleration (which must be
+                                  of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
+                                  it is not set, which means tolerate the taint forever (do not evict). Zero and
+                                  negative values will be treated as 0 (evict immediately) by the system.
+                                format: int64
+                                type: integer
+                              value:
+                                description: |-
+                                  Value is the taint value the toleration matches to.
+                                  If the operator is Exists, the value should be empty, otherwise just a regular string.
+                                type: string
+                            type: object
+                          type: array
                       type: object
                     replicas:
                       description: Replicas specifies how many Pods to create. Defaults to 1.
@@ -3303,6 +3339,11 @@ spec:
                     Corresponds to --ui tsrecorder flag https://tailscale.com/kb/1246/tailscale-ssh-session-recording#deploy-a-recorder-node.
                     Required if S3 storage is not set up, to ensure that recordings are accessible.
                   type: boolean
+                replicas:
+                  description: Replicas specifies how many instances of tsrecorder to run. Defaults to 1.
+                  format: int32
+                  minimum: 0
+                  type: integer
                 statefulSet:
                   description: |-
                     Configuration parameters for the Recorder's StatefulSet. The operator
@@ -4217,7 +4258,7 @@ spec:
                           additionalProperties:
                             type: string
                           description: |-
-                            Annotations that will be added to Recorder Pods. Any annotations
+                            Annotations that will be added to Recorder Pods. Any annotations
                             specified here will be merged with the default annotations applied to
                             the Pod by the operator.
                             https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#syntax-and-character-set
@@ -4919,6 +4960,9 @@ spec:
                     type: string
                   type: array
               type: object
+              x-kubernetes-validations:
+                - message: S3 storage must be used when deploying multiple Recorder replicas
+                  rule: "!(self.replicas > 1 && (!has(self.storage) || !has(self.storage.s3)))"
             status:
               description: |-
                 RecorderStatus describes the status of the recorder. This is set
@@ -5321,7 +5365,7 @@ spec:
             - name: CLIENT_SECRET_FILE
               value: /oauth/client_secret
             - name: PROXY_IMAGE
-              value: tailscale/tailscale:unstable
+              value: tailscale/tailscale:stable
             - name: PROXY_TAGS
               value: tag:sekibanki
             - name: APISERVER_PROXY
@@ -5336,7 +5380,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.uid
-          image: tailscale/k8s-operator:unstable
+          image: tailscale/k8s-operator:stable
           imagePullPolicy: Always
           name: operator
           volumeMounts:
