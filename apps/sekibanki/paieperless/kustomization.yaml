@@ -1,7 +1,0 @@
-resources:
-  - cronjob.yaml
-  - secrets.yaml
-secretGenerator:
-  - name: gpg-key
-    files:
-      - key.gpg
