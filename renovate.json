@@ -6,7 +6,6 @@
   "packageRules": [
     {
       "matchPackageNames": "*",
-      "minimumReleaseAge": "1 day",
       "automerge": true
     }
   ]
