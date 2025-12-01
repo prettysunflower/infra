@@ -2,11 +2,5 @@
   "extends": ["config:recommended", ":prHourlyLimitNone"],
   "kubernetes": {
     "managerFilePatterns": ["/\\.yaml$/"]
-  },
-  "packageRules": [
-    {
-      "matchPackageNames": "*",
-      "automerge": true
-    }
-  ]
+  }
 }
