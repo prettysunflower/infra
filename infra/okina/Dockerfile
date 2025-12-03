@@ -7,7 +7,7 @@ RUN xcaddy build \
     --with github.com/caddy-dns/bunny \
     --with github.com/mholt/caddy-l4
 
-FROM alpine:3.22
+FROM alpine:3.23
 
 EXPOSE 80/tcp
 EXPOSE 443/tcp
