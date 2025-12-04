@@ -8,7 +8,8 @@ resources:
   - mazanoke
   - miniqr
   - ourfigurecollection
-  - pocketid
+  - pocketid-remilia
+  - pocketid-sunflower
   - prettysunflower-website
   - privatebin
   - uptime-kuma
