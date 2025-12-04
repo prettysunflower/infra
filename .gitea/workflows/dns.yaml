@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: Update DNS servers
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - infra/dns/**
+
+jobs:
+  dns:
+    name: Update DNS
+    runs-on: ubuntu-latest-prettysunflower
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Decrypt secrets
+        working-directory: ./infra/dns
+        run: >
+          sops -d --output-type json --output creds.json creds.json.sops
+        env:
+          SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
+
+      - name: Check DNS config
+        working-directory: ./infra/dns
+        run: dnscontrol check
+
+      - name: Push DNS config
+        working-directory: ./infra/dns
+        run: dnscontrol push
