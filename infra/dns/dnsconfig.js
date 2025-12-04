@@ -106,6 +106,8 @@ D(
   A("certs", internal_okina),
   A("kube-dns.kube-system.svc.sekibanki", "10.218.0.10"),
   A("kube-dns.kube-system.svc.yuiman", "10.220.0.10"),
+  A("bunny1", "91.200.176.1"),
+  A("bunny2", "109.104.147.1"),
   NS("sekibanki", "kube-dns.kube-system.svc.sekibanki.prettysunflower.moe."),
   NS("yuiman", "kube-dns.kube-system.svc.yuiman.prettysunflower.moe."),
 );
@@ -173,6 +175,8 @@ D(
   A("papers", internal_okina),
   A("shinmyoumaru", "100.105.17.105"),
   A("yuyuko", "100.126.243.21"),
+  A("ns1", "91.200.176.1"),
+  A("ns2", "109.104.147.1"),
 );
 
 D(
@@ -188,6 +192,7 @@ D(
   okina("schedule"),
   okina("data"),
   okina("jackett"),
+  okina("login"),
   CNAME("tigris", "prettysunflower.fly.storage.tigris.dev."),
   TXT("_discord", "dh=86bfb23fa64ce4d8e26d4b165e43958a744105f1"),
   TXT(
@@ -206,6 +211,7 @@ D(
   A("mirror.container", internal_okina),
   A("admin.status", internal_okina),
   A("flaresolverr", internal_okina),
+  A("dns", "100.74.71.91"),
 );
 
 D(
@@ -215,5 +221,4 @@ D(
   okina("@"),
   okina("www"),
   CNAME("images", "kakigoori.fly.storage.tigris.dev."),
-  okina("dev"),
 );

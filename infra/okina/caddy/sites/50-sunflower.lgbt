@@ -109,3 +109,25 @@ flaresolverr.sunflower.lgbt {
 		abort
 	}
 }
+
+dns.sunflower.lgbt {
+	import bunny
+
+	import tailscale {
+		reverse_proxy https://100.74.71.91 {
+			transport http {
+				tls_insecure_skip_verify
+			}
+		}
+	}
+
+	handle {
+		abort
+	}
+}
+
+login.sunflower.lgbt {
+	import bunny
+
+	reverse_proxy pocketid.pocketid.svc.yuiman.prettysunflower.moe
+}
