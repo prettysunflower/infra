@@ -18,9 +18,6 @@ spec:
         - name: radicale-data
           persistentVolumeClaim:
             claimName: radicale-data-pvc
-          # emptyDir:
-          #   sizeLimit: 50Mi
-          #   medium: Memory
         - name: radicale-config
           configMap:
             name: radicale-config
