@@ -18,9 +18,6 @@ spec:
         - name: radicale-data
           persistentVolumeClaim:
             claimName: radicale-data-pvc
-          # emptyDir:
-          #   sizeLimit: 50Mi
-          #   medium: Memory
         - name: radicale-config
           configMap:
             name: radicale-config
@@ -30,7 +27,7 @@ spec:
             medium: Memory
       containers:
         - name: radicale
-          image: tomsquest/docker-radicale:3.5.8.2
+          image: tomsquest/docker-radicale:3.5.9.0
           ports:
             - containerPort: 5232
               name: http
