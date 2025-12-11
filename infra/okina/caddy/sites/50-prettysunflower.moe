@@ -218,3 +218,15 @@ certs.prettysunflower.moe {
 		abort
 	}
 }
+
+multiscrobbler.prettysunflower.moe {
+	import bunny
+
+	import tailscale {
+		reverse_proxy http://multiscrobbler.default.svc.yuiman.prettysunflower.moe
+	}
+
+	handle {
+		abort
+	}
+}

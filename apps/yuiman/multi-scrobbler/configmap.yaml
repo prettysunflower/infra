@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: multi-scrobbler-configmap
+data:
+  TZ: America/Toronto
+  BASE_URL: http://multiscrobbler.default.svc.yuiman.prettysunflower.moe
+  PUID: "1000"
+  GUID: "1000"
+  LZ_USER: prettysunflower
+  PLEX_URL: https://plex.prettysunflower.moe
+  PLEX_USERS_ALLOW: prettysunflower
+  WS_ENABLE: "true"
+  MB_CONTACT: me@prettysunflower.moe
+  MB_PRESETS: sensible,native
+  VLC_URL: 100.122.236.43:9697

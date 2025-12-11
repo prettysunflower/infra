@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-scrobbler
+  labels:
+    app.kubernetes.io/name: multi-scrobbler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: multi-scrobbler
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: multi-scrobbler
+    spec:
+      volumes:
+        - name: multi-scrobbler-config
+          persistentVolumeClaim:
+            claimName: multi-scrobbler-pvc
+      containers:
+        - name: multiscrobbler
+          image: ghcr.io/foxxmd/multi-scrobbler:0.10.5
+          envFrom:
+            - configMapRef:
+                name: multi-scrobbler-configmap
+            - secretRef:
+                name: multi-scrobbler-secrets
+          ports:
+            - containerPort: 9078
+              name: http
+          volumeMounts:
+            - name: multi-scrobbler-config
+              mountPath: "/config"
+          livenessProbe:
+            httpGet:
+              path: /health?name=unnamed-lz
+              port: http
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            periodSeconds: 90
+          startupProbe:
+            httpGet:
+              path: /health?name=unnamed-lz
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
