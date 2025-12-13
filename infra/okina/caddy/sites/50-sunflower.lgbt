@@ -131,3 +131,7 @@ login.sunflower.lgbt {
 
 	reverse_proxy pocketid.pocketid.svc.yuiman.prettysunflower.moe
 }
+
+privatebin.sunflower.lgbt {
+	reverse_proxy privatebin.default.svc.yuiman.prettysunflower.moe
+}

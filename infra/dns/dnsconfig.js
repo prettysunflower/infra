@@ -194,6 +194,7 @@ D(
   okina("data"),
   okina("jackett"),
   okina("login"),
+  okina("privatebin"),
   CNAME("tigris", "prettysunflower.fly.storage.tigris.dev."),
   TXT("_discord", "dh=86bfb23fa64ce4d8e26d4b165e43958a744105f1"),
   TXT(
@@ -224,3 +225,5 @@ D(
   okina("www"),
   CNAME("images", "kakigoori.fly.storage.tigris.dev."),
 );
+
+D("download-ram.zip", REG_NONE, DnsProvider(DSP_PORKBUN), okina("restic"));
