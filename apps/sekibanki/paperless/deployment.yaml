@@ -83,7 +83,7 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
-        - image: valkey/valkey:9.0.0-alpine
+        - image: valkey/valkey:9.0.1-alpine
           name: valkey
           ports:
             - containerPort: 6379
