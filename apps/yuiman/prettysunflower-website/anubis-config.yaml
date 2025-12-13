@@ -171,7 +171,7 @@ status_codes:
 store:
   backend: valkey
   parameters:
-    url: "redis://valkey.prettysunflower-website.svc.seija.prettysunflower.moe:6379/1"
+    url: "redis://valkey.prettysunflower-website.svc.yuiman.prettysunflower.moe:6379/1"
 
 # The weight thresholds for when to trigger individual challenges. Any
 # CHALLENGE will take precedence over this.
