@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pixiv-notifs
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+            - name: cache
+              persistentVolumeClaim:
+                claimName: pixivnotifs-cache
+            - name: gallerydl
+              persistentVolumeClaim:
+                claimName: pvc-pixivnotifs-gallerydl
+          containers:
+            - name: pixiv-notifs
+              image: git.prettysunflower.moe/prettysunflower/pixiv-notifs@sha256:700b15b81cadabd4bfb76cd73476a402d3e2ecd73f9af13bd8078bdc23303367
+              envFrom:
+                - secretRef:
+                    name: pixivnotifs-secrets
+              volumeMounts:
+                - name: cache
+                  mountPath: "/cache"
+                - name: gallerydl
+                  mountPath: "/gallery-dl"
+              resources:
+                limits:
+                  cpu: 1
+                  memory: 512Mi
+                requests:
+                  cpu: 250m
+                  memory: 128Mi
+          restartPolicy: Never
