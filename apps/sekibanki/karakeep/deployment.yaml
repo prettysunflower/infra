@@ -104,7 +104,7 @@ spec:
             claimName: karakeep-pvc
       containers:
         - name: meilisearch
-          image: getmeili/meilisearch:v1.30.0
+          image: getmeili/meilisearch:v1.30.1
           command: ["meilisearch", "--experimental-dumpless-upgrade"]
           envFrom:
             - configMapRef:
