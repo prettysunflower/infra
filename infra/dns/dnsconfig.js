@@ -105,6 +105,7 @@ D(
   A("yuyuko", "100.126.243.21"),
   A("certs", internal_okina),
   A("multiscrobbler", internal_okina),
+  A("jetkvm", "100.98.194.11"),
   A("kube-dns.kube-system.svc.sekibanki", "10.218.0.10"),
   A("kube-dns.kube-system.svc.yuiman", "10.220.0.10"),
   A("bunny1", "91.200.176.1"),
@@ -195,6 +196,7 @@ D(
   okina("jackett"),
   okina("login"),
   okina("privatebin"),
+  okina("masto-fe"),
   CNAME("tigris", "prettysunflower.fly.storage.tigris.dev."),
   TXT("_discord", "dh=86bfb23fa64ce4d8e26d4b165e43958a744105f1"),
   TXT(
@@ -215,6 +217,13 @@ D(
   A("admin.status", internal_okina),
   A("flaresolverr", internal_okina),
   A("dns", "100.74.71.91"),
+);
+
+D(
+  "ecdfeaa2.sentry.io",
+  REG_NONE,
+  DnsProvider(DSP_BIND9),
+  A("@", "35.186.247.156"),
 );
 
 D(

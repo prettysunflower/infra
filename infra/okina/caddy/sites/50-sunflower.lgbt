@@ -133,5 +133,13 @@ login.sunflower.lgbt {
 }
 
 privatebin.sunflower.lgbt {
+	import bunny
+
 	reverse_proxy privatebin.default.svc.yuiman.prettysunflower.moe
+}
+
+masto-fe.sunflower.lgbt {
+	import bunny
+
+	reverse_proxy masto-fe.default.svc.yuiman.prettysunflower.moe
 }
