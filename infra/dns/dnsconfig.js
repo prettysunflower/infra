@@ -220,13 +220,6 @@ D(
 );
 
 D(
-  "ecdfeaa2.sentry.io",
-  REG_NONE,
-  DnsProvider(DSP_BIND9),
-  A("@", "35.186.247.156"),
-);
-
-D(
   "kakigoori.dev",
   REG_NONE,
   DnsProvider(DSP_PORKBUN),
