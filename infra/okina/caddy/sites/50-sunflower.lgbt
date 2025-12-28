@@ -143,3 +143,10 @@ masto-fe.sunflower.lgbt {
 
 	reverse_proxy masto-fe.default.svc.yuiman.prettysunflower.moe
 }
+
+testmtls.sunflower.lgbt {
+	import bunny
+	import mtls
+
+	respond "Hello, world!"
+}

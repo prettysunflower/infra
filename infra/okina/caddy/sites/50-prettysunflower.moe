@@ -79,14 +79,9 @@ dns.prettysunflower.moe {
 
 passwords.prettysunflower.moe {
 	import bunny
+	import mtls
 
-	import tailscale {
-		reverse_proxy vaultwarden.default.svc.sekibanki.prettysunflower.moe
-	}
-
-	handle {
-		abort
-	}
+	reverse_proxy vaultwarden.default.svc.sekibanki.prettysunflower.moe
 }
 
 caldav.prettysunflower.moe {
@@ -180,7 +175,13 @@ youtubethumbnails.prettysunflower.moe {
 fedi.prettysunflower.moe {
 	import bunny
 
-	reverse_proxy gotosocial.default.svc.sekibanki.prettysunflower.moe
+	handle /login {
+		redir https://masto-fe.sunflower.lgbt
+	}
+
+	handle {
+		reverse_proxy gotosocial.default.svc.sekibanki.prettysunflower.moe
+	}
 }
 
 wiki.prettysunflower.moe {

@@ -57,6 +57,7 @@ D(
   okina("gist"),
   okina("files"),
   okina("fedi"),
+  okina("passwords"),
   mx,
   TXT(
     "@",
@@ -97,7 +98,6 @@ D(
   A("runner.gitea", "100.67.114.102"),
   A("nareko", "100.76.0.86"),
   A("papers", internal_okina),
-  A("passwords", internal_okina),
   A("plex", internal_okina),
   A("qbittorrent", internal_okina),
   A("shinmyoumaru", "100.105.17.105"),
@@ -217,6 +217,7 @@ D(
   A("admin.status", internal_okina),
   A("flaresolverr", internal_okina),
   A("dns", "100.74.71.91"),
+  A("testmtls", internal_okina),
 );
 
 D(
