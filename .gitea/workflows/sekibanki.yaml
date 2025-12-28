@@ -37,4 +37,4 @@ jobs:
 
       - name: Deploy sekibanki
         working-directory: ./apps/sekibanki
-        run: kubectl apply -k . --server-side
+        run: kubectl apply -k . --server-side --force-conflicts
