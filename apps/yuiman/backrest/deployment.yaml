@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backrest
+  labels:
+    app.kubernetes.io/name: backrest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: backrest
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: backrest
+    spec:
+      volumes:
+        - name: backrest-data
+          persistentVolumeClaim:
+            claimName: backrest-pvc
+        - name: backrest-tmp
+          emptyDir:
+            sizeLimit: 500Mi
+            medium: Memory
+      containers:
+        - name: backrest
+          image: garethgeorge/backrest:v1.10.1
+          envFrom:
+            - configMapRef:
+                name: backrest-configmap
+          ports:
+            - containerPort: 9898
+              name: http
+          volumeMounts:
+            - name: backrest-data
+              mountPath: /data
+              subPath: data
+            - name: backrest-data
+              mountPath: /config
+              subPath: config
+            - name: backrest-data
+              mountPath: /cache
+              subPath: cache
+            - name: backrest-data
+              mountPath: /root/.config/rclone
+              subPath: rclone
+            - name: backrest-tmp
+              mountPath: /tmp

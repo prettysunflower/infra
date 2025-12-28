@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backrest-configmap
+data:
+  BACKREST_DATA: /data
+  BACKREST_CONFIG: /config/config.json
+  XDG_CACHE_HOME: /cache
+  TMPDIR: /tmp
+  TZ: America/Toronto
+  BACKREST_PORT: "9898"
