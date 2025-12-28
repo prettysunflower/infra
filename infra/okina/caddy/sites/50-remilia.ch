@@ -1,5 +1,5 @@
 remilia.ch, www.remilia.ch {
-	import porkbun
+	import bunny
 
 	handle / {
 		redir https://prettysunflower.moe
@@ -9,25 +9,25 @@ remilia.ch, www.remilia.ch {
 }
 
 auth.remilia.ch {
-	import porkbun
+	import bunny
 
 	reverse_proxy pocketid.default.svc.yuiman.prettysunflower.moe
 }
 
 data.remilia.ch {
-	import porkbun
+	import bunny
 
 	redir https://data.prettysunflower.moe
 }
 
 papers.remilia.ch {
-	import porkbun
+	import bunny
 
 	redir https://papers.prettysunflower.moe{uri} permanent
 }
 
 home.remilia.ch {
-	import porkbun
+	import bunny
 
 	import tailscale {
 		reverse_proxy 100.121.126.124:8123
