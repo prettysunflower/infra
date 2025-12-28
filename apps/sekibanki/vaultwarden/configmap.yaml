@@ -9,4 +9,7 @@ data:
   SMTP_PORT: "587"
   SMTP_SECURITY: starttls
   SMTP_USERNAME: me@prettysunflower.moe
-  SIGNUPS_DOMAINS_WHITELIST: prettysunflower.moe
+  SSO_ENABLED: "true"
+  SSO_ONLY: "true"
+  SSO_AUTHORITY: https://login.sunflower.lgbt
+  SSO_CLIENT_ID: 683d908d-c642-458b-8cd4-c1bda25db2c9
