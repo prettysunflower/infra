@@ -19,7 +19,8 @@ spec:
           persistentVolumeClaim:
             claimName: gotosocial-pvc
       containers:
-        - image: docker.io/superseriousbusiness/gotosocial:0.20.2
+        - image: git.prettysunflower.moe/prettysunflower/gotosocial:dev-amd64
+          imagePullPolicy: Always
           name: gotosocial
           ports:
             - containerPort: 8080
@@ -57,7 +58,7 @@ spec:
               path: /readyz
               port: http
             initialDelaySeconds: 10
-            periodSeconds: 10
+            periodSeconds: 2
             timeoutSeconds: 5
             failureThreshold: 30
             successThreshold: 1
