@@ -24,7 +24,7 @@ spec:
             - "mail.prettysunflower.moe"
       containers:
         - name: vaultwarden
-          image: vaultwarden/server:1.35.0
+          image: vaultwarden/server:1.35.1-alpine
           ports:
             - containerPort: 80
               name: http
@@ -71,5 +71,5 @@ spec:
             httpGet:
               path: /
               port: http
-            failureThreshold: 30
-            periodSeconds: 10
+            failureThreshold: 60
+            periodSeconds: 2
