@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: epicgames-freegames-configmap
+data:
+  EMAIL: epicgames@prettysunflower.moe
+  BASE_URL: http://epicgames-freegames.default.svc.sekibanki.prettysunflower.moe
+  TEST_NOTIFIERS: "false"
+  TZ: America/Toronto
+  CRON_SCHEDULE: "0 0,6,12,18 * * *"
+  RUN_ON_STARTUP: "true"

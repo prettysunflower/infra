@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: epicgames-freegames
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: epicgames-freegames
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http
