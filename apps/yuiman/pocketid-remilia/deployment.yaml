@@ -20,13 +20,15 @@ spec:
             claimName: pocketid-pvc
       containers:
         - name: pocketid
-          image: ghcr.io/pocket-id/pocket-id:v1.16.0-distroless
+          image: ghcr.io/pocket-id/pocket-id:v2.0.1-distroless
           ports:
             - containerPort: 1411
               name: http
           envFrom:
             - configMapRef:
                 name: pocketid-config
+            - secretRef:
+                name: pocketid-secrets
           volumeMounts:
             - name: pocketid-data
               mountPath: "/app/data"

@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: pocketid
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: pocketid
@@ -21,7 +21,7 @@ spec:
             claimName: pocketid-pvc
       containers:
         - name: pocketid
-          image: ghcr.io/pocket-id/pocket-id:v1.16.0-distroless
+          image: ghcr.io/pocket-id/pocket-id:v2.0.1-distroless
           ports:
             - containerPort: 1411
               name: http

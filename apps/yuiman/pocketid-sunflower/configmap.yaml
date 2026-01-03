@@ -6,5 +6,3 @@ metadata:
 data:
   APP_URL: "https://login.sunflower.lgbt"
   TRUST_PROXY: "true"
-  DB_PROVIDER: postgres
-  KEYS_STORAGE: database
