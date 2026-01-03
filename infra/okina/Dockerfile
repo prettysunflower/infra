@@ -14,7 +14,6 @@ EXPOSE 443/tcp
 EXPOSE 443/udp
 EXPOSE 25/tcp
 EXPOSE 1688/tcp
-EXPOSE 4922/tcp
 
 COPY --from=caddy-builder /usr/bin/caddy /usr/bin/caddy
 
@@ -28,7 +27,7 @@ RUN <<EOF ash
     chmod +x /usr/bin/caddy
 EOF
 
-COPY --exclude=**/*.nocopy caddy /etc/caddy
+COPY --exclude=**/*.nocopy --exclude=**/*.tmpl caddy /etc/caddy
 
 ENV XDG_CONFIG_HOME=/config
 ENV XDG_DATA_HOME=/data

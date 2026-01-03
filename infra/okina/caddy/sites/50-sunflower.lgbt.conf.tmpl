@@ -29,13 +29,13 @@ photos.sunflower.lgbt {
 git.sunflower.lgbt {
 	import bunny
 
-	import tailscale {
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy gitea.gitea.svc.sekibanki.prettysunflower.moe
-	}
-
-	handle {
-		reverse_proxy gitea.anubis.svc.sekibanki.prettysunflower.moe
-	}
+	{{ else }}
+		reverse_proxy gitea.anubis.svc.sekibanki.prettysunflower.moe {
+			header_up X-Real-Ip {remote_host}
+		}
+	{{ end -}}
 }
 
 pad.sunflower.lgbt {
@@ -53,13 +53,21 @@ data.sunflower.lgbt {
 mirror.container.sunflower.lgbt {
 	import bunny
 
-	import tailscale {
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy container-mirror.default.svc.yuiman.prettysunflower.moe
-	}
-
-	handle {
+	{{ else }}
 		abort
-	}
+	{{ end -}}
+}
+
+private.registry.container.sunflower.lgbt {
+	import bunny
+	
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
+		reverse_proxy private-container-registry.default.svc.yuiman.prettysunflower.moe
+	{{ else }}
+		abort
+	{{ end -}}
 }
 
 schedule.sunflower.lgbt {
@@ -68,28 +76,14 @@ schedule.sunflower.lgbt {
 	reverse_proxy rallly.default.svc.yuiman.prettysunflower.moe
 }
 
-n8n.sunflower.lgbt {
-	import bunny
-
-	import tailscale {
-		reverse_proxy n8n.n8n.svc.sekibanki.prettysunflower.moe
-	}
-
-	handle {
-		abort
-	}
-}
-
 admin.status.sunflower.lgbt {
 	import bunny
 
-	import tailscale {
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy uptime-kuma.default.svc.yuiman.prettysunflower.moe
-	}
-
-	handle {
+	{{ else }}
 		abort
-	}
+	{{ end -}}
 }
 
 jackett.sunflower.lgbt {
@@ -101,29 +95,25 @@ jackett.sunflower.lgbt {
 flaresolverr.sunflower.lgbt {
 	import bunny
 
-	import tailscale {
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy flaresolverr.default.svc.yuiman.prettysunflower.moe
-	}
-
-	handle {
+	{{ else }}
 		abort
-	}
+	{{ end -}}
 }
 
 dns.sunflower.lgbt {
 	import bunny
 
-	import tailscale {
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy https://100.74.71.91 {
 			transport http {
 				tls_insecure_skip_verify
 			}
 		}
-	}
-
-	handle {
+	{{ else }}
 		abort
-	}
+	{{ end -}}
 }
 
 login.sunflower.lgbt {

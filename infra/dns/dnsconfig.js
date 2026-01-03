@@ -57,7 +57,6 @@ D(
   okina("gist"),
   okina("files"),
   okina("fedi"),
-  okina("passwords"),
   mx,
   TXT(
     "@",
@@ -78,6 +77,7 @@ D(
   okina("karakeep"),
   okina("git"),
   okina("papers"),
+  okina("passwords"),
 );
 
 D(
@@ -105,6 +105,7 @@ D(
   A("yuyuko", "100.126.243.21"),
   A("certs", internal_okina),
   A("multiscrobbler", internal_okina),
+  A("passwords", internal_okina),
   A("jetkvm", "100.98.194.11"),
   A("kube-dns.kube-system.svc.sekibanki", "10.218.0.10"),
   A("kube-dns.kube-system.svc.yuiman", "10.220.0.10"),
@@ -218,6 +219,7 @@ D(
   A("flaresolverr", internal_okina),
   A("dns", "100.74.71.91"),
   A("testmtls", internal_okina),
+  A("private.registry.container", internal_okina),
 );
 
 D(

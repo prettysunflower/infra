@@ -1,0 +1,8 @@
+inputDir: caddy/sites/
+
+excludes:
+  - "*"
+  - "!*.tmpl"
+
+outputMap: |
+  caddy/sites/{{ .in | strings.ReplaceAll ".tmpl" "" }}

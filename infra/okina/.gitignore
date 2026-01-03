@@ -1,6 +1,5 @@
 *.nocopy
 age_private.key
-publish.fish
-validate.fish
 **/minica-key.pem
 **/key.pem
+.env

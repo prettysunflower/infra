@@ -30,33 +30,23 @@ prettysunflower.moe, www.prettysunflower.moe {
 actual.prettysunflower.moe {
 	import bunny
 
-	import tailscale {
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy actual.default.svc.sekibanki.prettysunflower.moe
-	}
-
-	handle {
+	{{ else }}
 		abort
-	}
+	{{ end -}}
 }
 
 git.prettysunflower.moe {
 	import bunny
 
-	import tailscale {
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy gitea.gitea.svc.sekibanki.prettysunflower.moe
-	}
-
-	handle /.within.website/* {
+	{{ else }}
 		reverse_proxy gitea.anubis.svc.sekibanki.prettysunflower.moe {
 			header_up X-Real-Ip {remote_host}
 		}
-	}
-
-	handle {
-		reverse_proxy gitea.anubis.svc.sekibanki.prettysunflower.moe {
-			header_up X-Real-Ip {remote_host}
-		}
-	}
+	{{ end -}}
 }
 
 data.prettysunflower.moe {
@@ -68,18 +58,20 @@ data.prettysunflower.moe {
 dns.prettysunflower.moe {
 	import bunny
 
-	import tailscale {
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy 100.94.59.38:5380
-	}
-
-	handle {
+	{{ else }}
 		abort
-	}
+	{{ end -}}
 }
 
 passwords.prettysunflower.moe {
 	import bunny
-	import mtls
+
+	{{ if ne (.Env.listen | strings.ToLower) "tailscale" }}
+		import mtls
+	{{ end -}}
+
 
 	reverse_proxy vaultwarden.default.svc.sekibanki.prettysunflower.moe
 }
@@ -87,25 +79,21 @@ passwords.prettysunflower.moe {
 caldav.prettysunflower.moe {
 	import bunny
 
-	import tailscale {
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy caldav.default.svc.sekibanki.prettysunflower.moe
-	}
-
-	handle {
+	{{ else }}
 		abort
-	}
+	{{ end -}}
 }
 
 kanban.prettysunflower.moe {
 	import bunny
 
-	import tailscale {
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy planka.default.svc.sekibanki.prettysunflower.moe
-	}
-
-	handle {
+	{{ else }}
 		abort
-	}
+	{{ end -}}
 }
 
 gist.prettysunflower.moe {
@@ -117,13 +105,11 @@ gist.prettysunflower.moe {
 uptime.prettysunflower.moe {
 	import bunny
 
-	import tailscale {
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy uptime-kuma.default.svc.yuiman.prettysunflower.moe
-	}
-
-	handle {
+	{{ else }}
 		abort
-	}
+	{{ end -}}
 }
 
 qr.prettysunflower.moe {
@@ -153,17 +139,17 @@ karakeep.prettysunflower.moe {
 papers.prettysunflower.moe {
 	import bunny
 
-	import tailscale {
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy paperless.default.svc.sekibanki.prettysunflower.moe
-	}
+	{{ else }}
+		handle /share/* {
+			reverse_proxy paperless.default.svc.sekibanki.prettysunflower.moe
+		}
 
-	handle /share/* {
-		reverse_proxy paperless.default.svc.sekibanki.prettysunflower.moe
-	}
-
-	handle {
-		abort
-	}
+		handle {
+			abort
+		}
+	{{ end -}}
 }
 
 youtubethumbnails.prettysunflower.moe {
@@ -199,35 +185,29 @@ okina.prettysunflower.moe {
 plex.prettysunflower.moe {
 	import bunny
 
-	import tailscale {
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy 100.105.17.105:32400
-	}
-
-	handle {
+	{{ else }}
 		abort
-	}
+	{{ end -}}
 }
 
 certs.prettysunflower.moe {
 	import bunny
 
-	import tailscale {
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy 100.105.17.105:4050
-	}
-
-	handle {
+	{{ else }}
 		abort
-	}
+	{{ end -}}
 }
 
 multiscrobbler.prettysunflower.moe {
 	import bunny
 
-	import tailscale {
-		reverse_proxy http://multiscrobbler.default.svc.yuiman.prettysunflower.moe
-	}
-
-	handle {
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
+		reverse_proxy multiscrobbler.default.svc.yuiman.prettysunflower.moe
+	{{ else }}
 		abort
-	}
+	{{ end -}}
 }

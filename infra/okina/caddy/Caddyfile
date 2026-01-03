@@ -10,4 +10,4 @@
 	import layer4.conf
 }
 
-import sites/*
+import sites/*.conf
