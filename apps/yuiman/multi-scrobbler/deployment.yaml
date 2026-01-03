@@ -20,7 +20,7 @@ spec:
             claimName: multi-scrobbler-pvc
       containers:
         - name: multiscrobbler
-          image: ghcr.io/foxxmd/multi-scrobbler:0.10.7
+          image: ghcr.io/foxxmd/multi-scrobbler:0.10.8
           envFrom:
             - configMapRef:
                 name: multi-scrobbler-configmap
