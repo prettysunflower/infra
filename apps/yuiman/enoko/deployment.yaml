@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enoko
+  labels:
+    app.kubernetes.io/name: enoko
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: enoko
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: enoko
+    spec:
+      containers:
+        - name: enoko
+          image: git.prettysunflower.moe/prettysunflower/enoko
+          envFrom:
+            - secretRef:
+                name: enoko-secrets
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
