@@ -1,6 +1,18 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: private-container-registry
+spec:
+  selector:
+    app: private-container-registry
+  ports:
+    - port: 80
+      targetPort: http
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
   name: container-mirror
 spec:
   selector:

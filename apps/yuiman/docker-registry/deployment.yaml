@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: container-registry
+  name: private-container-registry
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: container-registry
+      app: private-container-registry
   template:
     metadata:
       labels:
-        app: container-registry
+        app: private-container-registry
     spec:
       volumes:
       containers:
@@ -18,7 +18,7 @@ spec:
           image: mirror.gcr.io/library/registry:3
           envFrom:
             - secretRef:
-                name: container-registry-config
+                name: private-container-registry-config
           resources:
             requests:
               memory: 128Mi
