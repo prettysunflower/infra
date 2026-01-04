@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: qui-configmap
+data:
+  QUI__HOST: 0.0.0.0
+  QUI__PORT: "7476"
+  QUI__OIDC_ISSUER: https://login.sunflower.lgbt
+  QUI__OIDC_CLIENT_ID: f6ba976f-a8c3-49b1-bb10-eef882edbc7a
+  QUI__OIDC_REDIRECT_URL: https://qui.prettysunflower.moe/api/auth/oidc/callback
+  QUI__OIDC_DISABLE_BUILT_IN_LOGIN: "true"
+  QUI__OIDC_ENABLED: "true"
