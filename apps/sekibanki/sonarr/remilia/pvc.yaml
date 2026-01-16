@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: remilia-config
+  namespace: sonarr
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: nfs-csi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: nfs.csi.k8s.io
+  name: pv-sonarr-media-remilia
+spec:
+  capacity:
+    storage: 2T
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-csi
+  mountOptions:
+    - nfsvers=4.1
+    - nolock
+  csi:
+    driver: nfs.csi.k8s.io
+    volumeHandle: 100.126.243.21/mnt/yuyuko/media##
+    volumeAttributes:
+      server: 100.126.243.21
+      share: mnt//yuyuko/media/
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-medias-remilia
+  namespace: sonarr
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2T
+  volumeName: pv-sonarr-media-remilia
+  storageClassName: nfs-csi

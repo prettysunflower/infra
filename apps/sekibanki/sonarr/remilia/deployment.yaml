@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarr-remilia
+  namespace: sonarr
+  labels:
+    app.kubernetes.io/name: sonarr-remilia
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: sonarr-remilia
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: sonarr-remilia
+    spec:
+      volumes:
+        - name: sonarr-config
+          persistentVolumeClaim:
+            claimName: remilia-config
+        - name: remilia-medias
+          persistentVolumeClaim:
+            claimName: pvc-medias-remilia
+      containers:
+        - name: sonarr
+          image: ghcr.io/linuxserver/sonarr:4.0.16.2944-ls300
+          envFrom:
+            - configMapRef:
+                name: remilia-config
+          ports:
+            - containerPort: 8989
+              name: http
+          volumeMounts:
+            - name: sonarr-config
+              mountPath: /config
+            - name: remilia-medias
+              mountPath: /data
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: http
+            initialDelaySeconds: 5
+            failureThreshold: 3
+            periodSeconds: 90
+          startupProbe:
+            httpGet:
+              path: /ping
+              port: http
+            failureThreshold: 30
+            periodSeconds: 2

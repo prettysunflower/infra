@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: deneb
+  namespace: sonarr
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: sonarr-deneb
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http
