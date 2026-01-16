@@ -21,7 +21,7 @@ spec:
             claimName: immich-media
       containers:
         - name: immich
-          image: ghcr.io/immich-app/immich-server:v2.4.1
+          image: ghcr.io/immich-app/immich-server:commit-da248414af94ebbf70a214fbb1b464031909e354@sha256:86603234f8b6d2692b72af3b48bd24a9838612f39775a65d79c5bec837c633b6
           envFrom:
             - configMapRef:
                 name: immich-config

@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=https://git.prettysunflower.moe/prettysunflower/himawari/raw/branch/main/cnpg-schemas/v1.28.0/io.cnpg.postgresql.v1.Cluster.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  namespace: immich
+spec:
+  instances: 3
+
+  imageCatalogRef:
+    apiGroup: postgresql.cnpg.io
+    kind: ClusterImageCatalog
+    name: postgresql-standard-trixie
+    major: 18
+
+  storage:
+    storageClass: nfs-csi
+    size: 15Gi
+
+  backup:
+    volumeSnapshot:
+      className: csi-nfs-snapclass
+
+  postgresql:
+    shared_preload_libraries:
+      - vchord
+      - vector
+    extensions:
+      - name: vchord
+        image:
+          reference: tensorchord/vchord-scratch:pg18-v1.0.0
+        extension_control_path:
+          - /usr/share/postgresql/18
+        dynamic_library_path:
+          - /usr/lib/postgresql/18/lib
+
+  primaryUpdateMethod: switchover

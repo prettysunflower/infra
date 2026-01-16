@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=https://git.prettysunflower.moe/prettysunflower/himawari/raw/branch/main/cnpg-schemas/v1.28.0/io.cnpg.postgresql.v1.ScheduledBackup.json
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: postgres-backup
+  namespace: immich
+spec:
+  schedule: "0 0 0 * * *" # At midnight every day
+  backupOwnerReference: self
+  cluster:
+    name: postgres
+  method: volumeSnapshot
+  immediate: true
