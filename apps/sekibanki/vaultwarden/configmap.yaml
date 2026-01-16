@@ -5,11 +5,14 @@ metadata:
 data:
   DOMAIN: "https://passwords.prettysunflower.moe"
   SMTP_HOST: mail.prettysunflower.moe
-  SMTP_FROM: vaultwarden@prettysunflower.moe
+  SMTP_FROM: vaultwarden@services.prettysunflower.moe
   SMTP_PORT: "587"
   SMTP_SECURITY: starttls
-  SMTP_USERNAME: me@prettysunflower.moe
+  SMTP_USERNAME: vaultwarden@services.prettysunflower.moe
   SSO_ENABLED: "true"
   SSO_ONLY: "true"
   SSO_AUTHORITY: https://login.sunflower.lgbt
   SSO_CLIENT_ID: 683d908d-c642-458b-8cd4-c1bda25db2c9
+  PUSH_ENABLED: "true"
+  PUSH_RELAY_URI: https://api.bitwarden.eu
+  PUSH_IDENTITY_URI: https://identity.bitwarden.eu
