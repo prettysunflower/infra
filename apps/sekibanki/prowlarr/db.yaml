@@ -1,0 +1,22 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  namespace: prowlarr
+spec:
+  instances: 2
+
+  storage:
+    storageClass: nfs-csi
+    size: 5Gi
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: postgres-logs
+  namespace: prowlarr
+spec:
+  name: prowlarr-logs
+  owner: app
+  cluster:
+    name: postgres
