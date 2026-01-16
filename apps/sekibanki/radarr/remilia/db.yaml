@@ -1,0 +1,22 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: pg-remilia
+  namespace: radarr
+spec:
+  instances: 2
+
+  storage:
+    storageClass: nfs-csi
+    size: 5Gi
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: pg-remilia-logs
+  namespace: radarr
+spec:
+  name: radarr-logs
+  owner: app
+  cluster:
+    name: pg-remilia

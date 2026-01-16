@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: remilia
+  namespace: radarr
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: radarr-remilia
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http
