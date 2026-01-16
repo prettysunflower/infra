@@ -9,31 +9,34 @@ var DSP_PORKBUN = NewDnsProvider("porkbun");
 var fsn_okina = "23.88.71.121";
 var fsn_okina_ipv6 = "2a01:4f8:272:ea00:be24:11ff:fe33:fa90";
 var internal_okina = "100.108.98.123";
-var mx = [
-  MX("@", 10, "okina.prettysunflower.moe."),
-  DMARC_BUILDER({
-    policy: "reject",
-    ruf: ["mailto:postmaster@prettysunflower.moe"],
-    rua: ["mailto:postmaster@prettysunflower.moe"],
-    failureOptions: {
-      SPF: false,
-      DKIM: false,
-    },
-    alignmentSPF: "strict",
-    alignmentDKIM: "strict",
-    percent: 100,
-    failureFormat: "afrf",
-    subdomainPolicy: "reject",
-  }),
-  SPF_BUILDER({
-    label: "@",
-    parts: [
-      "v=spf1",
-      "ip4:199.58.80.0/22", // Koumbit
-      "?all",
-    ],
-  }),
-];
+var dmarc = DMARC_BUILDER({
+  policy: "reject",
+  ruf: ["mailto:postmaster@prettysunflower.moe"],
+  rua: ["mailto:postmaster@prettysunflower.moe"],
+  failureOptions: {
+    SPF: false,
+    DKIM: false,
+  },
+  alignmentSPF: "strict",
+  alignmentDKIM: "strict",
+  percent: 100,
+  failureFormat: "afrf",
+  subdomainPolicy: "reject",
+});
+
+function mx(subdomain) {
+  return [
+    MX(subdomain, 10, "okina.prettysunflower.moe."),
+    SPF_BUILDER({
+      label: subdomain,
+      parts: [
+        "v=spf1",
+        "ip4:199.58.80.0/22", // Koumbit
+        "?all",
+      ],
+    }),
+  ];
+}
 
 function okina(subdomain) {
   return [A(subdomain, fsn_okina), AAAA(subdomain, fsn_okina_ipv6)];
@@ -57,7 +60,11 @@ D(
   okina("gist"),
   okina("files"),
   okina("fedi"),
-  mx,
+  okina("deneb.sonarr"),
+  CNAME("s3.fedi", "fedi-prettysunflower-storage.t3.storage.dev."),
+  mx("@"),
+  mx("services"),
+  dmarc,
   TXT(
     "@",
     "google-site-verification=MNk4A3w2twStNEcanuPQxO-zPWR6sLIDFrqzgKAWofc",
@@ -65,7 +72,11 @@ D(
   TXT("_atproto", "did=did:plc:amgacgxmv3jwr5q7ckgf4j63"),
   TXT(
     "ps1._domainkey",
-    "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCtpp/vr725dEAfEOeiR2ZZWZgmXAshysBLctDBTEOhiH8QcXX3Ec7SfVcTq5wKzmKh/Md1QrmivvPC//iX9AcJeGaAvkqskAHmbH5shP/Zv27CRHIRk0zqN15EPiBJPcCGkHPXTgPMjEAcEyCZTEKR5k9fLh2R2wP7JKRfXGFXYwIDAQAB",
+    "v=DKIM1; h=sha256; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCtpp/vr725dEAfEOeiR2ZZWZgmXAshysBLctDBTEOhiH8QcXX3Ec7SfVcTq5wKzmKh/Md1QrmivvPC//iX9AcJeGaAvkqskAHmbH5shP/Zv27CRHIRk0zqN15EPiBJPcCGkHPXTgPMjEAcEyCZTEKR5k9fLh2R2wP7JKRfXGFXYwIDAQAB",
+  ),
+  TXT(
+    "ps1._domainkey.services",
+    "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvNq0uP0gT1HM7W674qJnuwocGHjzZJpOvqlQJWstzqzlvPpR8Qb+0iVCC/vmWhlaeb//cHMOH1zTgB+x0EHkJGvcdHMVpClTp4o7Ch3zlUvWGfMl/M5Jq133/s8ZKXxwR75RszxdhcmflhcfFiawTJYAZF7fxVrJQm1kyeTxS2nQFsm2trgtVZ5X0BIGM5+Ij33xYq7o8XLySb8BGA1M4NeWv/7xJm22EZph18vyYH3fCdqRwPKh/FNX5p9mwh4roRLl7o433KH3cn+X1OFxN9wNhm2ss6uD6gIN9FosRs0FrQvTGOHHlV48Em+bgWzuhguKT1Eqba+Bqk40qTII6wIDAQAB",
   ),
 );
 
@@ -106,7 +117,11 @@ D(
   A("certs", internal_okina),
   A("multiscrobbler", internal_okina),
   A("passwords", internal_okina),
+  A("qui", internal_okina),
   A("jetkvm", "100.98.194.11"),
+  A("remilia.sonarr", internal_okina),
+  A("remilia.radarr", internal_okina),
+  A("prowlarr", internal_okina),
   A("kube-dns.kube-system.svc.sekibanki", "10.218.0.10"),
   A("kube-dns.kube-system.svc.yuiman", "10.220.0.10"),
   A("bunny1", "91.200.176.1"),
@@ -127,7 +142,8 @@ D(
   "ecdfeaa2.moe!public",
   REG_NONE,
   DnsProvider(DSP_BUNNY),
-  mx,
+  mx("@"),
+  dmarc,
   TXT(
     "ps1._domainkey",
     "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvFesFlwpavJmTtWLEOi1jgGdvLo7nuq58eEi0h2aKqr/G3RK7RrKzxoQGV0COm+uvJydcgV/An56/Nf7JaECGNQWKk+Bo8ootIYJc+h3jOCbBNM1VxrqF9dCMBUiFvWN4pz22hdtzqCtZGaBhIDT/ubVwvdWtobCHsPER1APMNwIDAQAB",
@@ -153,7 +169,8 @@ D(
   okina("git"),
   okina("data"),
   okina("kms"),
-  mx,
+  mx("@"),
+  dmarc,
   CNAME("ip", "okina.prettysunflower.moe."),
   TXT(
     "@",
@@ -183,9 +200,8 @@ D(
 );
 
 D(
-  "sunflower.lgbt!public",
+  "sunflower.lgbt!common",
   REG_NONE,
-  DnsProvider(DSP_BUNNY),
   okina("@"),
   okina("www"),
   okina("git"),
@@ -195,23 +211,36 @@ D(
   okina("schedule"),
   okina("data"),
   okina("jackett"),
-  okina("login"),
   okina("privatebin"),
   okina("masto-fe"),
+  okina("public.registry.container"),
   CNAME("tigris", "prettysunflower.fly.storage.tigris.dev."),
   TXT("_discord", "dh=86bfb23fa64ce4d8e26d4b165e43958a744105f1"),
   TXT(
     "@",
     "google-site-verification=6bLZ_pK198oF6hFgaaNqULP26r4dH2rvFxePhqIPD8Q",
   ),
-  mx,
+  TXT(
+    "ps1._domainkey",
+    "v=DKIM1; h=sha256; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA50E/cNEHusN8UjwWQ2b4MzlQCXLdOfYT9CDrv0ZZOQODEfK0tP93pQ1cF5MaaltRfM70Y3yEnE06O+CvKaXRtpP32WoW/H72FZidfHU/GymW75WZ0n+yW2jc0KUEeBx8c7tkMMdrh5VQ8vL4qOTtmPgyrU+HRkR9xnmFEwqUXnGBwAL8IhC899H0xE0S2dYQm1U9tZ1Mzgl7DEfWfw7z5p5FXFzfbyJEYHEJX+DHJGfXq85n0GIZwd+zIju1iMgV66yyzqzFSh1mNjKtRRcc+avxn5yAqhpeiJ9Q924luOaGaPxGL2PnZ5prt6HDJFPUcLHVQmhXoaQMpL7i5lNOuQIDAQAB",
+  ),
+  mx("@"),
+  dmarc,
+);
+
+D(
+  "sunflower.lgbt!public",
+  REG_NONE,
+  DnsProvider(DSP_BUNNY),
+  INCLUDE("sunflower.lgbt!common"),
+  okina("login"),
 );
 
 D(
   "sunflower.lgbt!internal",
   REG_NONE,
   DnsProvider(DSP_BIND9),
-  INCLUDE("sunflower.lgbt!public"),
+  INCLUDE("sunflower.lgbt!common"),
   A("currency", internal_okina),
   A("n8n", internal_okina),
   A("mirror.container", internal_okina),
@@ -219,7 +248,9 @@ D(
   A("flaresolverr", internal_okina),
   A("dns", "100.74.71.91"),
   A("testmtls", internal_okina),
-  A("private.registry.container", internal_okina),
+  A("private.registry.container", "100.108.98.123"),
+  A("login", internal_okina),
+  A("mediamanager", internal_okina),
 );
 
 D(

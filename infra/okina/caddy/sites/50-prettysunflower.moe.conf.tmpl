@@ -166,7 +166,7 @@ fedi.prettysunflower.moe {
 	}
 
 	handle {
-		reverse_proxy gotosocial.default.svc.sekibanki.prettysunflower.moe
+		reverse_proxy gotosocial.gotosocial.svc.yuiman.prettysunflower.moe
 	}
 }
 
@@ -211,3 +211,55 @@ multiscrobbler.prettysunflower.moe {
 		abort
 	{{ end -}}
 }
+
+qui.prettysunflower.moe {
+	import bunny
+
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
+		reverse_proxy qui.default.svc.sekibanki.prettysunflower.moe
+	{{ else }}
+		abort
+	{{ end -}}
+}
+
+remilia.sonarr.prettysunflower.moe {
+	import bunny
+
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
+		reverse_proxy remilia.sonarr.svc.sekibanki.prettysunflower.moe
+	{{ else }}
+		abort
+	{{ end -}}
+}
+
+deneb.sonarr.prettysunflower.moe {
+	import bunny
+
+	{{ if ne (.Env.listen | strings.ToLower) "tailscale" }}
+		import mtls
+	{{ end -}}
+
+
+	reverse_proxy deneb.sonarr.svc.sekibanki.prettysunflower.moe
+}
+
+remilia.radarr.prettysunflower.moe {
+	import bunny
+
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
+		reverse_proxy remilia.radarr.svc.sekibanki.prettysunflower.moe
+	{{ else }}
+		abort
+	{{ end -}}
+}
+
+prowlarr.prettysunflower.moe {
+	import bunny
+
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
+		reverse_proxy prowlarr.prowlarr.svc.sekibanki.prettysunflower.moe
+	{{ else }}
+		abort
+	{{ end -}}
+}
+

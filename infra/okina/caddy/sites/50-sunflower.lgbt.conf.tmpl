@@ -70,6 +70,13 @@ private.registry.container.sunflower.lgbt {
 	{{ end -}}
 }
 
+public.registry.container.sunflower.lgbt {
+	import bunny
+
+	reverse_proxy public-container-registry.default.svc.yuiman.prettysunflower.moe
+}
+		
+
 schedule.sunflower.lgbt {
 	import bunny
 
@@ -139,4 +146,14 @@ testmtls.sunflower.lgbt {
 	import mtls
 
 	respond "Hello, world!"
+}
+
+mediamanager.sunflower.lgbt {
+	import bunny
+
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
+		reverse_proxy mediamanager.mediamanager.svc.sekibanki.prettysunflower.moe
+	{{ else }}
+		abort
+	{{ end -}}
 }
