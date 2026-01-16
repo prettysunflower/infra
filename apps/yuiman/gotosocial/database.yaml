@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=https://git.prettysunflower.moe/prettysunflower/himawari/raw/branch/main/cnpg-schemas/v1.28.0/io.cnpg.postgresql.v1.Cluster.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  namespace: gotosocial
+spec:
+  instances: 2
+
+  imageCatalogRef:
+    apiGroup: postgresql.cnpg.io
+    kind: ClusterImageCatalog
+    major: 18
+    name: postgresql-standard-trixie
+
+  bootstrap:
+    initdb:
+      import:
+        type: microservice
+        databases:
+          - gotosocial
+        source:
+          externalCluster: sekibanki-postgres
+
+  storage:
+    size: 5Gi
+    storageClass: nfs-csi
+
+  externalClusters:
+    - name: sekibanki-postgres
+      connectionParameters:
+        host: 100.110.40.2
+        user: gotosocial
+        dbname: gotosocial
+      password:
+        name: gotosocial-secrets
+        key: GTS_DB_PASSWORD

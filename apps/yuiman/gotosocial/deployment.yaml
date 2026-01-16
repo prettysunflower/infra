@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gotosocial
+  namespace: gotosocial
   labels:
     app.kubernetes.io/name: gotosocial
 spec:
@@ -14,21 +15,20 @@ spec:
       labels:
         app.kubernetes.io/name: gotosocial
     spec:
-      volumes:
-        - name: data
-          persistentVolumeClaim:
-            claimName: gotosocial-pvc
       containers:
-        - image: git.prettysunflower.moe/prettysunflower/gotosocial:dev-amd64
+        - image: private.registry.container.sunflower.lgbt/prettysunflower/gotosocial:dev-amd64
           imagePullPolicy: Always
           name: gotosocial
           ports:
             - containerPort: 8080
               protocol: TCP
               name: http
-          volumeMounts:
-            - name: data
-              mountPath: /gotosocial/storage
+          env:
+            - name: GTS_DB_POSTGRES_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-app
+                  key: uri
           envFrom:
             - configMapRef:
                 name: gotosocial-config
