@@ -1,6 +1,6 @@
 ---
 clusterName: sekibanki
-talosVersion: v1.12.0-tailscale-1.92.3
+talosVersion: v1.12.1-tailscale-1.92.5
 kubernetesVersion: v1.35.0
 endpoint: https://10.0.0.32:6443
 domain: sekibanki.prettysunflower.moe
@@ -49,14 +49,14 @@ nodes:
     ipAddress: 10.0.0.32
     controlPlane: true
     installDisk: /dev/sda
-    talosImageURL: git.prettysunflower.moe/prettysunflower/talos
+    talosImageURL: public.registry.container.sunflower.lgbt/prettysunflower/talos
   - hostname: gleba
     ipAddress: 10.0.0.30
     controlPlane: true
     installDisk: /dev/sda
-    talosImageURL: git.prettysunflower.moe/prettysunflower/talos
+    talosImageURL: public.registry.container.sunflower.lgbt/prettysunflower/talos
   - hostname: vulcanus
     ipAddress: 10.0.0.33
     controlPlane: true
     installDisk: /dev/sda
-    talosImageURL: git.prettysunflower.moe/prettysunflower/talos
+    talosImageURL: public.registry.container.sunflower.lgbt/prettysunflower/talos
