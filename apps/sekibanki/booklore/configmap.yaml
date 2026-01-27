@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: booklore-configmap
+data:
+  BOOKLORE_PORT: "6060"
+  TZ: America/Toronto
+  USER_ID: "1000"
+  GROUP_ID: "1000"
