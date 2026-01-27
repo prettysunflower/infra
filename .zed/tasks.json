@@ -1,0 +1,8 @@
+[
+  {
+    "label": "Deploy DNS",
+    "command": "just dns",
+    "reveal": "no_focus",
+    "hide": "on_success"
+  }
+]
