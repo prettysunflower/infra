@@ -3,3 +3,10 @@ resources:
   - csi-nfs-controller.yaml
   - csi-nfs-driverinfo.yaml
   - rbac-csi-nfs.yaml
+  - crd-csi-snapshot.yaml
+  - csi-snapshot-controller.yaml
+  - rbac-snapshot-controller.yaml
+  - snapshotclass.yaml
+  - https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/refs/heads/master/deploy/kubernetes/csi-snapshotter/rbac-csi-snapshotter.yaml
+  - https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/refs/heads/master/deploy/kubernetes/csi-snapshotter/rbac-external-provisioner.yaml
+  - https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/refs/heads/master/deploy/kubernetes/csi-snapshotter/setup-csi-snapshotter.yaml
