@@ -23,7 +23,7 @@ spec:
           persistentVolumeClaim:
             claimName: gitea-config-pvc
       containers:
-        - image: docker.gitea.com/gitea:1.25.3-rootless
+        - image: docker.gitea.com/gitea:1.25.4-rootless
           name: gitea
           ports:
             - containerPort: 3000
