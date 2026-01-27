@@ -10,3 +10,11 @@ data:
   PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: "1"
   NODE_TLS_REJECT_UNAUTHORIZED: "0"
   BACKEND_STORAGE_TOKEN_EXPIRE_IN: "1d"
+  BACKEND_OIDC_CLIENT_ID: 12e7ce56-d17e-4fac-84e1-9e08be8028e5
+  BACKEND_OIDC_CALLBACK_URL: https://data.sunflower.lgbt/api/auth/oidc/callback
+  BACKEND_OIDC_AUTHORIZATION_URL: https://login.sunflower.lgbt/authorize
+  BACKEND_OIDC_TOKEN_URL: https://login.sunflower.lgbt/api/oidc/token
+  BACKEND_OIDC_USER_INFO_URL: https://login.sunflower.lgbt/api/oidc/userinfo
+  BACKEND_OIDC_ISSUER: https://login.sunflower.lgbt
+  BACKEND_OIDC_OTHER: '{"scope": ["openid", "email", "profile"]}'
+  SOCIAL_AUTH_PROVIDERS: oidc
