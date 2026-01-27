@@ -62,3 +62,5 @@ data:
   GITEA__security__PASSWORD_HASH_ALGO: argon2
   GITEA__cache__ADAPTER: redis
   GITEA__cache__HOST: redis://valkey.gitea.svc.sekibanki.prettysunflower.moe:6379/0
+  GITEA__ui__DEFAULT_THEME: catppuccin-lavender-auto
+  GITEA__ui__THEMES: catppuccin-rosewater-auto,catppuccin-flamingo-auto,catppuccin-pink-auto,catppuccin-mauve-auto,catppuccin-red-auto,catppuccin-maroon-auto,catppuccin-peach-auto,catppuccin-yellow-auto,catppuccin-green-auto,catppuccin-teal-auto,catppuccin-sky-auto,catppuccin-sapphire-auto,catppuccin-blue-auto,catppuccin-lavender-auto
