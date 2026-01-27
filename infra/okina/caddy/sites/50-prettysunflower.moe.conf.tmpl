@@ -253,6 +253,17 @@ remilia.radarr.prettysunflower.moe {
 	{{ end -}}
 }
 
+deneb.radarr.prettysunflower.moe {
+	import bunny
+
+	{{ if ne (.Env.listen | strings.ToLower) "tailscale" }}
+		import mtls
+	{{ end -}}
+
+
+	reverse_proxy deneb.radarr.svc.sekibanki.prettysunflower.moe
+}
+
 prowlarr.prettysunflower.moe {
 	import bunny
 
@@ -261,5 +272,9 @@ prowlarr.prettysunflower.moe {
 	{{ else }}
 		abort
 	{{ end -}}
+}
+
+books.prettysunflower.moe {
+	reverse_proxy booklore.default.svc.sekibanki.prettysunflower.moe
 }
 
