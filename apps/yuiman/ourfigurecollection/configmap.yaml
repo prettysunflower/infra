@@ -7,3 +7,4 @@ data:
   ALLOWED_HOSTS: ourfigurecollection.moe
   DEBUG: "False"
   OIDC_DISCOVERY_URL: https://auth.remilia.ch/.well-known/openid-configuration
+  FLARESOLVERR_URL: https://flaresolverr.sunflower.lgbt
