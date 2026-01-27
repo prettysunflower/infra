@@ -61,6 +61,8 @@ D(
   okina("files"),
   okina("fedi"),
   okina("deneb.sonarr"),
+  okina("deneb.radarr"),
+  okina("books"),
   CNAME("s3.fedi", "fedi-prettysunflower-storage.t3.storage.dev."),
   mx("@"),
   mx("services"),
@@ -78,6 +80,10 @@ D(
     "ps1._domainkey.services",
     "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvNq0uP0gT1HM7W674qJnuwocGHjzZJpOvqlQJWstzqzlvPpR8Qb+0iVCC/vmWhlaeb//cHMOH1zTgB+x0EHkJGvcdHMVpClTp4o7Ch3zlUvWGfMl/M5Jq133/s8ZKXxwR75RszxdhcmflhcfFiawTJYAZF7fxVrJQm1kyeTxS2nQFsm2trgtVZ5X0BIGM5+Ij33xYq7o8XLySb8BGA1M4NeWv/7xJm22EZph18vyYH3fCdqRwPKh/FNX5p9mwh4roRLl7o433KH3cn+X1OFxN9wNhm2ss6uD6gIN9FosRs0FrQvTGOHHlV48Em+bgWzuhguKT1Eqba+Bqk40qTII6wIDAQAB",
   ),
+  A("snikket", "116.202.12.37"),
+  AAAA("snikket", "2a01:4f8:c013:ca31::1"),
+  CNAME("groups.snikket", "snikket.prettysunflower.moe."),
+  CNAME("share.snikket", "snikket.prettysunflower.moe."),
 );
 
 D(
