@@ -1,24 +1,24 @@
 docker_image_url := "private.registry.container.sunflower.lgbt/okina-caddy"
 
 fmt:
-	#!/usr/bin/env sh
-	for f in caddy/sites/*.conf; do
-		caddy fmt --overwrite "$f"
-	done
+    #!/usr/bin/env sh
+    for f in caddy/sites/*.conf; do
+    	caddy fmt --overwrite "$f"
+    done
 
 template $listen: fmt
-	gomplate
+    gomplate
 
 build_docker listen: (template listen)
-	docker build -t "{{docker_image_url}}:latest-{{listen}}" .
+    docker build -t "{{ docker_image_url }}:latest-{{ listen }}" .
 
 validate listen: (build_docker listen)
-	docker run -e "SOPS_AGE_KEY=${SOPS_AGE_KEY}" --rm "{{docker_image_url}}:latest-{{listen}}" validate
+    docker run -e "SOPS_AGE_KEY=${SOPS_AGE_KEY}" --rm "{{ docker_image_url }}:latest-{{ listen }}" validate
 
 push listen: (validate listen)
-	docker push "{{docker_image_url}}:latest-{{listen}}"
+    docker push "{{ docker_image_url }}:latest-{{ listen }}"
 
 restart_fsn:
-	ssh fsn.okina "cd caddy && docker compose pull && docker compose down && docker compose up -d" 
+    ssh fsn.okina "cd caddy && docker compose pull && docker compose down && docker compose up -d" 
 
-deploy: (push "tailscale") (push "public") (restart_fsn)
+deploy: (push "tailscale") (push "public") restart_fsn
