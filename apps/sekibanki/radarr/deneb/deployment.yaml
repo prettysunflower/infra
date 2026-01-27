@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radarr-deneb
+  namespace: radarr
+  labels:
+    app.kubernetes.io/name: radarr-deneb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: radarr-deneb
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: radarr-deneb
+    spec:
+      volumes:
+        - name: radarr-config
+          persistentVolumeClaim:
+            claimName: deneb-config
+        - name: deneb-medias
+          persistentVolumeClaim:
+            claimName: pvc-medias-deneb
+      containers:
+        - name: radarr
+          image: ghcr.io/linuxserver/radarr:6.0.4.10291-ls289
+          envFrom:
+            - configMapRef:
+                name: deneb-config
+          ports:
+            - containerPort: 7878
+              name: http
+          volumeMounts:
+            - name: radarr-config
+              mountPath: /config
+            - name: deneb-medias
+              mountPath: /synology
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: http
+            initialDelaySeconds: 5
+            failureThreshold: 3
+            periodSeconds: 90
+          startupProbe:
+            httpGet:
+              path: /ping
+              port: http
+            failureThreshold: 30
+            periodSeconds: 2
