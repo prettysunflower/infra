@@ -1,0 +1,5 @@
+resources:
+  - statefulset.yaml
+  - svc.yaml
+  - secrets.yaml
+  - namespace.yaml

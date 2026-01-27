@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: internal
+  namespace: caddy
+  labels:
+    app.kubernetes.io/name: caddy-internal
+spec:
+  replicas: 3
+  serviceName: internal
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: caddy-internal
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Delete
+    whenScaled: Delete
+  volumeClaimTemplates:
+    - metadata:
+        name: caddy-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 5Gi
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: caddy-internal
+    spec:
+      dnsPolicy: None
+      dnsConfig:
+        nameservers:
+          - 100.74.71.91
+      containers:
+        - name: caddy
+          image: private.registry.container.sunflower.lgbt/okina-caddy:latest-tailscale
+          imagePullPolicy: Always
+          env:
+            - name: CADDY_ADMIN
+              value: 0.0.0.0:2019
+          envFrom:
+            - secretRef:
+                name: caddy-secrets
+          ports:
+            - containerPort: 80
+              name: http
+            - containerPort: 443
+              name: https
+            - containerPort: 443
+              name: https-udp
+              protocol: UDP
+            - containerPort: 25
+              name: smtp
+            - containerPort: 1688
+              name: kms
+            - containerPort: 2019
+              name: api
+          volumeMounts:
+            - name: caddy-data
+              mountPath: /data
+              subPath: data
+            - name: caddy-data
+              mountPath: /config
+              subPath: config
+          livenessProbe:
+            httpGet:
+              path: /config/
+              port: api
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            periodSeconds: 90
+          startupProbe:
+            httpGet:
+              path: /config/
+              port: api
+            failureThreshold: 30
+            periodSeconds: 10
