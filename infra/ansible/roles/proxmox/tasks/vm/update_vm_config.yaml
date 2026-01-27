@@ -1,0 +1,117 @@
+---
+- name: Update VM configuration VM {{ vm.key }}
+  vars:
+    set_name: >-
+      {{ ' --name "' + vm.key + '" '
+      if vm.key | default('') | length > 0 and
+      vm.key | default('') != vm_config.name | default('')
+      else '' }}
+    delete_name: >-
+      {{ 'name,' if vm.key | default('') | length == 0 and
+      vm_config.name | default('') | length > 0 else '' }}
+
+    set_cores: >-
+      {{ ' --cores ' + vm.value.cores | default(proxmox_vm_defaults.cores) | string
+      if vm.value.cores | default(proxmox_vm_defaults.cores) != vm_config.cores | default(1) else '' }}
+
+    set_cpu: >-
+      {{ ' --cpu ' + vm.value.cpu | default(proxmox_vm_defaults.cpu) | string
+      if vm.value.cpu | default(proxmox_vm_defaults.cpu) != vm_config.cpu | default(1) else '' }}
+
+    set_sockets: >-
+      {{ ' --sockets ' + vm.value.sockets | default(proxmox_vm_defaults.sockets) | string
+      if vm.value.sockets | default(proxmox_vm_defaults.sockets) != vm_config.sockets | default(1) else '' }}
+
+    set_memory: >-
+      {{ ' --memory ' + vm.value.ram | default(proxmox_vm_defaults.ram) | string
+      if vm.value.ram | default(proxmox_vm_defaults.ram) != vm_config.memory | default(512) else '' }}
+
+    set_agent: >-
+      {{ ' --agent ' + vm.value.qemu_agent | default(proxmox_vm_defaults.qemu_agent) | ternary(1, 0) | string
+      if vm.value.qemu_agent | default(proxmox_vm_defaults.qemu_agent) | ternary('1', '0') != vm_config.agent | default('0') else '' }}
+
+    set_onboot: >-
+      {{ ' --onboot ' + vm.value.autoboot | default(proxmox_vm_defaults.autoboot) | ternary(1, 0) | string
+      if vm.value.autoboot | default(proxmox_vm_defaults.autoboot) | ternary(1, 0) != vm_config.onboot | default(0) else '' }}
+
+    set_scsihw: >-
+      {{ ' --scsihw ' + vm.value.scsihw | default(proxmox_vm_defaults.scsihw)
+      if vm.value.scsihw | default(proxmox_vm_defaults.scsihw) != vm_config.scsihw | default('') else '' }}
+
+    set_vga: >-
+      {{ ' --vga ' + vm.value.vga | default(proxmox_vm_defaults.vga)
+      if vm.value.vga | default(proxmox_vm_defaults.vga) != vm_config.vga | default('') else '' }}
+
+    set_cloudinit_user: >-
+      {{ ' --ciuser "' + vm.value.cloudinit.user + '" '
+      if vm.value.cloudinit.user | default('') | length > 0 and
+      vm.value.cloudinit.user | default('') != vm_config.ciuser | default('')
+      else '' }}
+    delete_ci_user: >-
+      {{ 'ciuser,' if vm.value.cloudinit.user | default('') | length == 0 and
+      vm_config.ciuser | default('') | length > 0 else '' }}
+
+    set_cloudinit_password: >-
+      {{ ' --cipassword "' + cloudinit_passwords[vm.key] + '" '
+      if vm.value.cloudinit.password | default('') | length > 0 and
+      (vm_config.cipassword | default('') | length == 0 or vm.value.cloudinit.forcepassword | default(false))
+      else '' }}
+    delete_ci_password: >-
+      {{ 'cipassword,' if vm.value.cloudinit.password | default('') | length == 0 and
+      vm_config.cipassword | default('') | length > 0 else '' }}
+
+    set_ssh_keys: >-
+      {{ ' --sshkeys "' + vm.value.cloudinit.ssh_keys | urlencode | replace('/', '%2f') + '" '
+      if vm.value.cloudinit.ssh_keys | default('') | length > 0 and
+      vm.value.cloudinit.ssh_keys | default('') | urlencode | replace('/', '%2f') != vm_config.sshkeys | default('') | string
+      else '' }}
+    delete_ssh_keys: >-
+      {{ 'sshkeys,' if vm.value.cloudinit.ssh_keys | default('') | length == 0 and
+      vm_config.sshkeys | string | default('') | length > 0 else '' }}
+
+    set_nameserver: >-
+      {{ ' --nameserver "' + vm.value.cloudinit.nameserver + '" '
+      if vm.value.cloudinit.nameserver | default('') | length > 0 and
+      vm.value.cloudinit.nameserver | default('') != vm_config.nameserver | default('')
+      else '' }}
+    delete_nameserver: >-
+      {{ 'nameserver,' if vm.value.cloudinit.nameserver | default('') | length == 0 and
+      vm_config.nameserver | default('') | length > 0 else '' }}
+
+    set_searchdomain: >-
+      {{ ' --searchdomain "' + vm.value.cloudinit.searchdomain + '" '
+      if vm.value.cloudinit.searchdomain | default('') | length > 0 and
+      vm.value.cloudinit.searchdomain | default('') != vm_config.searchdomain | default('')
+      else '' }}
+    delete_searchdomain: >-
+      {{ 'searchdomain,' if vm.value.cloudinit.searchdomain | default('') | length == 0 and
+      vm_config.searchdomain | default('') | length > 0 else '' }}
+
+    to_delete: "\
+      {{ delete_name }}\
+      {{ delete_ci_user }}\
+      {{ delete_ci_password }}\
+      {{ delete_ssh_keys }}\
+      {{ delete_nameserver }}\
+      {{ delete_searchdomain }}"
+    delete_cfg: "{{ ' --delete ' + to_delete if to_delete | trim != '' else '' }}"
+
+    to_update: "\
+      {{ set_name }}\
+      {{ set_cores }}\
+      {{ set_cpu }}\
+      {{ set_sockets }}\
+      {{ set_memory }}\
+      {{ set_agent }}\
+      {{ set_onboot }}\
+      {{ set_scsihw }}\
+      {{ set_cloudinit_user }}\
+      {{ set_cloudinit_password }}\
+      {{ set_ssh_keys }}\
+      {{ set_nameserver }}\
+      {{ set_searchdomain }}\
+      {{ delete_cfg }}"
+  ansible.builtin.command: >-
+    pvesh create /nodes/{{ ansible_facts.hostname }}/qemu/{{ vm.value.id }}/config {{ to_update | trim }}
+  when: to_update | trim != ''
+  changed_when: true

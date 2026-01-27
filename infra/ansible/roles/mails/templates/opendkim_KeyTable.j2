@@ -1,0 +1,3 @@
+{% for domain, _ in domains.items() %}
+ps1._domainkey.{{ domain }} {{ domain }}:ps1:/etc/opendkim/keys/{{ domain }}/ps1.private
+{% endfor %}

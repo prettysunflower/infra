@@ -1,0 +1,14 @@
+---
+- name: Check if fish config folder exists
+  ansible.builtin.stat:
+    path: "{{ ansible_facts.env.HOME }}/.config/fish/conf.d"
+  register: fish_config_folder
+
+- name: Copy Fish config file
+  ansible.builtin.copy:
+    src: "files/direnv.fish"
+    dest: "{{ ansible_facts.env.HOME }}/.config/fish/conf.d/0-direnv.fish"
+    owner: "{{ ansible_facts['user_id'] }}"
+    group: "{{ ansible_facts['user_id'] }}"
+    mode: u=rw,go=r
+  when: fish_config_folder.stat.exists

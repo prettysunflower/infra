@@ -1,0 +1,30 @@
+- name: Download direnv
+  ansible.builtin.get_url:
+    url: https://github.com/direnv/direnv/releases/download/v2.37.1/direnv.linux-amd64
+    checksum: sha256:1f1b93dd6f38523fde26dfac96151ef9d31a374e3005cd3345fb93555ae0c9b5
+    dest: /usr/bin/direnv
+    mode: "u=rwx,go=rx"
+    owner: root
+    group: root
+
+- name: Create direnv config directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ ansible_facts.env.HOME }}/.config/direnv/"
+    state: directory
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    mode: u=rw,go=r
+
+- name: Copy Fish config file
+  ansible.builtin.copy:
+    src: "files/config.toml"
+    dest: "{{ ansible_facts.env.HOME }}/.config/direnv/direnv.toml"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    mode: u=rw,go=r
+
+- name: Hook direnv in Bash shell
+  ansible.builtin.import_tasks: hook_bash.yaml
+
+- name: Hook direnv in Fish shell
+  ansible.builtin.import_tasks: hook_fish.yaml

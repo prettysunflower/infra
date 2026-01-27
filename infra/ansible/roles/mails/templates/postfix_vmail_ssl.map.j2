@@ -1,0 +1,5 @@
+{% for domain, _ in domains.items() %}
+{{ domain }} {{ certificates_path }}/certificates/{{ domain }}.key {{ certificates_path }}/certificates/{{ domain }}.crt
+mail.{{ domain }} {{ certificates_path }}/certificates/{{ domain }}.key {{ certificates_path }}/certificates/{{ domain }}.crt
+smtp.{{ domain }} {{ certificates_path }}/certificates/{{ domain }}.key {{ certificates_path }}/certificates/{{ domain }}.crt
+{% endfor %}

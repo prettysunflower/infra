@@ -1,0 +1,40 @@
+---
+- name: Setup packages
+  ansible.builtin.template:
+    src: templates/alpine/apk_repositories
+    dest: /etc/apk/repositories
+    mode: u=rw,go=r
+    owner: root
+    group: root
+
+- name: Install database (MariaDB)
+  community.general.apk:
+    name:
+      - mariadb
+      - mariadb-client
+    update_cache: true
+
+- name: Install Postfix
+  community.general.apk:
+    name:
+      - postfix
+      - postfix-mysql
+
+- name: Install Dovecot
+  community.general.apk:
+    name:
+      - dovecot
+      - dovecot-mysql
+      - dovecot-lmtpd
+      - dovecot-pigeonhole-plugin
+      - dovecot-pop3d
+
+- name: Install Let's Encrypt Go
+  community.general.apk:
+    name:
+      - lego
+
+- name: Install OpenDKIM
+  community.general.apk:
+    name:
+      - opendkim

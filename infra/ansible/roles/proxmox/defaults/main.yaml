@@ -1,0 +1,19 @@
+ssh_keys: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKK/ydi3HD1cHP40hlYP3EU+h55rAj+nHkLhzcClHStj me@prettysunflower.moe
+vm_remove_unreferenced: true
+
+proxmox_vm_defaults:
+  qemu_agent: true
+  bios: seabios
+  cpu: x86-64-v2-AES
+  autoboot: true
+  machine: pc
+  ostype: l26 # Linus 2.6 - 6.X
+  scsihw: virtio-scsi-single
+  net:
+    firewall: true
+    type: virtio
+    bridge: vmbr0
+  cores: 1
+  sockets: 1
+  ram: 2048
+  vga: qxl

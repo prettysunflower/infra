@@ -1,0 +1,37 @@
+---
+- name: Create virtual machine {{ vm.key }}
+  vars:
+    cd_drives: "{% for cd_drive in vm.value.cd | default({}) | dict2items %}\
+      --{{ cd_drive.key }} {{ cd_drive.value.storage }}:iso/{{ cd_drive.value.iso }},media=cdrom \
+      {% endfor %}"
+    disks: "{% for disk in vm.value.disks | default({}) | dict2items %}\
+      --{{ disk.key }} {{ disk.value.storage }}:{{ disk.value.size }} \
+      {% endfor %}"
+    network_devices: "{% for netdev in vm.value.network | dict2items %}
+      --net{{ netdev.key }} {{ netdev.value.type | default(proxmox_vm_defaults.net.type) }}\
+      {{ '=' + netdev.value.mac if netdev.value.mac is defined else '' }},\
+      bridge={{ netdev.value.bridge | default(proxmox_vm_defaults.net.bridge) }},\
+      firewall={{ netdev.value.firewall | default(proxmox_vm_defaults.net.firewall) | ternary(1, 0) }},\
+      {% endfor %}"
+  ansible.builtin.command: >-
+    pvesh create /nodes/{{ ansible_facts.hostname }}/qemu
+    --vmid {{ vm.value.id }}
+    --name {{ vm.key }}
+    --bios {{ vm.value.bios | default(proxmox_vm_defaults.bios) }}
+    --cores {{ vm.value.cores | default(proxmox_vm_defaults.cores) }}
+    --cpu {{ vm.value.cpu | default(proxmox_vm_defaults.cpu) }}
+    --machine {{ vm.value.machine | default(proxmox_vm_defaults.machine) }}
+    --memory {{ vm.value.ram | default(proxmox_vm_defaults.ram) }}
+    --onboot {{ vm.value.autoboot | default(proxmox_vm_defaults.autoboot) | ternary(1, 0) }}
+    --ostype {{ vm.value.ostype | default(proxmox_vm_defaults.ostype) }}
+    --scsihw {{ vm.value.scsihw | default(proxmox_vm_defaults.scsihw) }}
+    --sockets {{ vm.value.sockets | default(proxmox_vm_defaults.sockets) }}
+    --vga {{ vm.value.vga | default(proxmox_vm_defaults.vga) }}
+    {{ cd_drives }}
+    {{ disks }}
+    {{ network_devices }}
+    {% if 'ovmf' in vm.value.bios | default(proxmox_vm_defaults.bios) %}
+    --efidisk0 {{ vm.value.storage }}:1,efitype=4m,pre-enrolled-keys=1
+    --tpmstate0 {{ vm.value.storage }}:1,version=v2.0
+    {% endif %}
+  changed_when: true

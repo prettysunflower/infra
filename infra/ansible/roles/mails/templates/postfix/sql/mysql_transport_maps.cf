@@ -1,0 +1,5 @@
+user = {{ mysql_user }}
+password = {{ mysql_password }}
+hosts = localhost
+dbname = {{ mysql_database }}
+query = SELECT REPLACE(transport, 'virtual', ':') AS transport FROM domain WHERE domain='%s' AND active = '1'

@@ -1,0 +1,44 @@
+---
+- name: Copy files
+  block:
+    - name: Ensure directory structure exists
+      ansible.builtin.file:
+        path: "/etc/postfix/{{ item.path }}"
+        state: directory
+        owner: postfix
+        group: postfix
+        mode: ug=rwx,o=r
+      with_community.general.filetree: files/postfix
+      when: item.state == 'directory'
+
+    - name: Copy Postfix files
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "/etc/postfix/{{ item.path }}"
+        owner: postfix
+        group: postfix
+        mode: ug=rwx,o=r
+      with_community.general.filetree: files/postfix
+      when: item.state == 'file'
+
+- name: Template files
+  block:
+    - name: Ensure directory structure exists
+      ansible.builtin.file:
+        path: "/etc/postfix/{{ item.path }}"
+        state: directory
+        owner: postfix
+        group: postfix
+        mode: u=rwx,o=r
+      with_community.general.filetree: templates/postfix
+      when: item.state == 'directory'
+
+    - name: Template Postfix files
+      ansible.builtin.template:
+        src: "{{ item.src }}"
+        dest: "/etc/postfix/{{ item.path }}"
+        owner: postfix
+        group: postfix
+        mode: ug=rwx,o=r
+      with_community.general.filetree: templates/postfix
+      when: item.state == 'file'

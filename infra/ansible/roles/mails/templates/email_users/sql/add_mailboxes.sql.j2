@@ -1,0 +1,35 @@
+{% set password = {} %}
+{% for password_entry in mailboxes_passwords['results'] %}
+    {%- set _ = password.update({password_entry.mailbox.key: password_entry.stdout}) -%}
+{% endfor %}
+
+{% for address, propreties in emails_mailboxes.items() %}
+    {% set local = address.split('@')[0] %}
+    {% set domain = address.split('@')[1] %}
+
+    INSERT INTO
+        mailbox
+        (username, password, name, maildir, local_part, domain, created, modified)
+    VALUES
+        (
+            '{{ address }}',
+            '{{ password[address] }}',
+            '{{ propreties.name }}',
+            '{{ domain }}/{{ local }}',
+            '{{ local }}',
+            '{{ domain }}',
+            NOW(),
+            NOW()
+        )
+    ON DUPLICATE KEY UPDATE
+        password='{{ password[address] }}',
+        name='{{ propreties.name }}',
+        modified=NOW();
+{% endfor %}
+
+DELETE FROM mailbox WHERE username NOT IN (
+    {% for address, propreties in emails_mailboxes.items() %}
+        '{{ address }}'{% if not loop.last %},{% endif %}
+
+    {% endfor %}
+) AND username NOT LIKE '%@services.prettysunflower.moe';

@@ -1,0 +1,17 @@
+---
+- name: Get existing VMs
+  ansible.builtin.command: pvesh get /nodes/{{ ansible_facts.hostname }}/qemu --output-format json
+  register: proxmox_current_vms_json
+  changed_when: false
+
+- name: Handle VMs
+  vars:
+    current_vms: "{{ proxmox_current_vms_json.stdout | from_json }}"
+    current_vms_ids: "{{ current_vms | json_query('[].vmid') }}"
+  block:
+    - name: Create VM
+      ansible.builtin.include_tasks: create_vm.yaml
+      when: vm.value.id not in current_vms_ids
+      with_items: "{{ vms | default({}) | dict2items }}"
+      loop_control:
+        loop_var: vm

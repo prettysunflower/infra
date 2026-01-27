@@ -1,0 +1,41 @@
+- name: Ensure keys directories exists for {{ domain.key }}
+  ansible.builtin.file:
+    path: "{{ ['/etc/opendkim/keys', domain.key] | path_join }}"
+    state: directory
+    owner: opendkim
+    group: mail
+    mode: u=rwx,go=rx
+
+- name: "Should create key for {{ domain.key }}"
+  ansible.builtin.stat:
+    path: "{{ ['/etc/opendkim/keys', domain.key, 'ps1.private'] | path_join }}"
+  register: private_key_exists
+
+- name: "Create certificate for {{ domain.key }}"
+  ansible.builtin.command:
+    argv:
+      - opendkim-genkey
+      - -b
+      - 2048
+      - -h
+      - sha256
+      - -s
+      - ps1
+      - -d
+      - "{{ domain.key }}"
+    chdir: "{{ ['/etc/opendkim/keys', domain.key] | path_join }}"
+  changed_when: true
+  when: not private_key_exists.stat.exists
+  notify:
+    - Generate OpenDKIM KeyTable
+    - Generate OpenDKIM SigningTable
+    - Generate OpenDKIM TrustedHosts
+
+- name: Set Permissions for key for {{ domain.key }}
+  ansible.builtin.file:
+    path: "{{ ['/etc/opendkim/keys', domain.key, 'ps1.private'] | path_join }}"
+    state: file
+    owner: opendkim
+    group: mail
+    mode: u=rw,go=
+  when: not private_key_exists.stat.exists

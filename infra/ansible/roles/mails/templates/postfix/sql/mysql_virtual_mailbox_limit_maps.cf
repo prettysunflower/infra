@@ -1,0 +1,5 @@
+user = {{ mysql_user }}
+password = {{ mysql_password }}
+hosts = localhost
+dbname = {{ mysql_database }}
+query = SELECT quota FROM mailbox WHERE username='%s' AND active = '1'

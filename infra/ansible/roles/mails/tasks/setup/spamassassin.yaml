@@ -1,0 +1,9 @@
+- name: Install SpamAssassin
+  community.general.apk:
+    name: spamassassin
+    state: present
+
+- name: Enable SpamAssassin service on startup
+  ansible.builtin.service:
+    name: spamd
+    enabled: true

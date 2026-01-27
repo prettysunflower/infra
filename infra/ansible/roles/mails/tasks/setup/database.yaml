@@ -1,0 +1,163 @@
+---
+- name: Create email config database
+  community.mysql.mysql_db:
+    config_file: /etc/my.cnf
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: "{{ mysql_database }}"
+    state: present
+
+- name: Copy database schema
+  ansible.builtin.copy:
+    src: files/database.sql
+    dest: /tmp/database.sql
+    owner: root
+    group: root
+    mode: u=rw,go=
+
+- name: Create email config tables
+  community.mysql.mysql_db:
+    config_file: /etc/my.cnf
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: "{{ mysql_database }}"
+    state: import
+    target: /tmp/database.sql
+
+- name: Create email config database user
+  community.mysql.mysql_user:
+    config_file: /etc/my.cnf
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: "{{ mysql_user }}"
+    password: "{{ mysql_password }}"
+    host: localhost
+    priv: "{{ mysql_database }}.*:ALL"
+    state: present
+
+- name: Get current domains
+  community.mysql.mysql_query:
+    config_file: /etc/my.cnf
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_db: "{{ mysql_database }}"
+    query: SELECT domain FROM domain
+  register: current_domains
+
+- name: Register new domains
+  vars:
+    domains_diff: "{{ domains | difference(current_domains.query_result[0] | map(attribute='domain')) }}"
+  community.mysql.mysql_query:
+    config_file: /etc/my.cnf
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_db: "{{ mysql_database }}"
+    query:
+      - INSERT INTO domain (domain, description, transport, created, modified) VALUES ('{{ domain }}', '', 'virtual', NOW(), NOW())
+  with_items: "{{ domains_diff }}"
+  loop_control:
+    loop_var: domain
+
+- name: Get current mailboxes
+  community.mysql.mysql_query:
+    config_file: /etc/my.cnf
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_db: "{{ mysql_database }}"
+    query: SELECT username FROM mailbox
+  register: current_mailboxes
+
+- name: Generate hashes for passwords of new mailboxes
+  ansible.builtin.command:
+    argv:
+      - /usr/bin/doveadm
+      - pw
+      - -s
+      - ARGON2ID
+      - -p
+      - "{{ mailbox.value.password }}"
+  register: mailboxes_passwords
+  with_items: "{{ emails_mailboxes_passwords | dict2items }}"
+  loop_control:
+    loop_var: mailbox
+  changed_when: false
+
+- name: Copy Mailbox SQL
+  ansible.builtin.template:
+    src: templates/email_users/sql/add_mailboxes.sql.j2
+    dest: /tmp/mailboxes.sql
+    owner: root
+    group: root
+    mode: u=rwx,go=
+
+- name: Run Mailbox SQL
+  community.mysql.mysql_db:
+    config_file: /etc/my.cnf
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: "{{ mysql_database }}"
+    state: import
+    target: /tmp/mailboxes.sql
+
+- name: Create new mailboxes directories
+  vars:
+    mailboxes_diff: "{{ emails_mailboxes.keys() | difference(current_mailboxes.query_result[0] | map(attribute='username')) }}"
+  ansible.builtin.file:
+    path: "/var/mail/vhosts/{{ (mailbox | split('@'))[1] }}/{{ (mailbox | split('@'))[0] }}"
+    state: directory
+    owner: vmail
+    group: vmail
+    mode: u=rwx,go=
+  with_items: "{{ mailboxes_diff }}"
+  loop_control:
+    loop_var: mailbox
+
+- name: Delete removed mailboxes
+  vars:
+    mailboxes_diff: "{{ current_mailboxes.query_result[0] | map(attribute='username') | difference(emails_mailboxes.keys()) }}"
+  ansible.builtin.file:
+    path: "/var/mail/vhosts/{{ (mailbox | split('@'))[1] }}/{{ (mailbox | split('@'))[0] }}"
+    state: absent
+  with_items: "{{ mailboxes_diff }}"
+  loop_control:
+    loop_var: mailbox
+
+- name: Generate hashes for passwords of new service mailboxes
+  ansible.builtin.command:
+    argv:
+      - /usr/bin/doveadm
+      - pw
+      - -s
+      - ARGON2ID
+      - -p
+      - "{{ mailbox.value.password }}"
+  register: service_mailboxes_passwords
+  with_items: "{{ service_emails_passwords | dict2items }}"
+  loop_control:
+    loop_var: mailbox
+  changed_when: false
+
+- name: Copy Service Mailbox SQL
+  ansible.builtin.template:
+    src: templates/email_users/sql/add_service_emails.sql.j2
+    dest: /tmp/service_mailboxes.sql
+    owner: root
+    group: root
+    mode: u=rwx,go=
+
+- name: Run Service Mailbox SQL
+  community.mysql.mysql_db:
+    config_file: /etc/my.cnf
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: "{{ mysql_database }}"
+    state: import
+    target: /tmp/service_mailboxes.sql
+
+- name: Copy alias SQL
+  ansible.builtin.template:
+    src: templates/email_users/sql/add_aliases.sql.j2
+    dest: /tmp/aliases.sql
+    owner: root
+    group: root
+    mode: u=rwx,go=
+
+- name: Run alias SQL
+  community.mysql.mysql_db:
+    config_file: /etc/my.cnf
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: "{{ mysql_database }}"
+    state: import
+    target: /tmp/aliases.sql

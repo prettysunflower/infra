@@ -1,0 +1,3 @@
+https://dl-cdn.alpinelinux.org/alpine/v{{ alpine_version }}/main
+https://dl-cdn.alpinelinux.org/alpine/v{{ alpine_version }}/community
+@edgecommunity https://dl-cdn.alpinelinux.org/alpine/edge/community

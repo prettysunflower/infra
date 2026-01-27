@@ -1,0 +1,14 @@
+proxmox:
+  hosts:
+    yuyuko:
+      ansible_host: 100.126.243.21
+      ansible_user: root
+    iwanaga:
+      ansible_host: 100.72.25.2
+      ansible_user: root
+
+containers:
+  hosts:
+    mails:
+      ansible_host: 100.113.193.5
+      ansible_user: root

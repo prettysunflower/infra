@@ -1,0 +1,15 @@
+---
+#- hosts: proxmox
+#  name: Proxmox config update
+#  roles:
+#    - proxmox
+
+- hosts: mails
+  name: Mail container config update
+  roles:
+    - mails
+#- hosts:
+#    - yuyuko
+#  name: direnv
+#  roles:
+#    - direnv

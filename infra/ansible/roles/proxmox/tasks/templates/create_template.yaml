@@ -1,0 +1,70 @@
+---
+- name: Validate VM ID is not already in use
+  ansible.builtin.fail:
+    msg: "VM {{ template.key }} (ID {{ template.value.id }}) is already in use by a VM that is not a template."
+  when: template.value.id in existing_vms | json_query('[].vmid') and existing_vms | json_query(vm_query) != [1]
+  vars:
+    vm_query: "[?vmid == `{{ template.value.id }}`].template"
+
+- name: Create template if not exists
+  when: >-
+    template.value.id not in existing_vms | json_query('[].vmid')
+  block:
+    - name: Create a new VM
+      ansible.builtin.command: >
+        pvesh create /nodes/{{ ansible_facts.hostname }}/qemu --vmid {{ template.value.id }}
+      changed_when: true
+
+    - name: Get cloudimg {{ template.value.url }}
+      ansible.builtin.get_url:
+        url: "{{ template.value.url }}"
+        dest: /tmp
+        mode: 0755
+      register: downloaded_image
+
+    - name: Import the downloaded disk
+      ansible.builtin.command: qm importdisk {{ template.value.id }} {{ downloaded_image.dest }} {{ template.value.storage }}
+      changed_when: true
+
+    - name: Get VM configuration
+      ansible.builtin.command: >
+        pvesh get /nodes/{{ ansible_facts.hostname }}/qemu/{{ template.value.id }}/config --output-format json
+      register: current_template_config
+      changed_when: false
+
+    - name: Update VM configuration
+      vars:
+        network_devices: "{{ template.value.network_devices | \
+          default({'net0':{'type': 'virtio', 'bridge': 'vmbr0'}}) | dict2items }}"
+        network_devices_cfg: "{% for netdev in network_devices %}
+          --{{ netdev.key }} {{ netdev.value.type | default(proxmox_vm_defaults.net.type) }}\
+          {{ '=' + netdev.value.mac if netdev.value.mac is defined else '' }},\
+          bridge={{ netdev.value.bridge | default(proxmox_vm_defaults.net.bridge) }},\
+          firewall={{ netdev.value.firewall | default(proxmox_vm_defaults.net.firewall) | ternary(1, 0) }},\
+          {{ ',tag=' + netdev.value.vlan_tag | string if netdev.value.vlan_tag is defined else '' }}
+          {% endfor %}"
+      ansible.builtin.command: >
+        pvesh create /nodes/{{ ansible_facts.hostname }}/qemu/{{ template.value.id }}/config
+        --name {{ template.key }}
+        --bios {{ template.value.bios | default(proxmox_vm_defaults.bios) }}
+        --cores {{ template.value.cores | default(proxmox_vm_defaults.cores) }}
+        --cpu {{ template.value.cpu | default(proxmox_vm_defaults.cpu) }}
+        --machine {{ template.value.machine | default(proxmox_vm_defaults.machine) }}
+        --memory {{ template.value.ram | default(proxmox_vm_defaults.ram) }}
+        --ostype {{ template.value.ostype | default(proxmox_vm_defaults.ostype) }}
+        --scsihw {{ template.value.scsihw | default(proxmox_vm_defaults.scsihw) }}
+        --sockets {{ template.value.sockets | default(proxmox_vm_defaults.sockets) }}
+        --scsi0 {{ current_template_config.stdout | from_json | json_query('unused0') }}
+        --ide0 {{ template.value.storage }}:cloudinit
+        --boot order=scsi0
+        --vga {{ template.value.vga | default(proxmox_vm_defaults.vga) }}
+        {% if 'ovmf' in template.value.bios | default(proxmox_vm_defaults.bios) %}
+        --efidisk0 {{ template.value.storage }}:1,efitype=4m,pre-enrolled-keys=1
+        --tpmstate0 {{ template.value.storage }}:1,version=v2.0
+        {% endif %}
+        {{ network_devices_cfg }}
+      changed_when: true
+
+    - name: Convert VM into a template
+      ansible.builtin.command: pvesh create /nodes/{{ ansible_facts.hostname }}/qemu/{{ template.value.id }}/template
+      changed_when: true

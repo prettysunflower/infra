@@ -1,0 +1,65 @@
+arch: amd64
+
+alpine_version: 3.22
+certificates_path: /etc/certificates
+postfix_main_domain: prettysunflower.moe
+
+domains:
+  prettysunflower.moe:
+    dns_provider: bunny
+  services.prettysunflower.moe:
+    dns_provider: bunny
+  remilia.ch:
+    dns_provider: bunny
+  remydcf.dev:
+    dns_provider: porkbun
+  ecdfeaa2.moe:
+    dns_provider: bunny
+  sunflower.lgbt:
+    dns_provider: bunny
+
+emails_mailboxes:
+  me@prettysunflower.moe:
+    name: prettysunflower
+  remilia@ecdfeaa2.moe:
+    name: prettysunflower
+  pixiv@remydcf.dev:
+    name: prettysunflower
+  umontreal@remilia.ch:
+    name: prettysunflower
+
+emails_aliases:
+  - from: "@ecdfeaa2.moe"
+    to:
+      - remilia@ecdfeaa2.moe
+
+  - from: "@prettysunflower.com"
+    to:
+      - me@prettysunflower.moe
+
+  - from: "@prettysunflower.moe"
+    to:
+      - me@prettysunflower.moe
+
+  - from: "@remilia.ch"
+    to:
+      - me@prettysunflower.moe
+
+  - from: "@remydcf.dev"
+    to:
+      - me@prettysunflower.moe
+
+  - from: "@prettysunflower.com"
+    to:
+      - me@prettysunflower.moe
+
+  - from: "@sunflower.lgbt"
+    to:
+      - me@prettysunflower.moe
+
+lego_env:
+  LEGO_EMAIL: me@prettysunflower.moe
+  LEGO_PATH: "{{certificates_path}}"
+
+mysql_user: email
+mysql_database: email

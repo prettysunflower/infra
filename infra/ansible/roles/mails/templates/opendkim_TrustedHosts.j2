@@ -1,0 +1,5 @@
+127.0.0.1
+::1
+{% for domain, _ in domains.items() %}
+*@{{ domain }} ps1._domainkey.{{ domain }}
+{% endfor %}

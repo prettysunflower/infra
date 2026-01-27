@@ -1,0 +1,59 @@
+---
+- name: Update network device VM-{{ vm.key }}
+  vars:
+    existing_net_config: "{{ vm_config['net' + netdev.key | string] | default('') }}"
+    net_config: "{{ '' if existing_net_config == '' else \
+      existing_net_config | split(',') | map('split', '=') | items2dict(key_name=0, value_name=1) }}"
+    type: "{{ netdev.value.type | default(proxmox_vm_defaults.net.type) }}"
+    mac: "{{ netdev.value.mac | default(net_config[type] | default('')) }}"
+    type_and_mac: "{{ type }}{{ '=' + mac if mac != '' else '' }}"
+    updated_net_config:
+      "{{ type_and_mac }},bridge={{ netdev.value.bridge | default(proxmox_vm_defaults.net.bridge) }},\
+      firewall={{ netdev.value.firewall | default(proxmox_vm_defaults.net.firewall) | ternary(1, 0) }}\
+      {{ ',tag=' + netdev.value.vlan_tag | string if netdev.value.vlan_tag is defined else '' }}"
+  ansible.builtin.command: >-
+    pvesh set /nodes/{{ ansible_facts.hostname }}/qemu/{{ vm.value.id }}/config
+    --net{{ netdev.key }} {{ updated_net_config }}
+  when: updated_net_config != existing_net_config
+  changed_when: true
+  with_items: "{{ vm.value.network | default({}) | dict2items }}"
+  loop_control:
+    loop_var: netdev
+
+- name: Update cloud-init ipconfigs VM-{{ vm.key }}
+  vars:
+    existing_ip_config: "{{ vm_config['ipconfig' + ipcfg.key | string] | default('') }}"
+    updated_ip_config: >
+      {{ 'ip=dhcp' if ipcfg.value.dhcp | default(false) else 'ip=' + ipcfg.value.ip + ',gw=' + ipcfg.value.gateway }}
+  ansible.builtin.command: >-
+    pvesh set /nodes/{{ ansible_facts.hostname }}/qemu/{{ vm.value.id }}/config
+    --ipconfig{{ ipcfg.key }} {{ updated_ip_config }}
+  when: updated_ip_config != existing_ip_config
+  changed_when: true
+  with_items: "{{ vm.value.ipconfig | default({}) | dict2items }}"
+  loop_control:
+    loop_var: ipcfg
+
+- name: Remove undeclared network interfaces VM-{{ vm.key }}
+  vars:
+    net_query: "[?starts_with(key, 'net')].key"
+    current_network_devs: "{{ vm_config | dict2items | json_query(net_query) }}"
+    network_devs: "{{ ['net'] | product((vm.value.network | default({})).keys()) | map('join') | list }}"
+    network_devs_to_remove: "{{ current_network_devs | difference(network_devs) | join(',') }}"
+  ansible.builtin.command: >-
+    pvesh set /nodes/{{ ansible_facts.hostname }}/qemu/{{ vm.value.id }}/config
+    --delete {{ network_devs_to_remove }}
+  when: vm_remove_unreferenced and network_devs_to_remove | trim | length > 0
+  changed_when: true
+
+- name: Remove undeclared cloud-init ipconfigs VM-{{ vm.key }}
+  vars:
+    ipcfg_query: "[?starts_with(key, 'ipconfig')].key"
+    current_ipconfigs: "{{ vm_config | dict2items | json_query(ipcfg_query) }}"
+    ipconfigs: "{{ ['ipconfig'] | product((vm.value.ipconfig | default({})).keys()) | map('join') | list }}"
+    ipconfigs_to_remove: "{{ current_ipconfigs | difference(ipconfigs) | join(',') }}"
+  ansible.builtin.command: >-
+    pvesh set /nodes/{{ ansible_facts.hostname }}/qemu/{{ vm.value.id }}/config
+    --delete {{ ipconfigs_to_remove }}
+  when: vm_remove_unreferenced and ipconfigs_to_remove | trim | length > 0
+  changed_when: true

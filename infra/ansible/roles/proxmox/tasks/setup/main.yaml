@@ -1,0 +1,12 @@
+---
+- name: Switch to community repository
+  ansible.builtin.import_tasks: community_repo.yaml
+
+- name: Disable Proxmox Subscription prompt
+  ansible.builtin.import_tasks: disable_subscription_prompt.yaml
+
+- name: Install Fish shell
+  ansible.builtin.import_tasks: fish_shell.yaml
+
+- name: Update packages
+  ansible.builtin.import_tasks: update.yaml

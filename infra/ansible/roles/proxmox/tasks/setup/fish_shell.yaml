@@ -1,0 +1,30 @@
+---
+- name: Gather the package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: Install fish
+  when: "'fish' not in ansible_facts.packages"
+  block:
+    - name: Add fish repository GPG key
+      ansible.builtin.get_url:
+        url: https://download.opensuse.org/repositories/shells:fish:release:4/Debian_13/Release.key
+        dest: /etc/apt/trusted.gpg.d/shells_fish_release_4.asc
+        mode: "0644"
+        force: true
+
+    - name: Add fish repository
+      ansible.builtin.apt_repository:
+        repo: deb http://download.opensuse.org/repositories/shells:/fish:/release:/4/Debian_13/ /
+        state: present
+        filename: shells:fish:release:4
+
+    - name: Install fish
+      ansible.builtin.apt:
+        name: fish
+        update_cache: true
+
+- name: Set fish as default shell
+  ansible.builtin.user:
+    name: root
+    shell: /usr/bin/fish

@@ -1,0 +1,31 @@
+{% set password = {} %}
+{% for password_entry in service_mailboxes_passwords['results'] %}
+    {%- set _ = password.update({password_entry.mailbox.key: password_entry.stdout}) -%}
+{% endfor %}
+
+{% for local_address, propreties in service_emails_passwords.items() %}
+    INSERT INTO
+        mailbox
+        (username, password, name, maildir, local_part, domain, created, modified)
+    VALUES
+        (
+            '{{ local_address }}@services.prettysunflower.moe',
+            '{{ password[local_address] }}',
+            '{{ local_address }}',
+            'services.prettysunflower.moe/{{ local_address }}',
+            '{{ local_address }}',
+            'services.prettysunflower.moe',
+            NOW(),
+            NOW()
+        )
+    ON DUPLICATE KEY UPDATE
+        password='{{ password[local_address] }}',
+        modified=NOW();
+{% endfor %}
+
+DELETE FROM mailbox WHERE username NOT IN (
+    {% for local_address, propreties in service_emails_passwords.items() %}
+        '{{ local_address }}@services.prettysunflower.moe'{% if not loop.last %},{% endif %}
+
+    {% endfor %}
+) AND username LIKE '%@services.prettysunflower.moe';

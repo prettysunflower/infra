@@ -1,0 +1,46 @@
+{% for alias in emails_aliases %}
+    {% set domain = alias.from.split('@')[1] %}
+    INSERT INTO
+        alias
+        (address, goto, domain, created, modified)
+    VALUES
+        (
+            '{{ alias.from }}',
+            '{{ alias.to | join(",") }}',
+            '{{ domain }}',
+            NOW(),
+            NOW()
+        )
+    ON DUPLICATE KEY UPDATE
+        goto='{{ alias.to | join(",") }}',
+        modified=NOW();
+{% endfor %}
+
+{% for address, propreties in emails_mailboxes.items() %}
+    {% set domain = address.split('@')[1] %}
+    INSERT INTO
+        alias
+        (address, goto, domain, created, modified)
+    VALUES
+        (
+            '{{ address }}',
+            '{{ address }}',
+            '{{ domain }}',
+            NOW(),
+            NOW()
+        )
+    ON DUPLICATE KEY UPDATE
+        goto='{{ address }}',
+        modified=NOW();
+{% endfor %}
+
+DELETE FROM alias WHERE address NOT IN (
+    {% for alias in emails_aliases %}
+        '{{ alias.from }}',
+
+    {% endfor %}
+    {% for address, propreties in emails_mailboxes.items() %}
+        '{{ address }}'{% if not loop.last %},{% endif %}
+
+    {% endfor %}
+);

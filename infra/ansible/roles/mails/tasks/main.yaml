@@ -1,0 +1,8 @@
+---
+- name: Setup container
+  ansible.builtin.import_tasks: setup/main.yaml
+  tags: setup
+
+- name: Generate certificates
+  ansible.builtin.import_tasks: certs/main.yaml
+  tags: certs

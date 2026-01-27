@@ -1,0 +1,46 @@
+---
+- name: "Should renew {{ domain.key }}"
+  ansible.builtin.stat:
+    path: "{{ [certificates_path, 'certificates', domain.key + '.crt'] | path_join }}"
+  register: certificate_file_exists
+
+- name: "Create certificate for {{ domain.key }}"
+  ansible.builtin.command:
+    argv:
+      - lego
+      - --accept-tos
+      - --domains
+      - "{{ domain.key }}"
+      - --domains
+      - "mail.{{ domain.key }}"
+      - --domains
+      - "smtp.{{ domain.key }}"
+      - --dns
+      - "{{ domain.value.dns_provider }}"
+      - --dns.resolvers=1.1.1.1:53
+      - run
+  changed_when: true
+  when: not certificate_file_exists.stat.exists
+  environment: "{{ lego_env | ansible.builtin.combine(lego_env_api) }}"
+  notify:
+    - Generate vmail_ssm.map
+    - Restart Dovecot
+
+- name: "Renew certificate for {{ domain.key }}"
+  ansible.builtin.command:
+    argv:
+      - lego
+      - --accept-tos
+      - --domains
+      - "{{ domain.key }}"
+      - --dns
+      - "{{ domain.value.dns_provider }}"
+      - --dns.resolvers=1.1.1.1:53
+      - renew
+  register: result
+  changed_when: true or '"no renewal" not in result.stderr'
+  when: certificate_file_exists.stat.exists
+  environment: "{{ lego_env | ansible.builtin.combine(lego_env_api) }}"
+  notify:
+    - Generate vmail_ssm.map
+    - Restart Dovecot

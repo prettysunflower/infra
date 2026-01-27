@@ -1,0 +1,11 @@
+- name: Setup Proxmox
+  ansible.builtin.import_tasks: setup/main.yaml
+  tags: setup
+
+- name: Setup templates and isos
+  ansible.builtin.import_tasks: templates/main.yaml
+  tags: templates
+
+- name: Setup VMs
+  ansible.builtin.import_tasks: vm/main.yaml
+  tags: vms

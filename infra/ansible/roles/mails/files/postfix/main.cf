@@ -1,0 +1,55 @@
+myorigin = prettysunflower.moe
+smtpd_banner = $myhostname ESMTP $mail_name (Alpine Linux) - 🏳️‍⚧️ (◕‿◕✿) Nya!
+biff = no
+append_dot_mydomain = no
+readme_directory = no
+compatibility_level = 3.6
+
+# TLS parameters
+smtpd_tls_security_level=may
+smtpd_tls_chain_files = /etc/certificates/certificates/prettysunflower.moe.key /etc/certificates/certificates/prettysunflower.moe.crt
+smtp_tls_session_cache_database = lmdb:${data_directory}/smtp_scache
+tls_server_sni_maps = lmdb:/etc/postfix/vmail_ssl.map
+
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_sasl_auth_enable = yes
+smtpd_recipient_restrictions = permit_sasl_authenticated permit_mynetworks reject_unauth_destination
+smtpd_relay_restrictions = permit_sasl_authenticated defer_unauth_destination
+smtp_sasl_security_options = noanonymous
+smtp_sasl_tls_security_options = noanonymous
+smtp_sasl_auth_enable = yes
+smtp_tls_security_level = encrypt
+header_size_limit = 4096000
+smtp_sasl_password_maps = lmdb:/etc/postfix/sasl_passwd
+relayhost = 199.58.80.81:587
+message_size_limit = 102400000
+smtpd_milters = inet:127.0.0.1:8891
+non_smtpd_milters = $smtpd_milters 
+milter_default_action = accept
+
+myhostname = mail.prettysunflower.moe
+alias_maps = lmdb:/etc/aliases
+alias_database = lmdb:/etc/aliases
+mydestination = localhost
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = all
+inet_protocols = all
+
+virtual_transport = lmtp:unix:private/dovecot-lmtp
+virtual_mailbox_domains = proxy:mysql:/etc/postfix/sql/mysql_virtual_domains_maps.cf
+virtual_alias_maps =
+   proxy:mysql:/etc/postfix/sql/mysql_virtual_alias_maps.cf,
+   proxy:mysql:/etc/postfix/sql/mysql_virtual_alias_domain_maps.cf,
+   proxy:mysql:/etc/postfix/sql/mysql_virtual_alias_domain_catchall_maps.cf
+virtual_mailbox_maps =
+   proxy:mysql:/etc/postfix/sql/mysql_virtual_mailbox_maps.cf,
+   proxy:mysql:/etc/postfix/sql/mysql_virtual_alias_domain_mailbox_maps.cf
+relay_domains = proxy:mysql:/etc/postfix/sql/mysql_relay_domains.cf
+transport_maps = proxy:mysql:/etc/postfix/sql/mysql_transport_maps.cf 
+
+postscreen_upstream_proxy_protocol = haproxy
+postscreen_upstream_proxy_timeout = 5s
+postscreen_greet_action = enforce

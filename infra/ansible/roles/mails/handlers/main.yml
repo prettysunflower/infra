@@ -1,0 +1,65 @@
+---
+- name: Generate vmail_ssm.map
+  ansible.builtin.template:
+    src: templates/postfix_vmail_ssl.map.j2
+    dest: /etc/postfix/vmail_ssl.map
+    owner: root
+    group: root
+    mode: u=rw,go=r
+  notify:
+    - Postmap vmail_ssl.map
+
+- name: Generate OpenDKIM KeyTable
+  ansible.builtin.template:
+    src: templates/opendkim_KeyTable.j2
+    dest: /etc/opendkim/KeyTable
+    owner: root
+    group: root
+    mode: u=rw,go=r
+  notify:
+    - Restart OpenDKIM
+    - Restart Postfix
+
+- name: Generate OpenDKIM SigningTable
+  ansible.builtin.template:
+    src: templates/opendkim_SigningTable.j2
+    dest: /etc/opendkim/SigningTable
+    owner: root
+    group: root
+    mode: u=rw,go=r
+  notify:
+    - Restart OpenDKIM
+    - Restart Postfix
+
+- name: Generate OpenDKIM TrustedHosts
+  ansible.builtin.template:
+    src: templates/opendkim_TrustedHosts.j2
+    dest: /etc/opendkim/TrustedHosts
+    owner: root
+    group: root
+    mode: u=rw,go=r
+  notify:
+    - Restart OpenDKIM
+    - Restart Postfix
+
+- name: Postmap vmail_ssl.map
+  ansible.builtin.command:
+    cmd: postmap -F /etc/postfix/vmail_ssl.map
+  changed_when: true
+  notify:
+    - Restart Postfix
+
+- name: Restart Postfix
+  ansible.builtin.service:
+    name: postfix
+    state: restarted
+
+- name: Restart Dovecot
+  ansible.builtin.service:
+    name: dovecot
+    state: restarted
+
+- name: Restart OpenDKIM
+  ansible.builtin.service:
+    name: opendkim
+    state: restarted
