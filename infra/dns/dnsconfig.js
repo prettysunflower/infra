@@ -219,6 +219,7 @@ D(
   okina("jackett"),
   okina("privatebin"),
   okina("masto-fe"),
+  okina("music"),
   okina("public.registry.container"),
   CNAME("tigris", "prettysunflower.fly.storage.tigris.dev."),
   TXT("_discord", "dh=86bfb23fa64ce4d8e26d4b165e43958a744105f1"),
