@@ -24,7 +24,7 @@ spec:
             medium: Memory
       containers:
         - name: backrest
-          image: garethgeorge/backrest:v1.10.1
+          image: garethgeorge/backrest:v1.11.2
           envFrom:
             - configMapRef:
                 name: backrest-configmap
