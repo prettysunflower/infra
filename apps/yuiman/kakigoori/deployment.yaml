@@ -193,7 +193,7 @@ spec:
         app.kubernetes.io/name: rabbitmq
     spec:
       containers:
-        - image: rabbitmq:4.2.2
+        - image: rabbitmq:4.2.3
           name: rabbitmq
           ports:
             - containerPort: 5672
