@@ -3,7 +3,10 @@ resources:
   - ../../infra/common/csi-driver-nfs
   - actual
   - autoupdate-teable-figurines-currencies
+  - booklore
+  - epicgames-freegames
   - etherpad
+  - flaresolverr
   - gitea
   - glance
   - gotosocial
@@ -12,7 +15,11 @@ resources:
   - opengist
   - outline
   - paperless
+  - pixiv-notifs
   - planka
+  - prowlarr
+  - radarr
+  - sonarr
   - publicfiles
   - qui
   - radicale

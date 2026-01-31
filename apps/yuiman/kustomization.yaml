@@ -6,12 +6,16 @@ resources:
   - httpdebug
   - kakigoori
   - mazanoke
+  - masto-fe
+  - backrest
+  - enoko
   - miniqr
   - multi-scrobbler
   - ourfigurecollection
   - pocketid-remilia
   - pocketid-sunflower
   - prettysunflower-website
+  - rallly
   - privatebin
   - uptime-kuma
   - vlmcsd
