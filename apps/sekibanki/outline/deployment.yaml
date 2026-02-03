@@ -70,7 +70,7 @@ spec:
               port: http
             failureThreshold: 30
             periodSeconds: 10
-        - image: valkey/valkey:9.0.1-alpine
+        - image: valkey/valkey:9.0.2-alpine
           name: valkey
           command: ["valkey-server"]
           ports:
