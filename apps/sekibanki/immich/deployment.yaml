@@ -21,7 +21,7 @@ spec:
             claimName: immich-media
       containers:
         - name: immich
-          image: ghcr.io/immich-app/immich-server:v2.5.2
+          image: ghcr.io/immich-app/immich-server:v2.5.3
           envFrom:
             - configMapRef:
                 name: immich-config
@@ -112,7 +112,7 @@ spec:
             claimName: immich-models-cache
       containers:
         - name: immich
-          image: ghcr.io/immich-app/immich-machine-learning:v2.5.2
+          image: ghcr.io/immich-app/immich-machine-learning:v2.5.3
           envFrom:
             - configMapRef:
                 name: immich-config
