@@ -13,6 +13,7 @@ data:
   SSO_ONLY: "true"
   SSO_AUTHORITY: https://login.sunflower.lgbt
   SSO_CLIENT_ID: 683d908d-c642-458b-8cd4-c1bda25db2c9
+  SSO_CLIENT_CACHE_EXPIRATION: "3600"
   PUSH_ENABLED: "true"
   PUSH_RELAY_URI: https://api.bitwarden.eu
   PUSH_IDENTITY_URI: https://identity.bitwarden.eu
