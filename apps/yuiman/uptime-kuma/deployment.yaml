@@ -23,7 +23,7 @@ spec:
           persistentVolumeClaim:
             claimName: uptime-kuma-pvc
       containers:
-        - image: louislam/uptime-kuma:2.0.2
+        - image: louislam/uptime-kuma:2.1.0
           name: uptime-kuma
           ports:
             - containerPort: 3001
