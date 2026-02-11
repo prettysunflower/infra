@@ -16,7 +16,7 @@ spec:
         app.kubernetes.io/name: gotosocial
     spec:
       containers:
-        - image: superseriousbusiness/gotosocial:snapshot-amd64
+        - image: superseriousbusiness/gotosocial:0.21.0-rc1
           imagePullPolicy: Always
           name: gotosocial
           ports:
