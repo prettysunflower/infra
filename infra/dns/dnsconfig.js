@@ -39,7 +39,8 @@ function mx(subdomain) {
 }
 
 function okina(subdomain) {
-  return [A(subdomain, fsn_okina), AAAA(subdomain, fsn_okina_ipv6)];
+  //return [A(subdomain, fsn_okina), AAAA(subdomain, fsn_okina_ipv6)];
+  return [A(subdomain, fsn_okina)];
 }
 
 D(
@@ -221,6 +222,7 @@ D(
   okina("masto-fe"),
   okina("music"),
   okina("public.registry.container"),
+  okina("cimmondayhelper"),
   CNAME("tigris", "prettysunflower.fly.storage.tigris.dev."),
   TXT("_discord", "dh=86bfb23fa64ce4d8e26d4b165e43958a744105f1"),
   TXT(

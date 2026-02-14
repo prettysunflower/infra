@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cim-monday-helper
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: cim-monday-helper
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http

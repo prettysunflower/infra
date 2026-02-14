@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cim-monday-helper
+  labels:
+    app.kubernetes.io/name: cim-monday-helper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cim-monday-helper
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cim-monday-helper
+    spec:
+      volumes:
+        - name: tmp-memory
+          emptyDir:
+            sizeLimit: 500Mi
+            medium: Memory
+      containers:
+        - name: monday-cim-helper
+          image: private.registry.container.sunflower.lgbt/prettysunflower/cim-monday-helper:latest
+          envFrom:
+            - secretRef:
+                name: cim-monday-helper-secrets
+          ports:
+            - containerPort: 8090
+              name: http
+          volumeMounts:
+            - name: tmp-memory
+              mountPath: "/tmp"
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
