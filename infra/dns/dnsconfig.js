@@ -38,32 +38,41 @@ function mx(subdomain) {
   ];
 }
 
-function okina(subdomain) {
-  //return [A(subdomain, fsn_okina), AAAA(subdomain, fsn_okina_ipv6)];
-  return [A(subdomain, fsn_okina)];
+function okina(subdomain, dsp) {
+  if (dsp == DSP_BIND9) {
+    return [A(subdomain, internal_okina)];
+  } else {
+    //return [A(subdomain, fsn_okina), AAAA(subdomain, fsn_okina_ipv6)];
+    return [A(subdomain, fsn_okina)];
+  }
+}
+
+function prettysunflower_moe_common_okina(dns_type) {
+  return [
+    okina("@", dns_type),
+    okina("www", dns_type),
+    okina("okina", dns_type),
+    okina("qr", dns_type),
+    okina("smtp", dns_type),
+    okina("kms", dns_type),
+    okina("data", dns_type),
+    okina("wiki", dns_type),
+    okina("invidious", dns_type),
+    okina("gist", dns_type),
+    okina("files", dns_type),
+    okina("fedi", dns_type),
+    okina("deneb.sonarr", dns_type),
+    okina("deneb.radarr", dns_type),
+    okina("books", dns_type),
+  ];
 }
 
 D(
   "prettysunflower.moe!common",
   REG_NONE,
-  okina("@"),
-  okina("www"),
   A("fsn.okina", fsn_okina),
   AAAA("fsn.okina", fsn_okina_ipv6),
-  okina("okina"),
-  okina("qr"),
-  okina("smtp"),
-  okina("kms"),
   CNAME("tigris", "prettysunflower.fly.storage.tigris.dev."),
-  okina("data"),
-  okina("wiki"),
-  okina("invidious"),
-  okina("gist"),
-  okina("files"),
-  okina("fedi"),
-  okina("deneb.sonarr"),
-  okina("deneb.radarr"),
-  okina("books"),
   CNAME("s3.fedi", "fedi-prettysunflower-storage.t3.storage.dev."),
   mx("@"),
   mx("services"),
@@ -92,6 +101,7 @@ D(
   REG_NONE,
   DnsProvider(DSP_BUNNY),
   INCLUDE("prettysunflower.moe!common"),
+  prettysunflower_moe_common_okina(DSP_BUNNY),
   okina("karakeep"),
   okina("git"),
   okina("papers"),
@@ -103,6 +113,7 @@ D(
   REG_NONE,
   DnsProvider(DSP_BIND9),
   INCLUDE("prettysunflower.moe!common"),
+  prettysunflower_moe_common_okina(DSP_BIND9),
   A("internal.okina", internal_okina),
   A("actual", internal_okina),
   A("caldav", internal_okina),
@@ -206,23 +217,28 @@ D(
   A("ns2", "109.104.147.1"),
 );
 
+function sunflower_lgbt_common_okina(dsp) {
+  return [
+    okina("@", dsp),
+    okina("www", dsp),
+    okina("git", dsp),
+    okina("kms", dsp),
+    okina("pad", dsp),
+    okina("photos", dsp),
+    okina("schedule", dsp),
+    okina("data", dsp),
+    okina("jackett", dsp),
+    okina("privatebin", dsp),
+    okina("masto-fe", dsp),
+    okina("music", dsp),
+    okina("public.registry.container", dsp),
+    okina("cimmondayhelper", dsp),
+  ];
+}
+
 D(
   "sunflower.lgbt!common",
   REG_NONE,
-  okina("@"),
-  okina("www"),
-  okina("git"),
-  okina("kms"),
-  okina("pad"),
-  okina("photos"),
-  okina("schedule"),
-  okina("data"),
-  okina("jackett"),
-  okina("privatebin"),
-  okina("masto-fe"),
-  okina("music"),
-  okina("public.registry.container"),
-  okina("cimmondayhelper"),
   CNAME("tigris", "prettysunflower.fly.storage.tigris.dev."),
   TXT("_discord", "dh=86bfb23fa64ce4d8e26d4b165e43958a744105f1"),
   TXT(
@@ -242,6 +258,7 @@ D(
   REG_NONE,
   DnsProvider(DSP_BUNNY),
   INCLUDE("sunflower.lgbt!common"),
+  sunflower_lgbt_common_okina(DSP_BUNNY),
   okina("login"),
 );
 
@@ -250,6 +267,7 @@ D(
   REG_NONE,
   DnsProvider(DSP_BIND9),
   INCLUDE("sunflower.lgbt!common"),
+  sunflower_lgbt_common_okina(DSP_BIND9),
   A("currency", internal_okina),
   A("n8n", internal_okina),
   A("mirror.container", internal_okina),
@@ -263,11 +281,20 @@ D(
 );
 
 D(
-  "kakigoori.dev",
+  "kakigoori.dev!public",
   REG_NONE,
   DnsProvider(DSP_PORKBUN),
   okina("@"),
   okina("www"),
+  CNAME("images", "kakigoori.fly.storage.tigris.dev."),
+);
+
+D(
+  "kakigoori.dev!internal",
+  REG_NONE,
+  DnsProvider(DSP_BIND9),
+  okina("@", DSP_BIND9),
+  okina("www", DSP_BIND9),
   CNAME("images", "kakigoori.fly.storage.tigris.dev."),
 );
 
