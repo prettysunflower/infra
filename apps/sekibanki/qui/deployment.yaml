@@ -20,7 +20,7 @@ spec:
             claimName: qui-pvc
       containers:
         - name: qui
-          image: ghcr.io/autobrr/qui:v1.13.1
+          image: ghcr.io/autobrr/qui:v1.14.0
           envFrom:
             - configMapRef:
                 name: qui-configmap
