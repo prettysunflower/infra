@@ -1,0 +1,46 @@
+- set_fact:
+    navidrome_release: "{{ (navidrome_versions.json | community.general.json_query('[0].assets[?contains(name, `linux_amd64.tar.gz`)].{name: name, url: browser_download_url, digest: digest}'))[0]}}"
+
+- name: "Downloading Navidrome {{ latest_navidrome_version }}"
+  ansible.builtin.get_url:
+    url: "{{ navidrome_release.url }}"
+    dest: /tmp/navidrome.tar.gz
+    checksum: "{{ navidrome_release.digest }}"
+    mode: u=rw,go=
+
+- name: Installing Navidrome
+  ansible.builtin.unarchive:
+    src: /tmp/navidrome.tar.gz
+    dest: /opt/navidrome/
+    remote_src: true
+    include:
+      - navidrome
+    mode: u=rwx,go=rx
+    owner: 1000
+
+- name: Remove downloaded tar.gz
+  ansible.builtin.file:
+    state: absent
+    path: /tmp/navidrome.tar.gz
+
+- name: Adding init.d script
+  ansible.builtin.copy:
+    src: files/navidrome.initd
+    dest: /etc/init.d/navidrome
+    owner: root
+    group: root
+    mode: u=rwx,go=rx
+
+- name: Adding conf.d settings
+  ansible.builtin.copy:
+    src: files/navidrome.confd
+    dest: /etc/conf.d/navidrome
+    owner: root
+    group: root
+    mode: u=rw,go=r
+
+- name: Enable and Restart Navidrome
+  ansible.builtin.service:
+    name: navidrome
+    enabled: true
+    state: restarted
