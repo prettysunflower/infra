@@ -1,0 +1,5 @@
+MusicFolder = "/mnt/yuyuko/media/media/music"
+BaseUrl = "https://music.sunflower.lgbt"
+EnableInsightsCollector = false
+EnableSharing = true
+UILoginBackgroundUrl = "https://kakigoori.dev/89a25d66-f736-457f-97a0-7ead78dd6058/auto"

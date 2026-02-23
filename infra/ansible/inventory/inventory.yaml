@@ -12,3 +12,6 @@ containers:
     mails:
       ansible_host: 100.113.193.5
       ansible_user: root
+    navidrome:
+      ansible_host: 100.71.106.114
+      ansible_user: root

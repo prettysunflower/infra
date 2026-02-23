@@ -185,7 +185,7 @@ spec:
             name: prettysunflower-website-anubis-config
       containers:
         - name: anubis
-          image: ghcr.io/techarohq/anubis:v1.24.0
+          image: ghcr.io/techarohq/anubis:v1.25.0
           envFrom:
             - secretRef:
                 name: thoth

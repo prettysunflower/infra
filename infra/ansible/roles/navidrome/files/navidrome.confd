@@ -1,0 +1,2 @@
+navidrome_configfile=/etc/navidrome/navidrome.toml
+error_log=/var/log/navidrome.log

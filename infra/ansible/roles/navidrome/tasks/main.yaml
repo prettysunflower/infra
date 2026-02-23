@@ -1,0 +1,27 @@
+- name: Upload configuration
+  ansible.builtin.copy:
+    src: files/navidrome.toml
+    dest: /etc/navidrome/navidrome.toml
+    owner: 1000
+    group: 1000
+    mode: u=rw,go=r
+
+- name: Check installed version
+  ansible.builtin.shell: '/opt/navidrome/navidrome --version || echo "0"'
+  register: current_navidrome_version_raw
+  changed_when: False
+
+- name: Check most recent version
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/navidrome/navidrome/releases
+    body_format: json
+    return_content: true
+  register: navidrome_versions
+
+- set_fact:
+    current_navidrome_version: "{{ current_navidrome_version_raw | regex_search('([\\d\\.]+)') }}"
+    latest_navidrome_version: "{{ navidrome_versions.json[0].tag_name | replace('v', '') }}"
+
+- name: Install / Update Navidrome
+  ansible.builtin.import_tasks: install_ansible.yaml
+  when: current_navidrome_version != latest_navidrome_version

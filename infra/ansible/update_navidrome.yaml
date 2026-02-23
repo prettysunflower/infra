@@ -1,0 +1,4 @@
+- hosts: navidrome
+  name: Update Navidrome
+  roles:
+    - navidrome
