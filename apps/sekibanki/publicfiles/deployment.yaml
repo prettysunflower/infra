@@ -28,7 +28,7 @@ spec:
           configMap:
             name: publicfiles-caddy-config
       containers:
-        - image: caddy:2.10.2-alpine
+        - image: caddy:2.11.1-alpine
           name: caddy
           imagePullPolicy: Always
           ports:

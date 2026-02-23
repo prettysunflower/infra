@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1-labs
 
-FROM caddy:2.10.2-builder AS caddy-builder
+FROM caddy:2.11.1-builder AS caddy-builder
 
 RUN xcaddy build \
     --with github.com/caddy-dns/porkbun \
