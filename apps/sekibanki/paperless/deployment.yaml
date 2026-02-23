@@ -110,7 +110,7 @@ spec:
             requests:
               cpu: 250m
               memory: 128Mi
-        - image: docker.io/gotenberg/gotenberg:8.26
+        - image: docker.io/gotenberg/gotenberg:8.27
           name: gotenberg
           command:
             [
