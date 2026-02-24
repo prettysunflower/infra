@@ -83,7 +83,7 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
-        - image: valkey/valkey:9.0.2-alpine
+        - image: valkey/valkey:9.0.3-alpine
           name: valkey
           ports:
             - containerPort: 6379
@@ -110,7 +110,7 @@ spec:
             requests:
               cpu: 250m
               memory: 128Mi
-        - image: docker.io/gotenberg/gotenberg:8.26
+        - image: docker.io/gotenberg/gotenberg:8.27
           name: gotenberg
           command:
             [

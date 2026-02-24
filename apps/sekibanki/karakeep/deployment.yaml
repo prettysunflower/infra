@@ -20,7 +20,7 @@ spec:
             claimName: karakeep-pvc
       containers:
         - name: karakeep
-          image: ghcr.io/karakeep-app/karakeep:0.30.0
+          image: ghcr.io/karakeep-app/karakeep:0.31.0
           envFrom:
             - configMapRef:
                 name: karakeep-config
@@ -104,7 +104,7 @@ spec:
             claimName: karakeep-pvc
       containers:
         - name: meilisearch
-          image: getmeili/meilisearch:v1.35.1
+          image: getmeili/meilisearch:v1.36.0
           command: ["meilisearch", "--experimental-dumpless-upgrade"]
           envFrom:
             - configMapRef:
