@@ -161,6 +161,17 @@ youtubethumbnails.prettysunflower.moe {
 fedi.prettysunflower.moe {
 	import bunny
 
+	handle /.well-known/webfinger {
+		reverse_proxy gotosocial.gotosocial.svc.yuiman.prettysunflower.moe {
+			@notfound status 404
+			handle_response @notfound {
+				respond <<JSON
+				{"subject": "{query.resource}", "links": [{"rel": "http://openid.net/specs/connect/1.0/issuer", "href": "https://login.sunflower.lgbt"}]}
+				JSON 200
+			}
+		}
+	}
+
 	handle /login {
 		redir https://masto-fe.sunflower.lgbt
 	}
@@ -277,6 +288,7 @@ prowlarr.prettysunflower.moe {
 }
 
 books.prettysunflower.moe {
+	import bunny
+
 	reverse_proxy booklore.default.svc.sekibanki.prettysunflower.moe
 }
-
