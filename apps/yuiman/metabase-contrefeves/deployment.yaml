@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metabase
+  namespace: metabase-contrefeves
+  labels:
+    app.kubernetes.io/name: metabase
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: metabase
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: metabase
+    spec:
+      containers:
+        - name: metabase
+          image: metabase/metabase:latest
+          envFrom:
+            - configMapRef:
+                name: metabase-config
+          env:
+            - name: MB_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-app
+                  key: username
+            - name: MB_DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-app
+                  key: password
+            - name: MB_DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-app
+                  key: host
+            - name: MB_DB_DBNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-app
+                  key: dbname
+          ports:
+            - containerPort: 3000
+              name: http

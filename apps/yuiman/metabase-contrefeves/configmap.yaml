@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: metabase-config
+  namespace: metabase-contrefeves
+data:
+  MB_DB_TYPE: postgres

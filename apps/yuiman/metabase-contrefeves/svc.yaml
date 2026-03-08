@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: metabase
+  namespace: metabase-contrefeves
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: metabase
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http
