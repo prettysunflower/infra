@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dolibarr-configmap
+  namespace: dolibarr
+data:
+  DOLI_INSTALL_AUTO: "1"
+  DOLI_INIT_DEMO: "0"
+  DOLI_PROD: "1"
+  DOLI_DB_TYPE: "pgsql"
+  DOLI_URL_ROOT: "https://dolibarr.nyallo.net"
+  DOLI_COMPANY_NAME: "Nyallo"
+  WWW_USER_ID: "1000"
+  WWW_GROUP_ID: "1000"
