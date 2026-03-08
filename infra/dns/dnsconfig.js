@@ -299,3 +299,16 @@ D(
 );
 
 D("download-ram.zip", REG_NONE, DnsProvider(DSP_PORKBUN), okina("restic"));
+
+D(
+  "nyallo.net",
+  REG_NONE,
+  DnsProvider(DSP_PORKBUN),
+  TXT(
+    "ps1._domainkey",
+    "v=DKIM1; h=sha256; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzonmKGMmk/Emie/MwWee6sWDmlj+uzdtMnE0+Gwfo/u0M2TZWmelPJ/T6VOpoB3iVrLNNrHDtcHyoGr24/EMEwjOk9J9SaDb7Fj+7RwgAyz04ykT+EjJJF+I0x+xz9qoJrxYhnoz6AOPbTT/KIfHMEaXe8Gox9DzvjdzH37TuNEzC2sEM+386G4WK3HR4TcCu0AhoWHCs5gyoojS7Za0ym9H+udlYpSxKsMugJexdaPW0CKBYWiQcYOI8YoX1WZTa9P3TTpBmgs8UniDUR5k14cXooyWG82OBhVVKIEiDyj2zjMOJ+J8DAl8WiT5aB6Ru/w/WCUFQGVWRZCu7YCH+QIDAQAB",
+  ),
+  mx("@"),
+  dmarc,
+  A("dolibarr", internal_okina),
+);

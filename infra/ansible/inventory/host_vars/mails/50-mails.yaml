@@ -17,6 +17,10 @@ domains:
     dns_provider: bunny
   sunflower.lgbt:
     dns_provider: bunny
+  nyallo.net:
+    dns_provider: porkbun
+  nyallo.ca:
+    dns_provider: porkbun
 
 emails_mailboxes:
   me@prettysunflower.moe:
@@ -27,6 +31,8 @@ emails_mailboxes:
     name: prettysunflower
   umontreal@remilia.ch:
     name: prettysunflower
+  remilia@nyallo.net:
+    name: Remilia Da Costa Faro
 
 emails_aliases:
   - from: "@ecdfeaa2.moe"
@@ -56,6 +62,14 @@ emails_aliases:
   - from: "@sunflower.lgbt"
     to:
       - me@prettysunflower.moe
+
+  - from: "@nyallo.net"
+    to:
+      - remilia@nyallo.net
+
+  - from: "@nyallo.ca"
+    to:
+      - remilia@nyallo.net
 
 lego_env:
   LEGO_EMAIL: me@prettysunflower.moe
