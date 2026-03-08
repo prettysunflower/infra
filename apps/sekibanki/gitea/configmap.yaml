@@ -62,3 +62,5 @@ data:
   GITEA__security__PASSWORD_HASH_ALGO: argon2
   GITEA__cache__ADAPTER: redis
   GITEA__cache__HOST: redis://valkey.gitea.svc.sekibanki.prettysunflower.moe:6379/0
+  GITEA__ui__THEMES: gitea-light,gitea-dark,gitea-auto
+  GITEA__ui__DEFAULT_THEME: gitea-auto
