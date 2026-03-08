@@ -6,7 +6,7 @@ metadata:
 data:
   GTS_HOST: fedi.prettysunflower.moe
   GTS_ACCOUNT_DOMAIN: prettysunflower.moe
-  GTS_TRUSTED_PROXIES: "10.219.0.0/16"
+  GTS_TRUSTED_PROXIES: "10.219.0.1/32"
   GTS_INSTANCE_LANGUAGES: en,fr
   GTS_ACCOUNTS_ALLOW_CUSTOM_CSS: "true"
   GTS_DB_TYPE: postgres
