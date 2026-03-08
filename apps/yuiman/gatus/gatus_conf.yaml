@@ -1,0 +1,19 @@
+storage:
+  type: postgres
+  path: ${PG_URI}
+  caching: true
+
+ui:
+  default-sort-by: group
+  title: 🌻 prettysunflower systems status
+  dashboard-heading: Systems status
+  dashboard-subheading: ""
+  header: 🌻 prettysunflower
+  logo: https://kakigoori.dev/5819581e-42b9-41a7-bab6-c3f99de30934/auto
+  link: https://prettysunflower.moe
+
+endpoints:
+  - name: prettysunflower website
+    url: "https://prettysunflower.moe"
+    conditions:
+      - "[STATUS] == 200"

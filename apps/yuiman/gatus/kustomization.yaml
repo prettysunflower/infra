@@ -1,0 +1,13 @@
+namespace: gatus
+
+resources:
+  - database.yaml
+  - deployment.yaml
+  - namespace.yaml
+  - svc.yaml
+  - secrets.yaml
+
+configMapGenerator:
+  - name: gatus-config
+    files:
+      - config.yaml=gatus_conf.yaml
