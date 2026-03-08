@@ -2,11 +2,16 @@ resources:
   - ../common
   - ../../infra/common/csi-driver-nfs
   - anko
+  - cim-monday-helper
   - docker-registry
+  - dolibarr
+  - flaresolverr
+  - gatus
   - httpdebug
   - kakigoori
   - mazanoke
   - masto-fe
+  - metabase-contrefeves
   - backrest
   - enoko
   - miniqr
@@ -17,6 +22,5 @@ resources:
   - prettysunflower-website
   - rallly
   - privatebin
-  - uptime-kuma
   - vlmcsd
   - youtubethumbnails
