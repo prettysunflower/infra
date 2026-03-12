@@ -27,7 +27,7 @@ spec:
             medium: Memory
       containers:
         - name: booklore
-          image: booklore/booklore:v2.0.6
+          image: booklore/booklore:v2.2.0
           envFrom:
             - configMapRef:
                 name: booklore-configmap
