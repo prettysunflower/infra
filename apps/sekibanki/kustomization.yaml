@@ -3,7 +3,6 @@ resources:
   - local-path-storage
   - actual
   - autoupdate-teable-figurines-currencies
-  - booklore
   - epicgames-freegames
   - etherpad
   - flaresolverr
