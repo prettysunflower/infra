@@ -1,0 +1,23 @@
+{
+  "nareko": "100.122.236.43",
+  "dns": "100.74.71.91",
+  "fsn.okina": "100.108.98.123",
+  "runner.gitea": "100.67.114.102",
+  "pixel": "100.84.195.101",
+  "homeassistant": "100.121.126.124",
+  "iphone": "100.92.42.49",
+  "iwanaga": "100.72.25.2",
+  "mails": "100.113.193.5",
+  "meiling": "100.98.46.41",
+  "monero-node": "10.0.0.20",
+  "navidrome": "100.71.106.114",
+  "niwatari": "100.67.179.35",
+  "firewall.iwanaga": "100.77.70.24",
+  "hisami": "100.76.112.31",
+  "informaniak-relay": "100.102.3.109",
+  "mariadb.sekibanki": "100.83.166.57",
+  "postgres.sekibanki": "100.110.40.2",
+  "shinmyoumaru": "100.105.17.105",
+  "yuyuko": "100.126.243.21",
+  "staging.kikimungo": "149.56.130.91"
+}

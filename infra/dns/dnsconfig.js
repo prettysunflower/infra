@@ -1,4 +1,3 @@
-// @ts-check
 /// <reference path="types-dnscontrol.d.ts" />
 
 var REG_NONE = NewRegistrar("none");
@@ -6,6 +5,7 @@ var DSP_BUNNY = NewDnsProvider("bunny");
 var DSP_BIND9 = NewDnsProvider("bind9");
 var DSP_PORKBUN = NewDnsProvider("porkbun");
 
+var hosts = require("./hosts.json");
 var fsn_okina = "23.88.71.121";
 var fsn_okina_ipv6 = "2a01:4f8:272:ea00:be24:11ff:fe33:fa90";
 var internal_okina = "100.108.98.123";
@@ -94,6 +94,8 @@ D(
   AAAA("snikket", "2a01:4f8:c013:ca31::1"),
   CNAME("groups.snikket", "snikket.prettysunflower.moe."),
   CNAME("share.snikket", "snikket.prettysunflower.moe."),
+  CNAME("em903851", "return.smtp2go.net."),
+  CNAME("s903851._domainkey", "dkim.smtp2go.net."),
 );
 
 D(
@@ -108,14 +110,24 @@ D(
   okina("passwords"),
 );
 
+function generateHostsDNS() {
+  var hostsRecords = [];
+  for (var host in hosts) {
+    hostsRecords.push(A(host + ".hosts", hosts[host]));
+  }
+  return hostsRecords;
+}
+
 D(
   "prettysunflower.moe!internal",
   REG_NONE,
   DnsProvider(DSP_BIND9),
   INCLUDE("prettysunflower.moe!common"),
   prettysunflower_moe_common_okina(DSP_BIND9),
+  generateHostsDNS(),
   A("internal.okina", internal_okina),
   A("actual", internal_okina),
+  A("atuin", internal_okina),
   A("caldav", internal_okina),
   A("dns", internal_okina),
   A("iwanaga", "100.72.25.2"),
@@ -166,6 +178,8 @@ D(
     "ps1._domainkey",
     "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvFesFlwpavJmTtWLEOi1jgGdvLo7nuq58eEi0h2aKqr/G3RK7RrKzxoQGV0COm+uvJydcgV/An56/Nf7JaECGNQWKk+Bo8ootIYJc+h3jOCbBNM1VxrqF9dCMBUiFvWN4pz22hdtzqCtZGaBhIDT/ubVwvdWtobCHsPER1APMNwIDAQAB",
   ),
+  CNAME("em903851", "return.smtp2go.net."),
+  CNAME("s903851._domainkey", "dkim.smtp2go.net."),
 );
 
 D(
@@ -187,6 +201,8 @@ D(
   okina("git"),
   okina("data"),
   okina("kms"),
+  CNAME("em903851", "return.smtp2go.net."),
+  CNAME("s903851._domainkey", "dkim.smtp2go.net."),
   mx("@"),
   dmarc,
   CNAME("ip", "okina.prettysunflower.moe."),
@@ -301,14 +317,38 @@ D(
 D("download-ram.zip", REG_NONE, DnsProvider(DSP_PORKBUN), okina("restic"));
 
 D(
-  "nyallo.net",
+  "nyallo.net!common",
+  REG_NONE,
+  MX("@", 10, "in1-smtp.messagingengine.com."),
+  MX("@", 20, "in2-smtp.messagingengine.com."),
+  CNAME("fm1._domainkey", "fm1.nyallo.net.dkim.fmhosted.com."),
+  CNAME("fm2._domainkey", "fm2.nyallo.net.dkim.fmhosted.com."),
+  CNAME("fm3._domainkey", "fm3.nyallo.net.dkim.fmhosted.com."),
+  SPF_BUILDER({
+    parts: ["v=spf1", "include:spf.messagingengine.com", "?all"],
+  }),
+  dmarc,
+  okina("dolibarr"),
+  okina("redmine.kikimungo"),
+  A("staging.kikimungo", "149.56.130.91"),
+  AAAA("staging.kikimungo", "2607:5300:205:200::9b02"),
+  A("*.staging.kikimungo", "149.56.130.91"),
+  AAAA("*.staging.kikimungo", "2607:5300:205:200::9b02"),
+  CNAME("em903851", "return.smtp2go.net."),
+  CNAME("s903851._domainkey", "dkim.smtp2go.net."),
+);
+
+D(
+  "nyallo.net!public",
   REG_NONE,
   DnsProvider(DSP_PORKBUN),
-  TXT(
-    "ps1._domainkey",
-    "v=DKIM1; h=sha256; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzonmKGMmk/Emie/MwWee6sWDmlj+uzdtMnE0+Gwfo/u0M2TZWmelPJ/T6VOpoB3iVrLNNrHDtcHyoGr24/EMEwjOk9J9SaDb7Fj+7RwgAyz04ykT+EjJJF+I0x+xz9qoJrxYhnoz6AOPbTT/KIfHMEaXe8Gox9DzvjdzH37TuNEzC2sEM+386G4WK3HR4TcCu0AhoWHCs5gyoojS7Za0ym9H+udlYpSxKsMugJexdaPW0CKBYWiQcYOI8YoX1WZTa9P3TTpBmgs8UniDUR5k14cXooyWG82OBhVVKIEiDyj2zjMOJ+J8DAl8WiT5aB6Ru/w/WCUFQGVWRZCu7YCH+QIDAQAB",
-  ),
-  mx("@"),
-  dmarc,
-  A("dolibarr", internal_okina),
+  INCLUDE("nyallo.net!common"),
+);
+
+D(
+  "nyallo.net!internal",
+  REG_NONE,
+  DnsProvider(DSP_BIND9),
+  INCLUDE("nyallo.net!common"),
+  A("mail", "100.113.193.5"),
 );
