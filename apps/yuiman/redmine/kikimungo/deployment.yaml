@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kikimungo
+  namespace: redmine
+  labels:
+    app.kubernetes.io/name: kikimungo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kikimungo
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kikimungo
+    spec:
+      volumes:
+        - name: redmine-files
+          persistentVolumeClaim:
+            claimName: redmine-kikimungo-pvc
+        - name: redmine-config
+          secret:
+            secretName: kikimungo-config
+      containers:
+        - name: redmine
+          image: redmine:6.1.1-alpine3.22
+          envFrom:
+            - secretRef:
+                name: kikimungo-secrets
+          env:
+            - name: REDMINE_DB_POSTGRES
+              valueFrom:
+                secretKeyRef:
+                  key: host
+                  name: postgres-kikimungo-app
+            - name: REDMINE_DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  key: port
+                  name: postgres-kikimungo-app
+            - name: REDMINE_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: user
+                  name: postgres-kikimungo-app
+            - name: REDMINE_DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  key: dbname
+                  name: postgres-kikimungo-app
+            - name: REDMINE_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: postgres-kikimungo-app
+          ports:
+            - containerPort: 3000
+              name: http
+          volumeMounts:
+            - name: redmine-files
+              mountPath: "/usr/src/redmine/files"
+            - name: redmine-config
+              mountPath: "/usr/src/redmine/config/configuration.yml"
+              subPath: configuration.yml
+              readOnly: true
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            periodSeconds: 90
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 30
+            periodSeconds: 2
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kikimungo
+  namespace: redmine
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: kikimungo
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http
