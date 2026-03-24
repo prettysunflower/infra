@@ -73,7 +73,7 @@ passwords.prettysunflower.moe {
 	{{ end -}}
 
 
-	reverse_proxy vaultwarden.default.svc.sekibanki.prettysunflower.moe
+	reverse_proxy vaultwarden.vaultwarden.svc.sekibanki.prettysunflower.moe
 }
 
 caldav.prettysunflower.moe {
@@ -99,7 +99,7 @@ kanban.prettysunflower.moe {
 gist.prettysunflower.moe {
 	import bunny
 
-	reverse_proxy opengist.default.svc.sekibanki.prettysunflower.moe
+	reverse_proxy opengist.opengist.svc.sekibanki.prettysunflower.moe
 }
 
 uptime.prettysunflower.moe {
@@ -133,17 +133,17 @@ invidious.prettysunflower.moe {
 karakeep.prettysunflower.moe {
 	import bunny
 
-	reverse_proxy karakeep.default.svc.sekibanki.prettysunflower.moe
+	reverse_proxy karakeep.karakeep.svc.sekibanki.prettysunflower.moe
 }
 
 papers.prettysunflower.moe {
 	import bunny
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
-		reverse_proxy paperless.default.svc.sekibanki.prettysunflower.moe
+		reverse_proxy paperless.paperless.svc.sekibanki.prettysunflower.moe
 	{{ else }}
 		handle /share/* {
-			reverse_proxy paperless.default.svc.sekibanki.prettysunflower.moe
+			reverse_proxy paperless.paperless.svc.sekibanki.prettysunflower.moe
 		}
 
 		handle {
@@ -291,4 +291,14 @@ books.prettysunflower.moe {
 	import bunny
 
 	reverse_proxy booklore.default.svc.sekibanki.prettysunflower.moe
+}
+
+atuin.prettysunflower.moe {
+	import bunny
+
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
+		reverse_proxy atuin.atuin.svc.sekibanki.prettysunflower.moe
+	{{ else }}
+		abort
+	{{ end -}}
 }

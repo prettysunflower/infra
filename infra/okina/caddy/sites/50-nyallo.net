@@ -1,5 +1,0 @@
-dolibarr.nyallo.net {
-	import porkbun
-
-	reverse_proxy dolibarr.dolibarr.svc.yuiman.prettysunflower.moe
-}
