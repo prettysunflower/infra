@@ -1,6 +1,7 @@
 {
   "prettier": {
-    "allowed": true
+    "allowed": true,
+    "tabWidth": 2
   },
   "lsp": {
     "yaml-language-server": {
