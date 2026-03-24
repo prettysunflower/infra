@@ -8,13 +8,11 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  storageClassName: nfs-csi
+  storageClassName: local-path
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  annotations:
-    pv.kubernetes.io/provisioned-by: nfs.csi.k8s.io
   name: pv-pixivnotifs-gallerydl
 spec:
   capacity:
@@ -22,16 +20,8 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-csi
-  mountOptions:
-    - nfsvers=4.1
-    - nolock
-  csi:
-    driver: nfs.csi.k8s.io
-    volumeHandle: 100.126.243.21/mnt/yuyuko/images/gallery_dl##
-    volumeAttributes:
-      server: 100.126.243.21
-      share: mnt//yuyuko/images/gallery_dl
+  hostPath:
+    path: /var/mnt/yuyuko/images/gallery_d
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -44,4 +34,3 @@ spec:
     requests:
       storage: 2T
   volumeName: pv-pixivnotifs-gallerydl
-  storageClassName: nfs-csi

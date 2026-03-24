@@ -9,13 +9,11 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  storageClassName: nfs-csi
+  storageClassName: local-path
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  annotations:
-    pv.kubernetes.io/provisioned-by: nfs.csi.k8s.io
   name: pv-immich-media
 spec:
   capacity:
@@ -23,16 +21,8 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-csi
-  mountOptions:
-    - nfsvers=4.1
-    - nolock
-  csi:
-    driver: nfs.csi.k8s.io
-    volumeHandle: 100.126.243.21/mnt/yuyuko/media/media/images##
-    volumeAttributes:
-      server: 100.126.243.21
-      share: mnt//yuyuko/media/media/images
+  hostPath:
+    path: /var/mnt/yuyuko/media/media/images
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -46,4 +36,3 @@ spec:
     requests:
       storage: 200Gi
   volumeName: pv-immich-media
-  storageClassName: nfs-csi

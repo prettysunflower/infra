@@ -9,4 +9,4 @@ data:
   DATA_DIR: /data
   NEXTAUTH_URL: https://karakeep.prettysunflower.moe
   CRAWLER_FULL_PAGE_ARCHIVE: "true"
-  DB_WAL_MODE: "false"
+  DB_WAL_MODE: "true"
