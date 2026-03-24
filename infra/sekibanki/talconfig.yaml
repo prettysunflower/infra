@@ -1,6 +1,6 @@
 ---
 clusterName: sekibanki
-talosVersion: v1.12.4-tailscale-1.94.2
+talosVersion: v1.12.6-tailscale-1.96.3
 kubernetesVersion: v1.35.0
 endpoint: https://10.0.0.32:6443
 domain: sekibanki.prettysunflower.moe
@@ -11,6 +11,7 @@ clusterSvcNets:
   - 10.218.0.0/16
 patches:
   - "@./tailscale.patch.yaml"
+  - "@./virtiofs.patch.yaml"
   - |-
     machine:
       network:

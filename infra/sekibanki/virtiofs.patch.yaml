@@ -1,0 +1,16 @@
+---
+apiVersion: v1alpha1
+kind: ExternalVolumeConfig
+name: virtiofs-data
+filesystemType: virtiofs
+mount:
+  virtiofs:
+    tag: k8s
+---
+apiVersion: v1alpha1
+kind: ExternalVolumeConfig
+name: yuyuko
+filesystemType: virtiofs
+mount:
+  virtiofs:
+    tag: yuyuko_data
