@@ -24,8 +24,6 @@ data:
   GITEA__server__PUBLIC_URL_DETECTION: auto
   GITEA__database__DB_TYPE: postgres
   GITEA__database__SSL_MODE: disable
-  GITEA__database__HOST: 100.110.40.2:5432
-  GITEA__database__NAME: gitea
   GITEA__database__SCHEMA: public
   GITEA__database__LOG_SQL: "false"
   GITEA__session__PROVIDER: redis

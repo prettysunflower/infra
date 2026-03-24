@@ -28,6 +28,11 @@ spec:
           env:
             - name: OG_OPENGIST_HOME
               value: /opengist
+            - name: OG_DB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-app
+                  key: uri
           ports:
             - containerPort: 6157
               name: http

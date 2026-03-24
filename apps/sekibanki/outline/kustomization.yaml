@@ -1,6 +1,10 @@
+namespace: outline
+
 resources:
   - deployment.yaml
   - configmap.yaml
   - secrets.yaml
   - svc.yaml
   - pvc.yaml
+  - namespace.yaml
+  - database.yaml
