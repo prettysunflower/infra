@@ -21,7 +21,7 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: /var/mnt/yuyuko/images/gallery_d
+    path: /var/mnt/yuyuko/images/gallery_dl
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
