@@ -19,7 +19,7 @@ spec:
 
   backup:
     volumeSnapshot:
-      className: csi-nfs-snapclass
+      className: local-path
 
   postgresql:
     shared_preload_libraries:
@@ -28,7 +28,7 @@ spec:
     extensions:
       - name: vchord
         image:
-          reference: tensorchord/vchord-scratch:pg18-v1.0.0
+          reference: tensorchord/vchord-scratch:pg18-v1.1.1
         extension_control_path:
           - /usr/share/postgresql/18
         dynamic_library_path:
