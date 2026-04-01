@@ -1,0 +1,25 @@
+default:
+  email_delivery:
+    delivery_method: :smtp
+    smtp_settings:
+      address: mail.smtp2go.com
+      port: 2525
+      authentication: :plain
+      enable_starttls_auto: true
+      user_name: ENC[AES256_GCM,data:bOFrxSu08XvDHR34gLOi,iv:uFvB3GeKQfTc2XFlwR12PmNbHz6Z+b50refa3COU9L0=,tag:EpTxVgQ1w5VV1pymmgo8GA==,type:str]
+      password: ENC[AES256_GCM,data:ypWzaKxjlJ+xR8ZglY+m7Q==,iv:GeRKR8RvtOoT6QOzai/Pbn2LJzhEYPiXDxwM1HRZrko=,tag:5g/acfqoa3DMRCD8RndFKA==,type:str]
+sops:
+  age:
+    - recipient: age1r0tjhg6uexyj0p7fp0ftv5h7r7e3ptzkk2797pznfvrvsm576u0s37yyaw
+      enc: |
+        -----BEGIN AGE ENCRYPTED FILE-----
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBkUjNNOFRpbHdYOStwSXJ0
+        bXg3MjdJRUkzSHVsc1dYMUJoR3JaTk1DeUM4CnVqYWQ3ZyswaU5mTmFKNVgza0Mw
+        MHJPek1ROVFGVVlsMzNFSXZ5RzFWcEUKLS0tIDFoL0lySStrZXVqV21BQjd4MkVn
+        cUdaV0dsZnQvaWIxc3pIeHR0MXVlN3MK/hM0aOxA6benLqGMMVvSkxup5h//li4y
+        dzRhR8/Wo/t55RByfOUqi49YHdsgNw+cc4X1mtk8IEm4NN32aURc7g==
+        -----END AGE ENCRYPTED FILE-----
+  lastmodified: "2026-03-24T23:47:38Z"
+  mac: ENC[AES256_GCM,data:rBFiNcTbsisVoYJTPxDuhE38FRXfjauNDazPZLlz6HQOboCvp0U3NeA/0NFDIHk9qqqePmQyZ2pT+lGEx9GJQ8XXp1MRpIgtn2RKfHjU0vPPSVXHdARoQzpyIvFBIlH/mO0kMPcb6M0FhocR8VAZ7mMPz2sWU0pN0dGLZRWgGQw=,iv:a7mDroTpGV/C3DZZbpWDKcohbLDIrGgPsJaD3nHbvQg=,tag:CJVgIsy5QNsP8c06EQ8H/w==,type:str]
+  encrypted_regex: ^(user_name|password)$
+  version: 3.12.2
