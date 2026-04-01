@@ -112,7 +112,7 @@ spec:
             claimName: immich-models-cache
       containers:
         - name: immich
-          image: ghcr.io/immich-app/immich-machine-learning:v2.6.1
+          image: ghcr.io/immich-app/immich-machine-learning:v2.6.3
           envFrom:
             - configMapRef:
                 name: immich-config
