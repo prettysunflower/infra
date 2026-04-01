@@ -328,7 +328,10 @@ D(
     parts: ["v=spf1", "include:spf.messagingengine.com", "?all"],
   }),
   dmarc,
+  okina("@"),
+  okina("www"),
   okina("dolibarr"),
+  okina("redmine"),
   okina("redmine.kikimungo"),
   A("staging.kikimungo", "149.56.130.91"),
   AAAA("staging.kikimungo", "2607:5300:205:200::9b02"),
@@ -336,6 +339,10 @@ D(
   AAAA("*.staging.kikimungo", "2607:5300:205:200::9b02"),
   CNAME("em903851", "return.smtp2go.net."),
   CNAME("s903851._domainkey", "dkim.smtp2go.net."),
+  TXT(
+    "@",
+    "google-site-verification=LsHs_iV-KqKKe3tViAr_8Xlw0eg8i7T7RPvH2OyCAGU",
+  ),
 );
 
 D(
