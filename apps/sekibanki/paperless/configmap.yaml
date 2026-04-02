@@ -4,10 +4,10 @@ metadata:
   name: paperless-configmap
   namespace: paperless
 data:
-  PAPERLESS_REDIS: redis://127.0.0.1:6379
+  PAPERLESS_REDIS: redis://valkey.paperless:6379
   PAPERLESS_TIKA_ENABLED: "1"
-  PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://127.0.0.1:3000
-  PAPERLESS_TIKA_ENDPOINT: http://127.0.0.1:9998
+  PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg.paperless:3000
+  PAPERLESS_TIKA_ENDPOINT: http://tika.paperless:9998
   PAPERLESS_URL: https://papers.prettysunflower.moe
   PAPERLESS_TIME_ZONE: America/Toronto
   PAPERLESS_OCR_LANGUAGE: eng+fra
@@ -18,4 +18,3 @@ data:
   GRANIAN_PORT: "8000"
   USERMAP_UID: "1000"
   USERMAP_GID: "1000"
-  PAPERLESS_CONSUMER_POLLING: "10"

@@ -11,3 +11,45 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: valkey
+  namespace: paperless
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: paperless-valkey
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: valkey
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gotenberg
+  namespace: paperless
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: paperless-gotenberg
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: gotenberg
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tika
+  namespace: paperless
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: paperless-tika
+  ports:
+    - protocol: TCP
+      port: 9998
+      targetPort: tika
