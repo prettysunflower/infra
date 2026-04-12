@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://git.prettysunflower.moe/prettysunflower/himawari/raw/branch/main/cnpg-schemas/v1.28.0/io.cnpg.postgresql.v1.Cluster.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  namespace: immich-dacostafaro
+spec:
+  instances: 3
+
+  imageCatalogRef:
+    apiGroup: postgresql.cnpg.io
+    kind: ClusterImageCatalog
+    name: postgresql-minimal-trixie
+    major: 18
+
+  storage:
+    storageClass: nfs-csi
+    size: 15Gi
+
+  backup:
+    volumeSnapshot:
+      className: nfs-csi
+
+  postgresql:
+    shared_preload_libraries:
+      - vchord
+      - vector
+    extensions:
+      - name: vchord
+      - name: pgvector
+
+  primaryUpdateMethod: switchover

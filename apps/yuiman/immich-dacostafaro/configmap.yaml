@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: immich-config
+  namespace: immich-dacostafaro
+data:
+  REDIS_HOSTNAME: valkey.immich-dacostafaro
+  IMMICH_PORT: "2283"
+  IMMICH_MACHINE_LEARNING_URL: http://machine-learning.immich-dacostafaro:2283
+  TRANSFORMERS_CACHE: /cache
+  HF_XET_CACHE: /cache/huggingface-xet
+  MPLCONFIGDIR: /cache/matplotlib-config
+  IMMICH_HELMET_FILE: "true"

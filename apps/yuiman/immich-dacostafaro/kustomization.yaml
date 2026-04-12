@@ -1,0 +1,8 @@
+resources:
+  - database.yaml
+  - cluster.yaml
+  - namespace.yaml
+  - configmap.yaml
+  - deployment.yaml
+  - pvc.yaml
+  - svc.yaml

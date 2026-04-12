@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://git.prettysunflower.moe/prettysunflower/himawari/raw/branch/main/cnpg-schemas/v1.28.0/io.cnpg.postgresql.v1.Database.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: immich-db
+  namespace: immich-dacostafaro
+spec:
+  name: app
+  owner: app
+  cluster:
+    name: postgres
+  extensions:
+    - name: vchord
+    - name: vector
+    - name: earthdistance
+    - name: cube
+    - name: unaccent
+    - name: uuid-ossp
+    - name: pg_trgm
