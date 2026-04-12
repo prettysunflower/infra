@@ -1,0 +1,7 @@
+{% for alias in emails_aliases %}
+{{ alias.from }} {{ alias.to | join(", ") }}
+{% endfor %}
+
+{% for address, propreties in emails_mailboxes.items() %}
+{{ address }} {{ address }}
+{% endfor %}

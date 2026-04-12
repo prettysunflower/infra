@@ -2,9 +2,6 @@
 # - name: Install packages
 #   ansible.builtin.import_tasks: install_packages.yaml
 
-- name: Setup database
-  ansible.builtin.import_tasks: database.yaml
-
 - name: Setup OpenDKIM
   with_items: "{{ domains | dict2items }}"
   loop_control:
@@ -13,6 +10,9 @@
 
 - name: Setup Postfix
   ansible.builtin.import_tasks: postfix.yaml
+
+- name: Setup Dovecot
+  ansible.builtin.import_tasks: dovecot.yaml
 
 - name: Setup SpamAssassin
   ansible.builtin.import_tasks: spamassassin.yaml

@@ -6,6 +6,7 @@
 
 - hosts: mails
   name: Mail container config update
+  become: true
   roles:
     - mails
 #- hosts:

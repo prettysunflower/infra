@@ -20,6 +20,8 @@
         mode: ug=rwx,o=r
       with_community.general.filetree: files/postfix
       when: item.state == 'file'
+      notify:
+        - Restart Postfix
 
 - name: Template files
   block:
@@ -42,3 +44,19 @@
         mode: ug=rwx,o=r
       with_community.general.filetree: templates/postfix
       when: item.state == 'file'
+      notify:
+        - Restart Postfix
+
+- name: Postmap virtual_aliases
+  ansible.builtin.command:
+    cmd: postmap /etc/postfix/virtual_aliases
+  changed_when: true
+  notify:
+    - Restart Postfix
+
+- name: Postmap virtual_mailboxes
+  ansible.builtin.command:
+    cmd: postmap /etc/postfix/virtual_mailboxes
+  changed_when: true
+  notify:
+    - Restart Postfix

@@ -22,10 +22,10 @@ smtp_sasl_auth_enable = yes
 smtp_tls_security_level = encrypt
 header_size_limit = 4096000
 smtp_sasl_password_maps = lmdb:/etc/postfix/sasl_passwd
-relayhost = 199.58.80.81:587
+relayhost = [45.33.53.153]:2525
 message_size_limit = 102400000
 smtpd_milters = inet:127.0.0.1:8891
-non_smtpd_milters = $smtpd_milters 
+non_smtpd_milters = $smtpd_milters
 milter_default_action = accept
 
 myhostname = mail.prettysunflower.moe
@@ -39,16 +39,9 @@ inet_interfaces = all
 inet_protocols = all
 
 virtual_transport = lmtp:unix:private/dovecot-lmtp
-virtual_mailbox_domains = proxy:mysql:/etc/postfix/sql/mysql_virtual_domains_maps.cf
-virtual_alias_maps =
-   proxy:mysql:/etc/postfix/sql/mysql_virtual_alias_maps.cf,
-   proxy:mysql:/etc/postfix/sql/mysql_virtual_alias_domain_maps.cf,
-   proxy:mysql:/etc/postfix/sql/mysql_virtual_alias_domain_catchall_maps.cf
-virtual_mailbox_maps =
-   proxy:mysql:/etc/postfix/sql/mysql_virtual_mailbox_maps.cf,
-   proxy:mysql:/etc/postfix/sql/mysql_virtual_alias_domain_mailbox_maps.cf
-relay_domains = proxy:mysql:/etc/postfix/sql/mysql_relay_domains.cf
-transport_maps = proxy:mysql:/etc/postfix/sql/mysql_transport_maps.cf 
+virtual_mailbox_domains = /etc/postfix/virtual_domains
+virtual_alias_maps = lmdb:/etc/postfix/virtual_aliases
+virtual_mailbox_maps = lmdb:/etc/postfix/virtual_mailboxes
 
 postscreen_upstream_proxy_protocol = haproxy
 postscreen_upstream_proxy_timeout = 5s

@@ -1,0 +1,19 @@
+{% set password = {} %}
+{% for password_entry in mailboxes_passwords['results'] %}
+    {%- set _ = password.update({password_entry.mailbox.key: password_entry.stdout}) -%}
+{% endfor %}
+
+{% for address, propreties in emails_mailboxes.items() %}
+{% set local = address.split('@')[0] %}
+{% set domain = address.split('@')[1] %}
+{{ address }}:{{ password[address] }}:5000:5000::/var/mail/vhosts/{{ domain }}/{{ local }}
+{% endfor %}
+
+{% set password = {} %}
+{% for password_entry in service_mailboxes_passwords['results'] %}
+    {%- set _ = password.update({password_entry.mailbox.key: password_entry.stdout}) -%}
+{% endfor %}
+
+{% for local_address, propreties in service_emails_passwords.items() %}
+{{ local_address }}@services.prettysunflower.moe:{{ password[local_address] }}:5000:5000::/var/mail/vhosts/services.prettysunflower.moe/{{ local_address }}
+{% endfor %}

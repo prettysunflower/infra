@@ -24,6 +24,7 @@
   environment: "{{ lego_env | ansible.builtin.combine(lego_env_api) }}"
   notify:
     - Generate vmail_ssm.map
+    - Restart Postfix
     - Restart Dovecot
 
 - name: "Renew certificate for {{ domain.key }}"
@@ -43,4 +44,5 @@
   environment: "{{ lego_env | ansible.builtin.combine(lego_env_api) }}"
   notify:
     - Generate vmail_ssm.map
+    - Restart Postfix
     - Restart Dovecot

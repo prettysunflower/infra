@@ -1,0 +1,85 @@
+- name: Generate hashes for passwords of new mailboxes
+  ansible.builtin.command:
+    argv:
+      - /usr/bin/doveadm
+      - pw
+      - -s
+      - ARGON2ID
+      - -p
+      - "{{ mailbox.value.password }}"
+  register: mailboxes_passwords
+  with_items: "{{ emails_mailboxes_passwords | dict2items }}"
+  loop_control:
+    loop_var: mailbox
+  changed_when: false
+
+- name: Generate hashes for passwords of new service mailboxes
+  ansible.builtin.command:
+    argv:
+      - /usr/bin/doveadm
+      - pw
+      - -s
+      - ARGON2ID
+      - -p
+      - "{{ mailbox.value.password }}"
+  register: service_mailboxes_passwords
+  with_items: "{{ service_emails_passwords | dict2items }}"
+  loop_control:
+    loop_var: mailbox
+  changed_when: false
+
+- name: Template passwd file
+  ansible.builtin.template:
+    src: "templates/mail_passwd.j2"
+    dest: "/var/mail/passwd"
+    owner: vmail
+    group: vmail
+    mode: ug=rwx,o=r
+
+- name: Copy files
+  block:
+    - name: Ensure directory structure exists
+      ansible.builtin.file:
+        path: "/etc/dovecot/{{ item.path }}"
+        state: directory
+        owner: dovecot
+        group: dovecot
+        mode: ug=rwx,o=r
+      with_community.general.filetree: files/dovecot
+      when: item.state == 'directory'
+
+    - name: Copy Dovecot files
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "/etc/dovecot/{{ item.path }}"
+        owner: dovecot
+        group: dovecot
+        mode: ug=rwx,o=r
+      with_community.general.filetree: files/dovecot
+      when: item.state == 'file'
+      notify:
+        - Restart Dovecot
+
+- name: Template files
+  block:
+    - name: Ensure directory structure exists
+      ansible.builtin.file:
+        path: "/etc/dovecot/{{ item.path }}"
+        state: directory
+        owner: dovecot
+        group: dovecot
+        mode: u=rwx,o=r
+      with_community.general.filetree: templates/dovecot
+      when: item.state == 'directory'
+
+    - name: Template Dovecot files
+      ansible.builtin.template:
+        src: "{{ item.src }}"
+        dest: "/etc/dovecot/{{ item.path }}"
+        owner: dovecot
+        group: dovecot
+        mode: ug=rwx,o=r
+      with_community.general.filetree: templates/dovecot
+      when: item.state == 'file'
+      notify:
+        - Restart Dovecot

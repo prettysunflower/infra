@@ -1,6 +1,10 @@
 arch: amd64
 
-alpine_version: 3.22
+ssh:
+  hostKeyPub: AAAAC3NzaC1lZDI1NTE5AAAAINQHEC3MHBJyaKOUIcAQm9KPA2sLw9fXFxqNF5X8gSHv
+  keySignature: AAAAIHNzaC1lZDI1NTE5LWNlcnQtdjAxQG9wZW5zc2guY29tAAAAIMtqD/f5NTjwfTa46u00JNsqPeO2FtXQa2y2AjhoCCGtAAAAINQHEC3MHBJyaKOUIcAQm9KPA2sLw9fXFxqNF5X8gSHvAAAAAAAAAAAAAAACAAAAH21haWxzLmhvc3RzLnByZXR0eXN1bmZsb3dlci5tb2UAAAAjAAAAH21haWxzLmhvc3RzLnByZXR0eXN1bmZsb3dlci5tb2UAAAAAAAAAAP//////////AAAAAAAAAAAAAAAAAAABFwAAAAdzc2gtcnNhAAAAAwEAAQAAAQEArERQgIDFRqiEPVCWtHRgTn2lN9s+03UqNfg7OND0QsH1Yd+/FyvCcZevpyEI3t6zD5nt8sc/TGQCMMNuNTUoX3OqhriigIdMLR3LnOzmNbMgSaL0u6kX/k/S1xah8c5a6uud3O9yZupcuYDNGHQhGWbWqIlrwGdmRs3Rhs6nRF8xEjTNzOfQOzCjkcI/dytJoLAbL7TXR04dWhFj7lUibcUHlHeTj2zUonVvjJF6hlsqkLR/8gMBXETyyYtNqhUQhSFjehe5QzK65T3t/SAgz7cWQJrz3mVm8fHqsCk3lI+7oAf5zgA/gtLYIqFlipAdGKIfnRCV9rCb7q+GuknMCwAAARQAAAAMcnNhLXNoYTItNTEyAAABAJJDUxtnKdqUP6EoZS3IjcjItzamSPMIqmdyztzfzf2WT5vA0rFuwel3qoxhz2nkQ0GDpQTiijm7emAC/LzoCea2aD9FA83AK4UDyBPSQh+hb2FZFAg8L/AvlOJNxMsdZOsXuuu+PBSLAoskGhLgA6Pi8WFidpLfbkcgWsN0AD5iJjptrIAJGNKDZaHnJwTbuljWJ2QJUtRA12ESmhGKGSeKKq16oa0g3Q7OyKOHt8u/g6kA0ne+WgF0sJ0AXZVkj86W4uNyDjRX33r/6G79HzeBXx5JxvY4ZO0v+CU621y99CSbVO1cDTJk36hGtcLtiUsefRqcqQ2XqPOpzgmbMOA=
+
+alpine_version: 3.23
 certificates_path: /etc/certificates
 postfix_main_domain: prettysunflower.moe
 
@@ -33,6 +37,8 @@ emails_mailboxes:
     name: prettysunflower
   remilia@nyallo.net:
     name: Remilia Da Costa Faro
+  redmine.kikimungo@nyallo.net:
+    name: Redmine Kikimungo
 
 emails_aliases:
   - from: "@ecdfeaa2.moe"
@@ -52,10 +58,6 @@ emails_aliases:
       - me@prettysunflower.moe
 
   - from: "@remydcf.dev"
-    to:
-      - me@prettysunflower.moe
-
-  - from: "@prettysunflower.com"
     to:
       - me@prettysunflower.moe
 

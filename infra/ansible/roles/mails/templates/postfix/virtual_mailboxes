@@ -1,0 +1,9 @@
+{% for address, propreties in emails_mailboxes.items() %}
+{% set local = address.split('@')[0] %}
+{% set domain = address.split('@')[1] %}
+{{ address }} {{ domain }}/{{ local }}
+{% endfor %}
+
+{% for local_address, propreties in service_emails_passwords.items() %}
+{{ local_address }}@services.prettysunflower.moe services.prettysunflower.moe/{{ local_address }}
+{% endfor %}
