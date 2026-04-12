@@ -1,0 +1,20 @@
+Include /etc/ssh/sshd_config.d/*.conf
+
+Port 22
+ListenAddress 0.0.0.0
+ListenAddress ::
+
+HostKey /etc/ssh/ssh_host_ed25519_key
+HostCertificate /etc/ssh/ssh_host_ed25519_key-cert.pub
+TrustedUserCAKeys /etc/ssh/yubikey_ca.pub
+PermitRootLogin no
+PubkeyAuthentication yes
+PasswordAuthentication no
+AuthenticationMethods publickey
+KbdInteractiveAuthentication no
+UsePAM yes
+X11Forwarding yes
+PrintMotd no
+AcceptEnv LANG LC_* COLORTERM NO_COLOR
+
+Subsystem	sftp	/usr/lib/openssh/sftp-server

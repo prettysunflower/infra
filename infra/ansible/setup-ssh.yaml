@@ -1,0 +1,4 @@
+- hosts: mails
+  name: Setup SSH Certs
+  roles:
+    - ssh-config

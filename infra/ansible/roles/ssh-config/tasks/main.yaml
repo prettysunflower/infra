@@ -1,0 +1,49 @@
+- name: Copy sshd config
+  ansible.builtin.copy:
+    src: files/sshd_config
+    dest: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: u=rw,go=r
+  notify:
+    - Restart SSHD
+
+- name: Copy CA certificate
+  ansible.builtin.copy:
+    src: files/yubikey_ca.pub
+    dest: /etc/ssh/yubikey_ca.pub
+    owner: root
+    group: root
+    mode: u=rw,go=r
+  notify:
+    - Restart SSHD
+
+- name: Copy SSH Private Key
+  ansible.builtin.template:
+    src: templates/ssh_host_ed25519_key
+    dest: /etc/ssh/ssh_host_ed25519_key
+    owner: root
+    group: root
+    mode: u=rw,go=
+  notify:
+    - Restart SSHD
+
+- name: Copy SSH Public Key
+  ansible.builtin.template:
+    src: templates/ssh_host_ed25519_key.pub
+    dest: /etc/ssh/ssh_host_ed25519_key.pub
+    owner: root
+    group: root
+    mode: u=rw,go=r
+  notify:
+    - Restart SSHD
+
+- name: Copy SSH Public Key Signature
+  ansible.builtin.template:
+    src: templates/ssh_host_ed25519_key-cert.pub
+    dest: /etc/ssh/ssh_host_ed25519_key-cert.pub
+    owner: root
+    group: root
+    mode: u=rw,go=r
+  notify:
+    - Restart SSHD

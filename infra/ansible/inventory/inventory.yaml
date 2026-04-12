@@ -7,11 +7,21 @@ proxmox:
       ansible_host: 100.72.25.2
       ansible_user: root
 
+vps:
+  hosts:
+    staging.kikimungo:
+      ansible_host: 149.56.130.91
+      ansible_user: debian
+      ansible_become: true
+
 containers:
   hosts:
     mails:
-      ansible_host: 100.113.193.5
-      ansible_user: root
+      ansible_host: mails.hosts.prettysunflower.moe
+      ansible_user: prettysunflower
+      ansible_become: true
+      ansible_become_method: su
+
     navidrome:
       ansible_host: 100.71.106.114
       ansible_user: root
