@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: changedetection
+  namespace: changedetection
+  labels:
+    app.kubernetes.io/name: changedetection
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: changedetection
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: changedetection
+    spec:
+      volumes:
+        - name: changedetection-data
+          persistentVolumeClaim:
+            claimName: changedetection-pvc
+      containers:
+        - name: changedetection
+          image: ghcr.io/dgtlmoon/changedetection.io
+          envFrom:
+            - configMapRef:
+                name: changedetection-configmap
+          ports:
+            - containerPort: 5000
+              name: http
+          volumeMounts:
+            - name: changedetection-data
+              mountPath: "/datastore"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            periodSeconds: 90
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 30
+            periodSeconds: 2
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sockpuppet-chrome
+  namespace: changedetection
+  labels:
+    app.kubernetes.io/name: sockpuppet-chrome
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: sockpuppet-chrome
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: sockpuppet-chrome
+    spec:
+      containers:
+        - name: sockpuppet-chrome
+          image: dgtlmoon/sockpuppetbrowser:latest
+          envFrom:
+            - configMapRef:
+                name: sockpuppet-chrome-configmap
+          ports:
+            - containerPort: 3000
+              name: ws
+          resources:
+            limits:
+              cpu: 1
+              memory: 512Mi
+            requests:
+              cpu: 500m
+              memory: 128Mi
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
