@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex-remilia
+  labels:
+    app.kubernetes.io/name: plex-remilia
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: plex-remilia
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: plex-remilia
+    spec:
+      containers:
+        - name: plex
+          image: lscr.io/linuxserver/plex:1.43.0.10492-121068a07-ls299
+          ports:
+            - containerPort: 6157
+              name: http
+          volumeMounts:
+            - name: plex-media
+              mountPath: /data
+            - name: plex-config
+              mountPath: /config
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          # livenessProbe:
+          #   httpGet:
+          #     path: /healthcheck
+          #     port: http
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 30
+          #   failureThreshold: 3
+          # readinessProbe:
+          #   httpGet:
+          #     path: /healthcheck
+          #     port: http
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 30
+          #   failureThreshold: 3
+          # startupProbe:
+          #   httpGet:
+          #     path: /healthcheck
+          #     port: http
+          #   failureThreshold: 30
+          #   periodSeconds: 10
+          resources:
+            limits:
+              cpu: 4
+              memory: 2G
+            requests:
+              cpu: 1
+              memory: 512M

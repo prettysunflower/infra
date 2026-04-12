@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: remilia-config
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 15Gi
+  storageClassName: local-path
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-radarr-media-remilia
+spec:
+  capacity:
+    storage: 2T
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /var/mnt/yuyuko/media/
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-medias-remilia
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2T
+  volumeName: pv-radarr-media-remilia
