@@ -19,3 +19,4 @@ data:
   PUSH_ENABLED: "true"
   PUSH_RELAY_URI: https://api.bitwarden.eu
   PUSH_IDENTITY_URI: https://identity.bitwarden.eu
+  EXPERIMENTAL_CLIENT_FEATURE_FLAGS: ssh-agent-v2,ssh-key-vault-item,desktop-ui-migration-milestone-1,desktop-ui-migration-milestone-2,desktop-ui-migration-milestone-3,desktop-ui-migration-milestone-4
