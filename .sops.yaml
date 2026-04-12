@@ -9,4 +9,8 @@ creation_rules:
     encrypted_regex: "^(data|stringData)$"
     age: age1r0tjhg6uexyj0p7fp0ftv5h7r7e3ptzkk2797pznfvrvsm576u0s37yyaw
 
+  - path_regex: .*redmine/kikimungo/configuration(\.sops)?\.ya?ml$
+    encrypted_regex: "^(user_name|password)$"
+    age: age1r0tjhg6uexyj0p7fp0ftv5h7r7e3ptzkk2797pznfvrvsm576u0s37yyaw
+
   - age: age1r0tjhg6uexyj0p7fp0ftv5h7r7e3ptzkk2797pznfvrvsm576u0s37yyaw
