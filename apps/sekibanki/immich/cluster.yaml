@@ -10,7 +10,7 @@ spec:
   imageCatalogRef:
     apiGroup: postgresql.cnpg.io
     kind: ClusterImageCatalog
-    name: postgresql-standard-trixie
+    name: postgresql-minimal-trixie
     major: 18
 
   storage:
@@ -27,11 +27,6 @@ spec:
       - vector
     extensions:
       - name: vchord
-        image:
-          reference: tensorchord/vchord-scratch:pg18-v1.1.1
-        extension_control_path:
-          - /usr/share/postgresql/18
-        dynamic_library_path:
-          - /usr/lib/postgresql/18/lib
+      - name: pgvector
 
   primaryUpdateMethod: switchover
