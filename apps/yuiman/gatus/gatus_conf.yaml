@@ -17,3 +17,8 @@ endpoints:
     url: "https://prettysunflower.moe"
     conditions:
       - "[STATUS] == 200"
+
+  - name: Redmine Kikimungo
+    url: "http://kikimungo.redmine/up"
+    conditions:
+      - "[STATUS] == 200"

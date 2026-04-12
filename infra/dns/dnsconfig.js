@@ -8,7 +8,7 @@ var DSP_PORKBUN = NewDnsProvider("porkbun");
 var hosts = require("./hosts.json");
 var fsn_okina = "23.88.71.121";
 var fsn_okina_ipv6 = "2a01:4f8:272:ea00:be24:11ff:fe33:fa90";
-var internal_okina = "100.108.98.123";
+var internal_okina = "100.74.29.7";
 var dmarc = DMARC_BUILDER({
   policy: "reject",
   ruf: ["mailto:postmaster@prettysunflower.moe"],
@@ -42,8 +42,8 @@ function okina(subdomain, dsp) {
   if (dsp == DSP_BIND9) {
     return [A(subdomain, internal_okina)];
   } else {
-    //return [A(subdomain, fsn_okina), AAAA(subdomain, fsn_okina_ipv6)];
-    return [A(subdomain, fsn_okina)];
+    return [A(subdomain, fsn_okina), AAAA(subdomain, fsn_okina_ipv6)];
+    // return [A(subdomain, fsn_okina)];
   }
 }
 
@@ -291,9 +291,10 @@ D(
   A("flaresolverr", internal_okina),
   A("dns", "100.74.71.91"),
   A("testmtls", internal_okina),
-  A("private.registry.container", "100.108.98.123"),
+  A("private.registry.container", internal_okina),
   A("login", internal_okina),
   A("mediamanager", internal_okina),
+  A("changedetection", internal_okina),
 );
 
 D(

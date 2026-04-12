@@ -19,5 +19,6 @@
   "postgres.sekibanki": "100.110.40.2",
   "shinmyoumaru": "100.105.17.105",
   "yuyuko": "100.126.243.21",
-  "staging.kikimungo": "149.56.130.91"
+  "staging.kikimungo": "149.56.130.91",
+  "internal-okina": "100.74.29.7"
 }

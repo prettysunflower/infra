@@ -21,4 +21,8 @@ push listen: (validate listen)
 restart_fsn:
     ssh fsn.okina "cd caddy && docker compose pull && docker compose down && docker compose up -d" 
 
-deploy: (push "tailscale") (push "public") restart_fsn
+restart_internal:
+    ssh internal.okina "cd caddy && docker compose pull && docker compose down && docker compose up -d" 
+
+
+deploy: (push "tailscale") (push "public") restart_fsn restart_internal

@@ -1,6 +1,6 @@
 ---
 clusterName: yuiman
-talosVersion: v1.12.6-tailscale-1.96.3
+talosVersion: v1.12.6-tailscale-1.96.4
 kubernetesVersion: v1.35.0
 endpoint: https://10.0.12.10:6443
 domain: yuiman.prettysunflower.moe
