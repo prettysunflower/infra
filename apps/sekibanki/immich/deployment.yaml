@@ -206,9 +206,8 @@ spec:
     spec:
       volumes:
         - name: valkey
-          emptyDir:
-            sizeLimit: 256Mi
-            medium: Memory
+          persistentVolumeClaim:
+            claimName: valkey-pvc
       containers:
         - image: valkey/valkey:alpine
           name: valkey

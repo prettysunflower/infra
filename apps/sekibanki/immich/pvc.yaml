@@ -12,6 +12,19 @@ spec:
   storageClassName: local-path
 ---
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: valkey-pvc
+  namespace: immich
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: local-path
+---
+apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: pv-immich-media

@@ -1,3 +1,5 @@
+namespace: immich
+
 resources:
   - database.yaml
   - cluster.yaml

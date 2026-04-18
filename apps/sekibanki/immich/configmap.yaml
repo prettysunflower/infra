@@ -4,9 +4,9 @@ metadata:
   name: immich-config
   namespace: immich
 data:
-  REDIS_HOSTNAME: valkey.immich.svc.sekibanki.prettysunflower.moe
+  REDIS_HOSTNAME: valkey
   IMMICH_PORT: "2283"
-  IMMICH_MACHINE_LEARNING_URL: http://machine-learning.immich.svc.cluster.local:2283
+  IMMICH_MACHINE_LEARNING_URL: http://machine-learning
   TRANSFORMERS_CACHE: /cache
   HF_XET_CACHE: /cache/huggingface-xet
   MPLCONFIGDIR: /cache/matplotlib-config
