@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nextcloud-config
+  namespace: nextcloud-dacostafaro
+data:
+  NEXTCLOUD_ADMIN_USER: nyallo
+  NEXTCLOUD_TRUSTED_DOMAINS: nextcloud.dacostafaro.com
+  NEXTCLOUD_INIT_HTACCESS: "true"
+  APACHE_DISABLE_REWRITE_IP: "1"
+  REDIS_HOST: valkey
+  SMTP_HOST: smtp.fastmail.com
+  SMTP_SECURE: ssl
+  SMTP_PORT: "465"
+  MAIL_FROM_ADDRESS: "nextcloud.dacostafaro"
+  MAIL_DOMAIN: "nyallo.net"
+  TRUSTED_PROXIES: "10.219.0.1/32"

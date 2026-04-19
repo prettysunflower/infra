@@ -1,0 +1,134 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextcloud
+  labels:
+    app.kubernetes.io/name: nextcloud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nextcloud
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: nextcloud
+    spec:
+      volumes:
+        - name: nextcloud-data
+          persistentVolumeClaim:
+            claimName: nextcloud-pvc
+      containers:
+        - name: nextcloud
+          image: nextcloud:33.0.2-apache
+          envFrom:
+            - configMapRef:
+                name: nextcloud-config
+            - secretRef:
+                name: nextcloud-secrets
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-app
+                  key: username
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-app
+                  key: dbname
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-app
+                  key: host
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-app
+                  key: password
+          ports:
+            - containerPort: 80
+              name: http
+          volumeMounts:
+            - name: nextcloud-data
+              mountPath: "/var/www/html"
+          livenessProbe:
+            httpGet:
+              path: /status.php
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: nextcloud.dacostafaro.com
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            periodSeconds: 90
+          startupProbe:
+            httpGet:
+              path: /status.php
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: nextcloud.dacostafaro.com
+            failureThreshold: 30
+            periodSeconds: 2
+          resources:
+            limits:
+              cpu: 2
+              memory: 2G
+            requests:
+              cpu: 1
+              memory: 1G
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: valkey
+  namespace: nextcloud-dacostafaro
+  labels:
+    app.kubernetes.io/name: valkey
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: valkey
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: valkey
+    spec:
+      volumes:
+        - name: valkey-data
+          persistentVolumeClaim:
+            claimName: nextcloud-valkey-pvc
+      containers:
+        - image: valkey/valkey:alpine
+          name: valkey
+          command: ["valkey-server"]
+          ports:
+            - containerPort: 6379
+              protocol: TCP
+              name: valkey
+          env:
+            - name: VALKEY_EXTRA_FLAGS
+              value: "--save 60 1"
+          volumeMounts:
+            - name: valkey-data
+              mountPath: "/data"
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 250m
+              memory: 64Mi
