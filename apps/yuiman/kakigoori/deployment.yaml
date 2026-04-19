@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: kakigoori
-          image: "git.prettysunflower.moe/prettysunflower/kakigoori:2.0.1"
+          image: "git.prettysunflower.moe/prettysunflower/kakigoori:2.0.2-amd64"
           imagePullPolicy: Always
           ports:
             - containerPort: 8001
@@ -88,7 +88,7 @@ spec:
               cpu: 500m
               memory: 512Mi
         - name: kakigoori-static
-          image: "git.prettysunflower.moe/prettysunflower/kakigoori-static:2.0.1"
+          image: "git.prettysunflower.moe/prettysunflower/kakigoori-static:2.0.2"
           ports:
             - containerPort: 8002
               name: static
@@ -290,7 +290,7 @@ spec:
     spec:
       containers:
         - name: kakigoori
-          image: git.prettysunflower.moe/prettysunflower/kakigoori:2.0.1
+          image: git.prettysunflower.moe/prettysunflower/kakigoori:2.0.2-amd64
           envFrom:
             - secretRef:
                 name: kakigoori-config
@@ -354,7 +354,7 @@ spec:
         app.kubernetes.io/name: avif-image-worker
     spec:
       containers:
-        - image: git.prettysunflower.moe/prettysunflower/kakigoori-worker:2.0.1
+        - image: git.prettysunflower.moe/prettysunflower/kakigoori-worker:2.0.2-amd64
           name: kakigoori-worker
           envFrom:
             - secretRef:
@@ -397,7 +397,7 @@ spec:
         app.kubernetes.io/name: webp-image-worker
     spec:
       containers:
-        - image: git.prettysunflower.moe/prettysunflower/kakigoori-worker:2.0.1
+        - image: git.prettysunflower.moe/prettysunflower/kakigoori-worker:2.0.2-amd64
           name: kakigoori-worker
           envFrom:
             - secretRef:
