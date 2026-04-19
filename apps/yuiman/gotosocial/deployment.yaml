@@ -15,6 +15,10 @@ spec:
       labels:
         app.kubernetes.io/name: gotosocial
     spec:
+      volumes:
+        - name: gotosocial-data
+          persistentVolumeClaim:
+            claimName: gotosocial-pvc
       containers:
         - image: superseriousbusiness/gotosocial:0.21.2
           imagePullPolicy: Always
@@ -34,6 +38,9 @@ spec:
                 name: gotosocial-config
             - secretRef:
                 name: gotosocial-secrets
+          volumeMounts:
+            - name: gotosocial-data
+              mountPath: /gotosocial/storage
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000

@@ -9,5 +9,5 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 10G
-  storageClassName: nfs-csi
+      storage: 50G
+  storageClassName: local-path
