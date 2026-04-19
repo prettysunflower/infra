@@ -1,0 +1,8 @@
+---
+apiVersion: v1alpha1
+kind: ExternalVolumeConfig
+name: k8s-data
+filesystemType: virtiofs
+mount:
+  virtiofs:
+    tag: k8s_data
