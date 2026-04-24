@@ -24,7 +24,7 @@ spec:
             claimName: valkey-outline-pvc
       containers:
         - name: outline
-          image: outlinewiki/outline:1.6.1
+          image: outlinewiki/outline:1.7.0
           env:
             - name: DATABASE_URL
               valueFrom:
