@@ -15,4 +15,4 @@ spec:
 
   storage:
     size: 5Gi
-    storageClass: nfs-csi
+    storageClass: local-path

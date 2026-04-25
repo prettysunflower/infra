@@ -10,7 +10,7 @@ data:
   GTS_INSTANCE_LANGUAGES: en,fr
   GTS_ACCOUNTS_ALLOW_CUSTOM_CSS: "true"
   GTS_DB_TYPE: postgres
-  GTS_OIDC_ENABLED: "true"
+  GTS_OIDC_ENABLED: "false"
   GTS_OIDC_IDP_NAME: "🌻 Login"
   GTS_OIDC_ISSUER: "https://login.sunflower.lgbt"
   GTS_OIDC_CLIENT_ID: "d1e7c49a-b3a4-4dd4-a423-839e95981d05"

@@ -21,7 +21,7 @@ spec:
             claimName: pocketid-pvc
       containers:
         - name: pocketid
-          image: ghcr.io/pocket-id/pocket-id:v2.6.0-distroless
+          image: ghcr.io/pocket-id/pocket-id:v2.6.2-distroless
           ports:
             - containerPort: 1411
               name: http
@@ -78,4 +78,4 @@ spec:
                 - /app/pocket-id
                 - healthcheck
             failureThreshold: 30
-            periodSeconds: 10
+            periodSeconds: 2
