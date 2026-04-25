@@ -13,7 +13,7 @@ data:
   SSO_ENABLED: "true"
   SSO_ONLY: "true"
   SSO_AUTHORITY: https://login.sunflower.lgbt
-  SSO_CLIENT_ID: 683d908d-c642-458b-8cd4-c1bda25db2c9
+  SSO_CLIENT_ID: cfe9fc91-b926-41b6-ba6a-ebeca5bbbdcd
   SSO_CLIENT_CACHE_EXPIRATION: "3600"
   SSO_AUTH_ONLY_NOT_SESSION: "true"
   PUSH_ENABLED: "true"
