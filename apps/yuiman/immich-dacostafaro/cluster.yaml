@@ -14,7 +14,7 @@ spec:
     major: 18
 
   storage:
-    storageClass: nfs-csi
+    storageClass: local-path
     size: 15Gi
 
   backup:

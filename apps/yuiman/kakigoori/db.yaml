@@ -7,5 +7,5 @@ spec:
   instances: 3
 
   storage:
-    storageClass: nfs-csi
+    storageClass: local-path
     size: 5Gi
