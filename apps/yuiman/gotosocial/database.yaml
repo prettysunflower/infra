@@ -23,8 +23,8 @@ spec:
           externalCluster: sekibanki-postgres
 
   storage:
-    size: 5Gi
-    storageClass: nfs-csi
+    size: 15Gi
+    storageClass: local-path
 
   externalClusters:
     - name: sekibanki-postgres
