@@ -5,6 +5,7 @@ resources:
   - secrets.yaml
   - configmap.yaml
   - namespace.yaml
+  - database.yaml
 configMapGenerator:
   - name: gitea-anubis-config
     namespace: anubis
