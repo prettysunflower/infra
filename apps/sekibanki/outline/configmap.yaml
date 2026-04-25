@@ -15,10 +15,10 @@ data:
   AWS_S3_UPLOAD_BUCKET_NAME: prettysunflower-wiki
   AWS_S3_FORCE_PATH_STYLE: "true"
   AWS_S3_ACL: private
-  OIDC_AUTH_URI: https://auth.remilia.ch/authorize
-  OIDC_TOKEN_URI: https://auth.remilia.ch/api/oidc/token
-  OIDC_USERINFO_URI: https://auth.remilia.ch/api/oidc/userinfo
-  OIDC_LOGOUT_URI: https://auth.remilia.ch/api/oidc/end-session
+  OIDC_AUTH_URI: https://login.sunflower.lgbt/authorize
+  OIDC_TOKEN_URI: https://login.sunflower.lgbt/api/oidc/token
+  OIDC_USERINFO_URI: https://login.sunflower.lgbt/api/oidc/userinfo
+  OIDC_LOGOUT_URI: https://login.sunflower.lgbt/api/oidc/end-session
   OIDC_USERNAME_CLAIM: preferred_username
   OIDC_DISPLAY_NAME: Auth prettysunflower
   OIDC_SCOPES: openid profile email
