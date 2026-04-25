@@ -3,10 +3,15 @@ kind: ConfigMap
 metadata:
   name: karakeep-config
 data:
-  MEILI_ADDR: http://karakeep-meilisearch.karakeep.svc.sekibanki.prettysunflower.moe:7700
+  MEILI_ADDR: http://karakeep-meilisearch:7700
   MEILI_NO_ANALYTICS: "true"
-  BROWSER_WEB_URL: http://127.0.0.1:9222
+  BROWSER_WEB_URL: http://chrome:9222
   DATA_DIR: /data
   NEXTAUTH_URL: https://karakeep.prettysunflower.moe
   CRAWLER_FULL_PAGE_ARCHIVE: "true"
   DB_WAL_MODE: "true"
+  DISABLE_PASSWORD_AUTH: "true"
+  OAUTH_WELLKNOWN_URL: "https://login.sunflower.lgbt/.well-known/openid-configuration"
+  OAUTH_CLIENT_ID: 8af5e154-362d-429d-ab0f-1a333b4a10e0
+  OAUTH_PROVIDER_NAME: "🌻 Login"
+  OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: "true"
