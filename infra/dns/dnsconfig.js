@@ -81,6 +81,7 @@ D(
     "@",
     "google-site-verification=MNk4A3w2twStNEcanuPQxO-zPWR6sLIDFrqzgKAWofc",
   ),
+  TXT("@", "TAILSCALE-qWTfVmOp4VVdetEn5NJT"),
   TXT("_atproto", "did=did:plc:amgacgxmv3jwr5q7ckgf4j63"),
   TXT(
     "ps1._domainkey",
@@ -201,6 +202,7 @@ D(
   okina("git"),
   okina("data"),
   okina("kms"),
+  okina("wiki"),
   CNAME("em903851", "return.smtp2go.net."),
   CNAME("s903851._domainkey", "dkim.smtp2go.net."),
   mx("@"),
