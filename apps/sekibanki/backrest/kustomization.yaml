@@ -1,5 +1,8 @@
+namespace: backrest
+
 resources:
   - deployment.yaml
   - svc.yaml
   - pvc.yaml
   - configmap.yaml
+  - namespace.yaml

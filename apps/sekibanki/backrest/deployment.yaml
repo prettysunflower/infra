@@ -22,6 +22,9 @@ spec:
           emptyDir:
             sizeLimit: 500Mi
             medium: Memory
+        - name: restic-backups
+          persistentVolumeClaim:
+            claimName: pvc-restic-backups
       containers:
         - name: backrest
           image: garethgeorge/backrest:v1.12.1
@@ -46,3 +49,5 @@ spec:
               subPath: rclone
             - name: backrest-tmp
               mountPath: /tmp
+            - name: restic-backups
+              mountPath: /mnt/yuyuko/backups/restic

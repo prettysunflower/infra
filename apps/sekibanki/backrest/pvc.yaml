@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: backrest-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: local-path
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-restic-backups
+spec:
+  capacity:
+    storage: 25T
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /var/mnt/yuyuko/backups/restic
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-restic-backups
+  namespace: backrest
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 25T
+  volumeName: pv-restic-backups
