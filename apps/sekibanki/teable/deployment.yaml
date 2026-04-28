@@ -19,42 +19,9 @@ spec:
         - ip: "100.113.193.5"
           hostnames:
             - "mail.prettysunflower.moe"
-      initContainers:
-        - name: db-migrate
-          image: ghcr.io/teableio/teable:release.2026-04-21T13-16-47Z.1517
-          args:
-            - migrate-only
-          envFrom:
-            - configMapRef:
-                name: teable-config
-            - secretRef:
-                name: teable-secrets
-          env:
-            - name: PRISMA_DATABASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-app
-                  key: uri
-          resources:
-            requests:
-              cpu: 100m
-              memory: 102Mi
-            limits:
-              cpu: 1000m
-              memory: 1024Mi
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            runAsNonRoot: true
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            seccompProfile:
-              type: RuntimeDefault
       containers:
         - name: teable
-          image: ghcr.io/teableio/teable:release.2026-04-21T13-16-47Z.1517
+          image: ghcr.io/teableio/teable:release.2026-04-28T09-22-07Z.1576
           args:
             - skip-migrate
           ports:
