@@ -1,7 +1,7 @@
 ---
 clusterName: sekibanki
-talosVersion: v1.12.6-tailscale-1.96.3
-kubernetesVersion: v1.35.0
+talosVersion: v1.13.0-tailscale-1.96.4
+kubernetesVersion: v1.36.0
 endpoint: https://10.0.0.32:6443
 domain: sekibanki.prettysunflower.moe
 allowSchedulingOnControlPlanes: true
@@ -26,20 +26,6 @@ patches:
         extraArgs:
           feature-gates: ImageVolume=true
           rotate-server-certificates: true
-      registries:
-        mirrors:
-          docker.io:
-            endpoints:
-              - https://mirror.container.sunflower.lgbt
-          gcr.io:
-            endpoints:
-              - https://mirror.container.sunflower.lgbt
-          ghcr.io:
-            endpoints:
-              - https://mirror.container.sunflower.lgbt
-          registry.k8s.io:
-            endpoints:
-              - https://mirror.container.sunflower.lgbt
     cluster:
       apiServer:
         extraArgs:
@@ -50,14 +36,14 @@ nodes:
     ipAddress: 10.0.0.32
     controlPlane: true
     installDisk: /dev/sda
-    talosImageURL: private.registry.container.sunflower.lgbt/prettysunflower/talos
+    talosImageURL: git.prettysunflower.moe/prettysunflower/talos
   - hostname: gleba
     ipAddress: 10.0.0.30
     controlPlane: true
     installDisk: /dev/sda
-    talosImageURL: private.registry.container.sunflower.lgbt/prettysunflower/talos
+    talosImageURL: git.prettysunflower.moe/prettysunflower/talos
   - hostname: vulcanus
     ipAddress: 10.0.0.33
     controlPlane: true
     installDisk: /dev/sda
-    talosImageURL: private.registry.container.sunflower.lgbt/prettysunflower/talos
+    talosImageURL: git.prettysunflower.moe/prettysunflower/talos
