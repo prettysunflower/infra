@@ -24,7 +24,7 @@ spec:
             claimName: pvc-medias-remilia
       containers:
         - name: sonarr
-          image: ghcr.io/linuxserver/sonarr:4.0.16.2944-ls300
+          image: ghcr.io/linuxserver/sonarr:4.0.17.2952-ls309
           envFrom:
             - configMapRef:
                 name: remilia-config
