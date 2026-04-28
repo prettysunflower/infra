@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: etherpad
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: etherpad
@@ -23,8 +23,27 @@ spec:
           envFrom:
             - configMapRef:
                 name: etherpad-config
-            - secretRef:
-                name: etherpad-secrets
+          env:
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-app
+                  key: host
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-app
+                  key: user
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-app
+                  key: password
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-app
+                  key: dbname
           resources:
             limits:
               cpu: 1

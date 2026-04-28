@@ -1,6 +1,5 @@
 resources:
   - ../common
-  - ../../infra/common/csi-driver-nfs
   - anko
   - cim-monday-helper
   - docker-registry
@@ -27,3 +26,4 @@ resources:
   - nyallo-website
   - immich-dacostafaro
   - nextcloud-dacostafaro
+  - etherpad
