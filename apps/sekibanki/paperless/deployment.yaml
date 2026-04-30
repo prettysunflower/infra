@@ -172,7 +172,7 @@ spec:
         app.kubernetes.io/name: paperless-gotenberg
     spec:
       containers:
-        - image: docker.io/gotenberg/gotenberg:8.31
+        - image: docker.io/gotenberg/gotenberg:8.32
           name: gotenberg
           command:
             [
