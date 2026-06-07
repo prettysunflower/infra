@@ -1,0 +1,77 @@
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sResource.pkl"
+import "sops:healthchecks.secrets.sops.pkl" as secrets_file
+
+import "../deploy/Deploy.pkl"
+
+app =
+  new Deploy {
+    name = "healthchecks"
+    namespace = "healthchecks"
+    image = "healthchecks/healthchecks:v4.2"
+    ports {
+      new {
+        containerPort = 8000
+        svcPort = 80
+        name = "http"
+      }
+    }
+    livenessProbe {
+      path = "/api/v3/status/"
+      port = "http"
+      httpHeaders {
+        new {
+          name = "Host"
+          value = "healthchecks.prettysunflower.moe"
+        }
+      }
+    }
+    startupProbe {
+      path = "/api/v3/status/"
+      port = "http"
+      httpHeaders {
+        new {
+          name = "Host"
+          value = "healthchecks.prettysunflower.moe"
+        }
+      }
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "1"
+        ["memory"] = 1.gib
+      }
+      requests {
+        ["cpu"] = "500m"
+        ["memory"] = 512.mib
+      }
+    }
+    env {
+      ["ALLOWED_HOSTS"] = "healthchecks.prettysunflower.moe"
+      ["DEFAULT_FROM_EMAIL"] = "healthchecks@services.prettysunflower.moe"
+      ["EMAIL_HOST"] = "mail.prettysunflower.moe"
+      ["SITE_ROOT"] = "https://healthchecks.prettysunflower.moe"
+      ["DB"] = "postgres"
+      ["REGISTRATION_OPEN"] = "False"
+      ["SITE_NAME"] = "Sunflower Healthchecks"
+      ["DEBUG"] = "False"
+      ["RP_ID"] = "healthchecks.prettysunflower.moe"
+    }
+    secrets = secrets_file.secrets
+    pgDb {
+      size = 10.gib
+      envMapping {
+        host = "DB_HOST"
+        dbname = "DB_NAME"
+        username = "DB_USER"
+        password = "DB_PASSWORD"
+        port = "DB_PORT"
+      }
+    }
+  }.resources
+
+output {
+  value = app
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}
