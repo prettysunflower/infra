@@ -1,6 +1,0 @@
-namespace: plex
-
-resources:
-  - namespace.yaml
-  - remilia
-  - deneb

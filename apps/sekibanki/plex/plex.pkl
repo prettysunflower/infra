@@ -1,0 +1,43 @@
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sObject.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sResource.pkl"
+
+import "../../deploy/Deploy.pkl"
+
+user: String
+mediaHostPath: String
+mediaContainerPath: String
+
+config = this
+
+deploy: Deploy = new {
+  name = "plex-" + user
+  namespace = "plex"
+  image = "lscr.io/linuxserver/plex:1.43.1.10611-1e34174b1-ls305"
+  ports {
+    new {
+      containerPort = 32400
+      svcPort = 80
+      name = "http"
+    }
+  }
+  volumes {
+    new {
+      name = "plex-" + config.user + "-config"
+      size = 5.gib
+      containerPath = "/config"
+      accessMode = "ReadWriteOnce"
+    }
+    new {
+      name = "plex-" + config.user + "-medias"
+      size = 2.tib
+      containerPath = config.mediaContainerPath
+      accessMode = "ReadWriteMany"
+      hostPath = config.mediaHostPath
+    }
+  }
+  env {
+    ["S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES"] = "1"
+    ["S6_READ_ONLY_ROOT"] = "1"
+  }
+  securityContext = null
+}
