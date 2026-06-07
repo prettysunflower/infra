@@ -1,3 +1,4 @@
+{{ if ne (.Env.listen | strings.ToLower) "tailscale" }}
 photos.dacostafaro.com {
 	reverse_proxy immich.immich-dacostafaro.svc.yuiman.prettysunflower.moe
 	log
@@ -17,3 +18,4 @@ dolibarr.dacostafaro.com {
 	reverse_proxy dolibarr.dolibarr-dacostafaro.svc.yuiman.prettysunflower.moe
 	log
 }
+{{ end -}}

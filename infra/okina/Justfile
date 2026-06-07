@@ -1,4 +1,10 @@
-docker_image_url := "private.registry.container.sunflower.lgbt/okina-caddy"
+[working-directory('caddy')]
+xcaddy:
+    xcaddy build \
+        --output caddy-bin \
+        --with github.com/caddy-dns/porkbun \
+        --with github.com/caddy-dns/bunny \
+        --with github.com/mholt/caddy-l4
 
 fmt:
     #!/usr/bin/env sh
@@ -9,20 +15,23 @@ fmt:
 template $listen: fmt
     gomplate
 
-build_docker listen: (template listen)
-    docker build -t "{{ docker_image_url }}:latest-{{ listen }}" .
+[working-directory('caddy')]
+adapt $listen: (template listen)
+    ./caddy-bin adapt --config ./Caddyfile --adapter caddyfile
 
-validate listen: (build_docker listen)
-    docker run -e "SOPS_AGE_KEY=${SOPS_AGE_KEY}" --rm "{{ docker_image_url }}:latest-{{ listen }}" validate
+update_internal:
+    caddy_json=$(just adapt "tailscale") && curl \
+        -X POST \
+        -H "Content-Type: application/json" \
+        --data "$caddy_json" \
+        http://internal.okina.hosts.prettysunflower.moe:2019/load
 
-push listen: (validate listen)
-    docker push "{{ docker_image_url }}:latest-{{ listen }}"
-
-restart_fsn:
-    ssh fsn.okina "cd caddy && docker compose pull && docker compose down && docker compose up -d" 
-
-restart_internal:
-    ssh internal.okina "cd caddy && docker compose pull && docker compose down && docker compose up -d" 
+update_public:
+    caddy_json=$(just adapt "public") && curl \
+        -X POST \
+        -H "Content-Type: application/json" \
+        --data "$caddy_json" \
+        http://fsn.okina.hosts.prettysunflower.moe:2019/load
 
 
-deploy: (push "tailscale") (push "public") restart_fsn restart_internal
+deploy: update_internal update_public

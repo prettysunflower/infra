@@ -1,5 +1,6 @@
 prettysunflower.moe, www.prettysunflower.moe {
 	import bunny
+	log
 
 	@fedi_path {
 		path /.well-known/host-meta
@@ -27,18 +28,16 @@ prettysunflower.moe, www.prettysunflower.moe {
 	}
 }
 
-actual.prettysunflower.moe {
+budget.prettysunflower.moe {
 	import bunny
+	log
 
-	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
-		reverse_proxy actual.default.svc.sekibanki.prettysunflower.moe
-	{{ else }}
-		abort
-	{{ end -}}
+	reverse_proxy actual.default.svc.sekibanki.prettysunflower.moe
 }
 
 git.prettysunflower.moe {
 	import bunny
+	log
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy gitea.gitea.svc.sekibanki.prettysunflower.moe
@@ -51,12 +50,14 @@ git.prettysunflower.moe {
 
 data.prettysunflower.moe {
 	import bunny
+	log
 
-	reverse_proxy teable.teable.svc.sekibanki.prettysunflower.moe
+	reverse_proxy teable.teable.svc.yuiman.prettysunflower.moe
 }
 
 dns.prettysunflower.moe {
 	import bunny
+	log
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy 100.94.59.38:5380
@@ -67,6 +68,7 @@ dns.prettysunflower.moe {
 
 passwords.prettysunflower.moe {
 	import bunny
+	log
 
 	{{ if ne (.Env.listen | strings.ToLower) "tailscale" }}
 		import mtls
@@ -78,6 +80,7 @@ passwords.prettysunflower.moe {
 
 caldav.prettysunflower.moe {
 	import bunny
+	log
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy caldav.default.svc.sekibanki.prettysunflower.moe
@@ -88,6 +91,7 @@ caldav.prettysunflower.moe {
 
 kanban.prettysunflower.moe {
 	import bunny
+	log
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy planka.default.svc.sekibanki.prettysunflower.moe
@@ -98,12 +102,14 @@ kanban.prettysunflower.moe {
 
 gist.prettysunflower.moe {
 	import bunny
+	log
 
 	reverse_proxy opengist.opengist.svc.sekibanki.prettysunflower.moe
 }
 
 uptime.prettysunflower.moe {
 	import bunny
+	log
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy uptime-kuma.default.svc.yuiman.prettysunflower.moe
@@ -114,30 +120,35 @@ uptime.prettysunflower.moe {
 
 qr.prettysunflower.moe {
 	import bunny
+	log
 
 	reverse_proxy miniqr.default.svc.yuiman.prettysunflower.moe
 }
 
 files.prettysunflower.moe {
 	import bunny
+	log
 
 	reverse_proxy publicfiles.default.svc.sekibanki.prettysunflower.moe
 }
 
 invidious.prettysunflower.moe {
 	import bunny
+	log
 
 	reverse_proxy 100.105.17.105:4039
 }
 
 karakeep.prettysunflower.moe {
 	import bunny
+	log
 
 	reverse_proxy karakeep.karakeep.svc.sekibanki.prettysunflower.moe
 }
 
 papers.prettysunflower.moe {
 	import bunny
+	log
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy paperless.paperless.svc.sekibanki.prettysunflower.moe
@@ -154,12 +165,14 @@ papers.prettysunflower.moe {
 
 youtubethumbnails.prettysunflower.moe {
 	import bunny
+	log
 
 	reverse_proxy youtubethumbnails.default.svc.yuiman.prettysunflower.moe
 }
 
 fedi.prettysunflower.moe {
 	import bunny
+	log
 
 	handle /.well-known/webfinger {
 		reverse_proxy gotosocial.gotosocial.svc.yuiman.prettysunflower.moe {
@@ -183,6 +196,7 @@ fedi.prettysunflower.moe {
 
 wiki.prettysunflower.moe {
 	import bunny
+	log
 
 	reverse_proxy outline.outline.svc.sekibanki.prettysunflower.moe {
 		header_up Host "wiki.prettysunflower.moe"
@@ -191,12 +205,14 @@ wiki.prettysunflower.moe {
 
 okina.prettysunflower.moe {
 	import bunny
+	log
 
 	respond "OK"
 }
 
 plex.prettysunflower.moe {
 	import bunny
+	log
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy 100.105.17.105:32400
@@ -207,6 +223,7 @@ plex.prettysunflower.moe {
 
 certs.prettysunflower.moe {
 	import bunny
+	log
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy 100.105.17.105:4050
@@ -217,6 +234,7 @@ certs.prettysunflower.moe {
 
 multiscrobbler.prettysunflower.moe {
 	import bunny
+	log
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy multiscrobbler.default.svc.yuiman.prettysunflower.moe
@@ -227,6 +245,7 @@ multiscrobbler.prettysunflower.moe {
 
 qui.prettysunflower.moe {
 	import bunny
+	log
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy qui.default.svc.sekibanki.prettysunflower.moe
@@ -237,6 +256,7 @@ qui.prettysunflower.moe {
 
 remilia.sonarr.prettysunflower.moe {
 	import bunny
+	log
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy remilia.sonarr.svc.sekibanki.prettysunflower.moe
@@ -247,6 +267,7 @@ remilia.sonarr.prettysunflower.moe {
 
 deneb.sonarr.prettysunflower.moe {
 	import bunny
+	log
 
 	{{ if ne (.Env.listen | strings.ToLower) "tailscale" }}
 		import mtls
@@ -258,6 +279,7 @@ deneb.sonarr.prettysunflower.moe {
 
 remilia.radarr.prettysunflower.moe {
 	import bunny
+	log
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy remilia.radarr.svc.sekibanki.prettysunflower.moe
@@ -268,6 +290,7 @@ remilia.radarr.prettysunflower.moe {
 
 deneb.radarr.prettysunflower.moe {
 	import bunny
+	log
 
 	{{ if ne (.Env.listen | strings.ToLower) "tailscale" }}
 		import mtls
@@ -279,6 +302,7 @@ deneb.radarr.prettysunflower.moe {
 
 prowlarr.prettysunflower.moe {
 	import bunny
+	log
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy prowlarr.prowlarr.svc.sekibanki.prettysunflower.moe
@@ -287,18 +311,43 @@ prowlarr.prettysunflower.moe {
 	{{ end -}}
 }
 
-books.prettysunflower.moe {
-	import bunny
-
-	reverse_proxy booklore.default.svc.sekibanki.prettysunflower.moe
-}
 
 atuin.prettysunflower.moe {
 	import bunny
+	log
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy atuin.atuin.svc.sekibanki.prettysunflower.moe
 	{{ else }}
 		abort
 	{{ end -}}
+}
+
+webarchives.prettysunflower.moe {
+	import bunny
+	log
+
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
+		reverse_proxy browsertrix-cloud-frontend.default.svc.sekibanki.prettysunflower.moe
+	{{ else }}
+		abort
+	{{ end -}}
+}
+
+healthchecks.prettysunflower.moe {
+	import bunny
+	log
+
+	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
+		reverse_proxy healthchecks.healthchecks.svc.yuiman.prettysunflower.moe
+	{{ else }}
+		abort
+	{{ end -}}
+}
+
+books.prettysunflower.moe {
+	import bunny
+	log
+	
+	reverse_proxy stump.default.svc.sekibanki.prettysunflower.moe
 }

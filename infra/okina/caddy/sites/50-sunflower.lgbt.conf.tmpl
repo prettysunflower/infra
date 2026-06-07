@@ -1,5 +1,6 @@
 sunflower.lgbt, www.sunflower.lgbt, http://http.sunflower.lgbt {
 	import bunny
+	log
 
 	handle_path /static/* {
 		reverse_proxy static.prettysunflower-website.svc.yuiman.prettysunflower.moe
@@ -14,6 +15,8 @@ sunflower.lgbt, www.sunflower.lgbt, http://http.sunflower.lgbt {
 
 currency.sunflower.lgbt {
 	import bunny
+	log
+
 	reverse_proxy https://api.ratesexchange.eu {
 		header_up -Host
 		header_down +Access-Control-Allow-Origin "*"
@@ -22,12 +25,14 @@ currency.sunflower.lgbt {
 
 photos.sunflower.lgbt {
 	import bunny
+	log
 
 	reverse_proxy immich.immich.svc.sekibanki.prettysunflower.moe
 }
 
 git.sunflower.lgbt {
 	import bunny
+	log
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy gitea.gitea.svc.sekibanki.prettysunflower.moe
@@ -40,18 +45,21 @@ git.sunflower.lgbt {
 
 pad.sunflower.lgbt {
 	import bunny
+	log
 
 	reverse_proxy etherpad.etherpad.svc.yuiman.prettysunflower.moe
 }
 
 data.sunflower.lgbt {
 	import bunny
+	log
 
-	reverse_proxy teable.teable.svc.sekibanki.prettysunflower.moe
+	reverse_proxy teable.teable.svc.yuiman.prettysunflower.moe
 }
 
 mirror.container.sunflower.lgbt {
 	import bunny
+	log
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy container-mirror.default.svc.yuiman.prettysunflower.moe
@@ -62,6 +70,7 @@ mirror.container.sunflower.lgbt {
 
 private.registry.container.sunflower.lgbt {
 	import bunny
+	log
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy private-container-registry.default.svc.yuiman.prettysunflower.moe
@@ -72,6 +81,7 @@ private.registry.container.sunflower.lgbt {
 
 public.registry.container.sunflower.lgbt {
 	import bunny
+	log
 
 	reverse_proxy public-container-registry.default.svc.yuiman.prettysunflower.moe
 }
@@ -79,28 +89,14 @@ public.registry.container.sunflower.lgbt {
 
 schedule.sunflower.lgbt {
 	import bunny
+	log
 
 	reverse_proxy rallly.default.svc.yuiman.prettysunflower.moe
 }
 
-admin.status.sunflower.lgbt {
-	import bunny
-
-	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
-		reverse_proxy uptime-kuma.default.svc.yuiman.prettysunflower.moe
-	{{ else }}
-		abort
-	{{ end -}}
-}
-
-jackett.sunflower.lgbt {
-	import bunny
-
-	reverse_proxy jackett.default.svc.sekibanki.prettysunflower.moe
-}
-
 flaresolverr.sunflower.lgbt {
 	import bunny
+	log
 
 	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
 		reverse_proxy flaresolverr.default.svc.yuiman.prettysunflower.moe
@@ -109,34 +105,23 @@ flaresolverr.sunflower.lgbt {
 	{{ end -}}
 }
 
-dns.sunflower.lgbt {
-	import bunny
-
-	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
-		reverse_proxy https://100.74.71.91 {
-			transport http {
-				tls_insecure_skip_verify
-			}
-		}
-	{{ else }}
-		abort
-	{{ end -}}
-}
-
 login.sunflower.lgbt {
 	import bunny
+	log
 
 	reverse_proxy pocketid.pocketid.svc.yuiman.prettysunflower.moe
 }
 
 privatebin.sunflower.lgbt {
 	import bunny
+	log
 
 	reverse_proxy privatebin.default.svc.yuiman.prettysunflower.moe
 }
 
 masto-fe.sunflower.lgbt {
 	import bunny
+	log
 
 	reverse_proxy masto-fe.default.svc.yuiman.prettysunflower.moe
 }
@@ -148,33 +133,61 @@ testmtls.sunflower.lgbt {
 	respond "Hello, world!"
 }
 
-mediamanager.sunflower.lgbt {
-	import bunny
-
-	{{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
-		reverse_proxy mediamanager.mediamanager.svc.sekibanki.prettysunflower.moe
-	{{ else }}
-		abort
-	{{ end -}}
-}
-
 music.sunflower.lgbt {
 	import bunny
+	log
 
 	reverse_proxy 100.71.106.114:4533
 }
 
 cimmondayhelper.sunflower.lgbt {
 	import bunny
+	log
 
 	reverse_proxy cim-monday-helper.default.svc.yuiman.prettysunflower.moe
 }
 
 changedetection.sunflower.lgbt {
     import bunny
+    log
 
     {{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
     reverse_proxy changedetection.changedetection.svc.sekibanki.prettysunflower.moe
+    {{ else }}
+    abort
+    {{ end -}}
+}
+
+pds.sunflower.lgbt, *.pds.sunflower.lgbt {
+    import bunny
+    log
+
+    @options {
+        method OPTIONS
+    }
+
+    header @options {
+        Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+        Access-Control-Allow-Headers "Content-Type, Authorization, *"
+        Access-Control-Max-Age "86400"
+    }
+
+    header {
+    	Access-Control-Allow-Origin: *
+    }
+
+    respond @options 204
+    reverse_proxy pds.bsky-pds.svc.yuiman.prettysunflower.moe {
+        header_down -Access-Control-Allow-Origin
+    }
+}
+
+grafana.sunflower.lgbt {
+    import bunny
+    log
+
+    {{ if eq (.Env.listen | strings.ToLower) "tailscale" }}
+    reverse_proxy grafana.grafana.svc.yuiman.prettysunflower.moe
     {{ else }}
     abort
     {{ end -}}
