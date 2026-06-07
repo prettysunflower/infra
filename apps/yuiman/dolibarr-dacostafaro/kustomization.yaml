@@ -1,0 +1,9 @@
+namespace: dolibarr-dacostafaro
+
+resources:
+  - deployment.yaml
+  - svc.yaml
+  - pvc.yaml
+  - configmap.yaml
+  - namespace.yaml
+  - database.yaml
