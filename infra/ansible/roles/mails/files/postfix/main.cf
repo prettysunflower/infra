@@ -46,3 +46,6 @@ virtual_mailbox_maps = lmdb:/etc/postfix/virtual_mailboxes
 postscreen_upstream_proxy_protocol = haproxy
 postscreen_upstream_proxy_timeout = 5s
 postscreen_greet_action = enforce
+
+maillog_file=/var/log/postfix.log
+maillog_file_permissions=0644
