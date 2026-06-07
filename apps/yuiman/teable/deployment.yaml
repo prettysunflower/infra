@@ -91,7 +91,7 @@ spec:
           persistentVolumeClaim:
             claimName: valkey-data-pvc
       containers:
-        - image: valkey/valkey:9.0.3-alpine
+        - image: valkey/valkey:9.1.0-alpine
           name: valkey
           envFrom:
             - secretRef:
