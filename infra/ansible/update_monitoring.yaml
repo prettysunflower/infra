@@ -1,0 +1,6 @@
+---
+- hosts: monitoring
+  name: Monitoring
+  roles:
+    - monitoring
+    # - ssh-config

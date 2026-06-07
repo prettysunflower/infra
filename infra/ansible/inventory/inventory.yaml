@@ -25,3 +25,8 @@ containers:
     navidrome:
       ansible_host: 100.71.106.114
       ansible_user: root
+
+    monitoring:
+      ansible_host: monitoring.hosts.prettysunflower.moe
+      ansible_user: prettysunflower
+      ansible_become: true

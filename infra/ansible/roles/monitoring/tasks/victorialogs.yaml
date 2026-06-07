@@ -1,0 +1,46 @@
+- name: Setup VictoriaLogs group
+  ansible.builtin.group:
+    name: victorialogs
+    system: true
+
+- name: Setup VictoriaLogs user
+  ansible.builtin.user:
+    name: victorialogs
+    group: victorialogs
+    comment: victorialogs
+    system: true
+    home: /var/lib/victoria-logs
+    create_home: false
+    shell: /sbin/nologin
+
+- name: Copy init.d file
+  ansible.builtin.copy:
+    src: "files/victorialogs/initd"
+    dest: "/etc/init.d/victoria-logs"
+    owner: root
+    group: root
+    mode: 755
+
+- name: Copy conf.d file
+  ansible.builtin.copy:
+    src: "files/victorialogs/confd"
+    dest: "/etc/conf.d/victoria-logs"
+    owner: root
+    group: root
+    mode: 644
+
+- name: Download VictoriaLogs
+  ansible.builtin.unarchive:
+    src: https://github.com/VictoriaMetrics/VictoriaLogs/releases/download/v1.50.0/victoria-logs-linux-amd64-v1.50.0.tar.gz
+    dest: /usr/bin
+    remote_src: yes
+    mode: 755
+    extra_opts:
+      - --transform
+      - s/-prod//
+
+- name: Restart VictoriaLogs
+  ansible.builtin.service:
+    name: victoria-logs
+    state: restarted
+    enabled: true

@@ -1,0 +1,72 @@
+if .appname != "filterlog" {
+  abort
+}
+
+filter_parts = split(string!(.message), ",")
+
+# field extraction
+.rulenr         = filter_parts[0]
+.subrulenr      = filter_parts[1]
+.anchorname     = filter_parts[2]
+.label          = filter_parts[3]
+.interface      = filter_parts[4]
+.reason         = filter_parts[5]
+.action         = filter_parts[6]
+.dir            = filter_parts[7]
+.ipversion      = to_int!(filter_parts[8])
+
+if (.ipversion == 4) {
+    .tos = filter_parts[9]
+    .ecn = filter_parts[10]
+    .ttl = filter_parts[11]
+    .id = filter_parts[12]
+    .offset = filter_parts[13]
+    .flags = filter_parts[14]
+    .protonum = filter_parts[15]
+    .protoname = filter_parts[16]
+    .length = filter_parts[17]
+    .source_ip = filter_parts[18]
+    .destination_ip = filter_parts[19]
+    index = 20
+} else if (.ipversion == 6) {
+    .class = filter_parts[9]
+    .flow = filter_parts[10]
+    .hoplimit = filter_parts[11]
+    .protoname = filter_parts[12]
+    .protonum = filter_parts[13]
+    .length = filter_parts[14]
+    .source_ip = filter_parts[15]
+    .destination_ip = filter_parts[16]
+    index = 17
+} else {
+  log("Not supported IP Version", level: "error")
+  abort
+}
+
+# TCP
+if .protonum == 6 {
+  filter_parts = split(string!(.message), ",", limit: 9 + 8 + 3 + 9 + 1)
+  .source_port      = filter_parts[20]
+  .destination_port = filter_parts[21]
+  .data_length      = filter_parts[22]
+  .tcp_flags        = filter_parts[23]
+  .sequence_number  = filter_parts[24]
+  .ack_number       = filter_parts[25]
+  .tcp_window       = filter_parts[26]
+  .urg              = filter_parts[27]
+  .tcp_options      = filter_parts[28]
+}
+
+# UDP
+if .protonum == 17 {
+  filter_parts = split(string!(.message), ",", limit: 9 + 8 + 3 + 3 + 1)
+  .source_port      = filter_parts[20]
+  .destination_port = filter_parts[21]
+  .data_length      = filter_parts[22]
+}
+
+# ICMP
+if .protonum == 1 {
+  filter_parts = split(string!(.message), ",", limit: 9 + 8 + 3 + 1 + 1)
+  .icmp_type        = filter_parts[20]
+}

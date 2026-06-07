@@ -1,0 +1,16 @@
+- name: Install Vector
+  community.general.apk:
+    name: vector@edgecommunity
+    state: present
+  notify:
+    - Restart vector
+
+- name: Copy vector.yaml
+  ansible.builtin.copy:
+    src: "files/vector/vector.yaml"
+    dest: "/etc/vector/vector.yaml"
+    owner: vector
+    group: vector
+    mode: u=rw,go=r
+  notify:
+    - Restart vector

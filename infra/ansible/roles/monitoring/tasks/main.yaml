@@ -1,0 +1,11 @@
+# - name: Update packages
+#   ansible.builtin.import_tasks: update_packages.yaml
+
+# - name: Install VictoriaLogs
+#   ansible.builtin.import_tasks: victorialogs.yaml
+
+# - name: Install VictoriaMetrics
+#   ansible.builtin.import_tasks: victoriametrics.yaml
+
+- name: Install Vector
+  ansible.builtin.import_tasks: vector.yaml

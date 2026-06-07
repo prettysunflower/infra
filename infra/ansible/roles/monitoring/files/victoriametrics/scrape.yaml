@@ -1,0 +1,11 @@
+scrape_configs:
+  - job_name: yuyuko-restic-rest-server
+    static_configs:
+      - targets:
+          - yuyuko.prettysunflower.moe:9732
+
+  - job_name: anubis
+    static_configs:
+      - targets:
+          - kakigoori.anubis.svc.yuiman.prettysunflower.moe:9090
+          - prettysunflower-website.anubis.svc.yuiman.prettysunflower.moe:9090

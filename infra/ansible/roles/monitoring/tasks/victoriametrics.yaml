@@ -1,0 +1,62 @@
+- name: Get currently installed VictoriaMetrics version
+  ansible.builtin.command: victoria-metrics --version
+  register: current_victoria_metrics
+
+- name: Setup VictoriaMetrics group
+  ansible.builtin.group:
+    name: victoriametrics
+    system: true
+
+- name: Setup VictoriaMetrics user
+  ansible.builtin.user:
+    name: victoriametrics
+    group: victoriametrics
+    comment: victoriametrics
+    system: true
+    home: /var/lib/victoria-metrics
+    create_home: false
+    shell: /sbin/nologin
+
+- name: Copy init.d file
+  ansible.builtin.copy:
+    src: "files/victoriametrics/initd"
+    dest: "/etc/init.d/victoria-metrics"
+    owner: root
+    group: root
+    mode: 755
+  notify:
+    - Restart victoria-metrics
+
+- name: Copy scrape.yaml
+  ansible.builtin.copy:
+    src: "files/victoriametrics/scrape.yaml"
+    dest: "/etc/victoria-metrics/scrape.yaml"
+    owner: victoriametrics
+    group: victoriametrics
+    mode: u=rw,go=r
+  notify:
+    - Restart victoria-metrics
+
+- name: Copy conf.d file
+  ansible.builtin.copy:
+    src: "files/victoriametrics/confd"
+    dest: "/etc/conf.d/victoria-metrics"
+    owner: root
+    group: root
+    mode: 644
+  notify:
+    - Restart victoria-metrics
+
+- name: Download VictoriaMetrics
+  ansible.builtin.unarchive:
+    src: "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoria_metrics_target_version }}/victoria-metrics-linux-amd64-v{{ victoria_metrics_target_version }}.tar.gz"
+    dest: /usr/bin
+    remote_src: yes
+    mode: 755
+    extra_opts:
+      - --transform
+      - s/-prod//
+  when: current_victoria_metrics.stdout | ansible.builtin.regex_search('v[\\d\\.]+') != 'v' + victoria_metrics_target_version
+  changed_when: true
+  notify:
+    - Restart victoria-metrics

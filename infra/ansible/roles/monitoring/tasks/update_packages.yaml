@@ -1,0 +1,12 @@
+- name: Setup packages
+  ansible.builtin.template:
+    src: templates/alpine/apk_repositories
+    dest: /etc/apk/repositories
+    mode: u=rw,go=r
+    owner: root
+    group: root
+
+- name: Update Alpine machines
+  community.general.apk:
+    update_cache: true
+    upgrade: true

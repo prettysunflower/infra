@@ -1,0 +1,11 @@
+- name: Restart victoria-metrics
+  ansible.builtin.service:
+    name: victoria-metrics
+    state: restarted
+    enabled: true
+
+- name: Restart vector
+  ansible.builtin.service:
+    name: vector
+    state: restarted
+    enabled: true

@@ -1,0 +1,114 @@
+sources:
+  source_syslog_udp:
+    type: syslog
+    address: 0.0.0.0:9514
+    mode: udp
+
+transforms:
+  filterlog:
+    type: remap
+    inputs:
+      - source_syslog_udp
+    source: |
+      if .appname != "filterlog" {
+        abort
+      }
+
+      filter_parts = split(string!(.message), ",")
+
+      # field extraction
+      .rulenr         = filter_parts[0]
+      .subrulenr      = filter_parts[1]
+      .anchorname     = filter_parts[2]
+      .label          = filter_parts[3]
+      .interface      = filter_parts[4]
+      .reason         = filter_parts[5]
+      .action         = filter_parts[6]
+      .dir            = filter_parts[7]
+      .ipversion      = to_int!(filter_parts[8])
+
+      index = 0
+
+      if (.ipversion == 4) {
+          .tos = filter_parts[9]
+          .ecn = filter_parts[10]
+          .ttl = filter_parts[11]
+          .id = filter_parts[12]
+          .offset = filter_parts[13]
+          .flags = filter_parts[14]
+          .protonum = filter_parts[15]
+          .protoname = filter_parts[16]
+          .length = filter_parts[17]
+          .source_ip = filter_parts[18]
+          .destination_ip = filter_parts[19]
+          index = 20
+      } else if (.ipversion == 6) {
+          .class = filter_parts[9]
+          .flow = filter_parts[10]
+          .hoplimit = filter_parts[11]
+          .protoname = filter_parts[12]
+          .protonum = filter_parts[13]
+          .length = filter_parts[14]
+          .source_ip = filter_parts[15]
+          .destination_ip = filter_parts[16]
+          index = 17
+      } else {
+        log("Not supported IP Version", level: "error")
+        abort
+      }
+
+      # TCP
+      if .protonum == 6 {
+        .source_port      = get!(filter_parts, [index])
+        .destination_port = get!(filter_parts, [index + 1])
+        .data_length      = get!(filter_parts, [index + 2])
+        .tcp_flags        = get!(filter_parts, [index + 3])
+        .sequence_number  = get!(filter_parts, [index + 4])
+        .ack_number       = get!(filter_parts, [index + 5])
+        .tcp_window       = get!(filter_parts, [index + 6])
+        .urg              = get!(filter_parts, [index + 7])
+        .tcp_options      = get!(filter_parts, [index + 8])
+      }
+
+      # UDP
+      if .protonum == 17 {
+        .source_port      = get!(filter_parts, [index])
+        .destination_port = get!(filter_parts, [index + 1])
+        .data_length      = get!(filter_parts, [index + 2])
+      }
+
+      # ICMP
+      if .protonum == 1 {
+        .icmp_type        = get!(filter_parts, [index])
+      }
+
+  syslog_catch_all:
+    type: remap
+    inputs:
+      - source_syslog_udp
+    source: |
+      if .appname == "filterlog" {
+        abort
+      }
+
+      parsed, err = parse_syslog(.message)
+      if err == null {
+        . |= parsed
+      }
+
+sinks:
+  victorialogs:
+    inputs:
+      - filterlog
+      - syslog_catch_all
+    type: elasticsearch
+    endpoints:
+      - http://100.68.30.102:9428/insert/elasticsearch/
+    api_version: v8
+    compression: gzip
+    healthcheck:
+      enabled: false
+    query:
+      _msg_field: message
+      _time_field: timestamp
+      _stream_fields: host
