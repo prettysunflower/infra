@@ -1,0 +1,79 @@
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sResource.pkl"
+import "sops:vaultwarden.secrets.sops.pkl" as secrets_file
+
+import "../deploy/Deploy.pkl"
+
+app =
+  new Deploy {
+    name = "vaultwarden"
+    namespace = "vaultwarden"
+    image = "vaultwarden/server:testing-alpine"
+    imagePullPolicy = "Always"
+    ports {
+      new {
+        containerPort = 80
+        svcPort = 80
+        name = "http"
+      }
+    }
+    volumes {
+      new {
+        name = "vaultwarden-data-pvc"
+        size = 5.gib
+        accessMode = "ReadWriteOnce"
+        containerPath = "/data"
+      }
+    }
+    livenessProbe {
+      path = "/"
+      port = "http"
+    }
+    startupProbe {
+      path = "/"
+      port = "http"
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "1"
+        ["memory"] = 256.mib
+      }
+      requests {
+        ["cpu"] = "250m"
+        ["memory"] = 128.mib
+      }
+    }
+    env {
+      ["DOMAIN"] = "https://passwords.prettysunflower.moe"
+      ["SMTP_HOST"] = "mail.prettysunflower.moe"
+      ["SMTP_FROM"] = "vaultwarden@services.prettysunflower.moe"
+      ["SMTP_PORT"] = "587"
+      ["SMTP_SECURITY"] = "starttls"
+      ["SMTP_USERNAME"] = "vaultwarden@services.prettysunflower.moe"
+      ["SSO_ENABLED"] = "true"
+      ["SSO_ONLY"] = "true"
+      ["SSO_AUTHORITY"] = "https://login.sunflower.lgbt"
+      ["SSO_CLIENT_ID"] = "cfe9fc91-b926-41b6-ba6a-ebeca5bbbdcd"
+      ["SSO_CLIENT_CACHE_EXPIRATION"] = "3600"
+      ["SSO_AUTH_ONLY_NOT_SESSION"] = "true"
+      ["PUSH_ENABLED"] = "true"
+      ["PUSH_RELAY_URI"] = "https://api.bitwarden.eu"
+      ["PUSH_IDENTITY_URI"] = "https://identity.bitwarden.eu"
+      ["EXPERIMENTAL_CLIENT_FEATURE_FLAGS"] =
+        "ssh-agent-v2,ssh-key-vault-item,desktop-ui-migration-milestone-1,desktop-ui-migration-milestone-2,desktop-ui-migration-milestone-3,desktop-ui-migration-milestone-4"
+    }
+    secrets = secrets_file.secrets
+    pgDb {
+      storageClass = "local-path-ssd"
+      size = 10.gib
+      envMapping {
+        uri = "DATABASE_URL"
+      }
+    }
+  }.resources
+
+output {
+  value = app
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}
