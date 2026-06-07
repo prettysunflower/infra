@@ -5,7 +5,7 @@ metadata:
   name: postgres
   namespace: immich
 spec:
-  instances: 3
+  instances: 2
 
   imageCatalogRef:
     apiGroup: postgresql.cnpg.io
@@ -14,12 +14,8 @@ spec:
     major: 18
 
   storage:
-    storageClass: local-path
+    storageClass: local-path-ssd
     size: 15Gi
-
-  backup:
-    volumeSnapshot:
-      className: local-path
 
   postgresql:
     shared_preload_libraries:

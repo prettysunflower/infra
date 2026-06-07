@@ -7,15 +7,6 @@ metadata:
 spec:
   instances: 2
 
-  bootstrap:
-    initdb:
-      import:
-        type: microservice
-        databases:
-          - paperless
-        source:
-          externalCluster: sekibanki-postgres
-
   imageCatalogRef:
     apiGroup: postgresql.cnpg.io
     kind: ClusterImageCatalog
@@ -24,14 +15,4 @@ spec:
 
   storage:
     size: 5Gi
-    storageClass: local-path
-
-  externalClusters:
-    - name: sekibanki-postgres
-      connectionParameters:
-        host: 100.110.40.2
-        user: paperless
-        dbname: paperless
-      password:
-        name: paperless-secrets
-        key: PAPERLESS_DBPASS
+    storageClass: local-path-ssd

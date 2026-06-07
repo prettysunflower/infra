@@ -117,7 +117,49 @@ spec:
         - name: config-volume
           configMap:
             name: local-path-config
-
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: local-path-ssd-provisioner
+  namespace: local-path-storage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: local-path-ssd-provisioner
+  template:
+    metadata:
+      labels:
+        app: local-path-ssd-provisioner
+    spec:
+      serviceAccountName: local-path-provisioner-service-account
+      containers:
+        - name: local-path-provisioner
+          image: rancher/local-path-provisioner:v0.0.35
+          imagePullPolicy: IfNotPresent
+          command:
+            - local-path-provisioner
+            - --debug
+            - start
+            - --config
+            - /etc/config/config.json
+            - --provisioner-name
+            - rancher.io/local-path-ssd
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config/
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: CONFIG_MOUNT_PATH
+              value: /etc/config/
+      volumes:
+        - name: config-volume
+          configMap:
+            name: local-path-ssd-config
 ---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -150,6 +192,48 @@ data:
     kind: Pod
     metadata:
       name: helper-pod
+    spec:
+      priorityClassName: system-node-critical
+      tolerations:
+        - key: node.kubernetes.io/disk-pressure
+          operator: Exists
+          effect: NoSchedule
+      containers:
+      - name: helper-pod
+        image: busybox
+        imagePullPolicy: IfNotPresent
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-path-ssd
+provisioner: rancher.io/local-path-ssd
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Delete
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: local-path-ssd-config
+  namespace: local-path-storage
+data:
+  config.json: |-
+    {
+      "sharedFileSystemPath": "/var/mnt/k8s-ssd"
+    }
+  setup: |-
+    #!/bin/sh
+    set -eu
+    mkdir -m 0777 -p "$VOL_DIR"
+  teardown: |-
+    #!/bin/sh
+    set -eu
+    rm -rf "$VOL_DIR"
+  helperPod.yaml: |-
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: helper-pod-ssd
     spec:
       priorityClassName: system-node-critical
       tolerations:
