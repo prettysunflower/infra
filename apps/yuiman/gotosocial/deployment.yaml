@@ -19,14 +19,20 @@ spec:
         - name: gotosocial-data
           persistentVolumeClaim:
             claimName: gotosocial-pvc
+        - name: gotosocial-wazero-cache
+          persistentVolumeClaim:
+            claimName: gotosocial-wazero-cache
       containers:
-        - image: superseriousbusiness/gotosocial:0.21.2
+        - image: docker.io/superseriousbusiness/gotosocial:snapshot
           imagePullPolicy: Always
           name: gotosocial
           ports:
             - containerPort: 8080
               protocol: TCP
               name: http
+            - containerPort: 9464
+              protocol: TCP
+              name: metrics
           env:
             - name: GTS_DB_POSTGRES_CONNECTION_STRING
               valueFrom:
@@ -41,6 +47,8 @@ spec:
           volumeMounts:
             - name: gotosocial-data
               mountPath: /gotosocial/storage
+            - name: gotosocial-wazero-cache
+              mountPath: /gotosocial/.cache
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -55,7 +63,6 @@ spec:
             httpGet:
               path: /livez
               port: http
-            initialDelaySeconds: 30
             periodSeconds: 30
             timeoutSeconds: 5
             failureThreshold: 3
@@ -64,7 +71,6 @@ spec:
             httpGet:
               path: /readyz
               port: http
-            initialDelaySeconds: 10
             periodSeconds: 2
             timeoutSeconds: 5
             failureThreshold: 30
@@ -73,7 +79,6 @@ spec:
             httpGet:
               path: /readyz
               port: http
-            initialDelaySeconds: 15
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 3
@@ -81,7 +86,7 @@ spec:
           resources:
             limits:
               cpu: 750m
-              memory: 1024Mi
+              memory: 1Gi
             requests:
               cpu: 250m
               memory: 512Mi

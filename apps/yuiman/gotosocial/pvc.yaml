@@ -11,3 +11,16 @@ spec:
     requests:
       storage: 50G
   storageClassName: local-path
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gotosocial-wazero-cache
+  namespace: gotosocial
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 512M
+  storageClassName: local-path
