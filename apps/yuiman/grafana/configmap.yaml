@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-configmap
+  namespace: grafana
+data:
+  GF_DEFAULT_INSTANCE_NAME: "Sunflower Grafana"
+  GF_SERVER_ROOT_URL: "https://grafana.sunflower.lgbt"
+  GF_DATABASE_TYPE: postgres
+  GF_AUTH_GENERIC_OAUTH_CLIENT_ID: d2f4b34f-4cc7-4592-bdb2-c5ecf8d57dbb
+  GF_AUTH_GENERIC_OAUTH_AUTH_URL: https://login.sunflower.lgbt/authorize
+  GF_AUTH_GENERIC_OAUTH_TOKEN_URL: https://login.sunflower.lgbt/api/oidc/token
+  GF_AUTH_GENERIC_OAUTH_API_URL: https://login.sunflower.lgbt/api/oidc/userinfo
+  GF_AUTH_GENERIC_OAUTH_ENABLED: "true"
+  GF_AUTH_GENERIC_OAUTH_LOGIN_ATTRIBUTE_PATH: sub
+  GF_AUTH_GENERIC_OAUTH_VALIDATE_ID_TOKEN: "true"
+  GF_AUTH_GENERIC_OAUTH_JWK_SET_URL: https://login.sunflower.lgbt/.well-known/jwks.json
+  GF_AUTH_GENERIC_OAUTH_SCOPES: openid profile email
+  GF_SMTP_ENABLED: "true"
+  GF_SMTP_HOST: "mail.prettysunflower.moe:587"
+  GF_SMTP_USER: "grafana@services.prettysunflower.moe"
+  GF_SMTP_FROM_ADDRESS: "grafana@services.prettysunflower.moe"
+  GF_PLUGINS_PREINSTALL_SYNC: victoriametrics-logs-datasource

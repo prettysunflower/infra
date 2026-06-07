@@ -1,0 +1,11 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  namespace: grafana
+spec:
+  instances: 3
+
+  storage:
+    storageClass: local-path
+    size: 20Gi
