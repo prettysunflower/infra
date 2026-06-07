@@ -15,13 +15,9 @@ spec:
       labels:
         app.kubernetes.io/name: teable
     spec:
-      hostAliases:
-        - ip: "100.113.193.5"
-          hostnames:
-            - "mail.prettysunflower.moe"
       containers:
         - name: teable
-          image: ghcr.io/teableio/teable:release.2026-04-28T09-22-07Z.1576
+          image: ghcr.io/teableio/teable:release.2026-04-30T01-09-07Z.1592
           args:
             - skip-migrate
           ports:

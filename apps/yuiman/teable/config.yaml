@@ -18,3 +18,4 @@ data:
   BACKEND_OIDC_ISSUER: https://login.sunflower.lgbt
   BACKEND_OIDC_OTHER: '{"scope": ["openid", "email", "profile"]}'
   SOCIAL_AUTH_PROVIDERS: oidc
+  BACKEND_CACHE_REDIS_URI: redis://valkey.teable:6379/0
