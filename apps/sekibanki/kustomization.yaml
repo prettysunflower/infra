@@ -1,7 +1,6 @@
 resources:
   - ../common
   - local-path-storage
-  - actual
   - autoupdate-teable-figurines-currencies
   - epicgames-freegames
   - flaresolverr
@@ -20,7 +19,4 @@ resources:
   - qui
   - radicale
   - renovate
-  - suwayomi
-  - teable
-  - vaultwarden
   - backrest

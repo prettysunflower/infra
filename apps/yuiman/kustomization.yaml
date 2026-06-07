@@ -15,7 +15,6 @@ resources:
   - miniqr
   - multi-scrobbler
   - ourfigurecollection
-  - pocketid-remilia
   - pocketid-sunflower
   - prettysunflower-website
   - rallly
@@ -26,3 +25,4 @@ resources:
   - immich-dacostafaro
   - nextcloud-dacostafaro
   - etherpad
+  - teable
