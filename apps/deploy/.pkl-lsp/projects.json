@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "pklProjects": [
+    {
+      "projectFile": "PklProject",
+      "packageUri": "package://prettysunflower.moe/infra-deploy@1.0.0",
+      "declaredDependencies": {
+        "k8s": "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1"
+      },
+      "resolvedDependencies": {
+        "package://pkg.pkl-lang.org/pkl-k8s/k8s@1": {
+          "myType": "remote",
+          "uri": "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1",
+          "checksums": {
+            "sha256": "0520f82219c074d2f4b69ab9c57a4a1c1d0b3c4acc1e5d12749e72e0d567d9bf"
+          }
+        }
+      },
+      "evaluatorSettings": {}
+    }
+  ]
+}

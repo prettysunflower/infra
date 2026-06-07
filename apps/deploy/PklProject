@@ -1,0 +1,17 @@
+amends "pkl:Project"
+
+package {
+  name = "deploy"
+  authors {
+    "prettysunflower <me@prettysunflower.moe"
+  }
+  version = "1.0.0"
+  baseUri = "package://prettysunflower.moe/infra-deploy"
+  packageZipUrl = "https://github.com/prettysunflower/infra-deploy/releases/download/\(name)@\(version)/\(name)@\(version).zip"
+}
+
+dependencies {
+  ["k8s"] {
+    uri = "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1"
+  }
+}

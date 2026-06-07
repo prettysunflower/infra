@@ -1,0 +1,82 @@
+extends "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sResource.pkl"
+
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/PersistentVolumeClaimSpec.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/apimachinery/pkg/apis/meta/v1/ObjectMeta.pkl"
+
+fixed apiVersion = "postgresql.cnpg.io/v1"
+fixed kind = "Cluster"
+
+metadata: ObjectMeta
+spec: ClusterSpec
+
+class ClusterSpec {
+  description: String?
+  imageCatalogRef: ImageCatalogRef?
+  imagePullPolicy: ("Always" | "Never" | "IfNotPresent")?
+  schedulerName: String?
+  postgresUID: Int? = 26
+  postgresGID: Int? = 26
+  instances: Int(this >= 1) = 1
+  minSyncReplicas: Int(this >= 0)?
+  maxSyncReplicas: Int(this >= 0)?
+  postgresql: PostgresConfiguration?
+  bootstrap: BootstrapConfiguration?
+  storage: StorageConfiguration?
+}
+
+class ImageCatalogRef {
+  apiGroup: String?
+  kind: String
+  name: String
+  major: Int
+}
+
+class PostgresConfiguration {
+  parameters: Mapping<String, String>?
+  pg_hba: Listing<String>?
+  pg_ident: Listing<String>?
+  shared_preload_libraries: Listing<String>?
+  promotionTimeout: Int?
+  enableAlterSystem: Boolean?
+  extensions: Listing<ExtensionConfiguration>?
+}
+
+class ExtensionConfiguration {
+  name: String
+  extension_control_path: Listing<String>?
+  dynamic_library_path: Listing<String>?
+  ld_library_path: Listing<String>?
+  bin_path: Listing<String>?
+}
+
+class BootstrapConfiguration {
+  initdb: BootstrapInitDB
+  recovery: BootstrapRecovery
+  pg_basebackup: BootstrapPgBaseBackup
+}
+
+class BootstrapInitDB {
+  database: String?
+  owner: String?
+  secret: LocalObjectReference?
+  options: Listing<String>?
+  dataChecksums: Boolean?
+  encoding: String?
+  postInitSQL: Listing<String>?
+  postInitApplicationSQL: Listing<String>?
+}
+
+class BootstrapRecovery {}
+
+class BootstrapPgBaseBackup {}
+
+class LocalObjectReference {
+  name: String
+}
+
+class StorageConfiguration {
+  storageClass: String?
+  size: DataSize?
+  resizeInUseVolumes: Boolean? = true
+  pvcTemplate: PersistentVolumeClaimSpec?
+}

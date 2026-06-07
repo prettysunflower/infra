@@ -1,0 +1,386 @@
+open module deploy
+
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/apps/v1/Deployment.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/ConfigMap.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/ContainerPort.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/HTTPGetAction.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/Namespace.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/PersistentVolume.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/PersistentVolumeClaim.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/ResourceRequirements.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/Secret.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/SecurityContext.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/Service.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/VolumeMount.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sObject.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sResource.pkl"
+
+import "CNPG_cluster.pkl"
+import "Volume.pkl"
+
+class Port {
+  name: K8sObject.PortName
+  containerPort: K8sObject.PortNumber
+  svcPort: K8sObject.PortNumber?
+  nodePort: K8sObject.PortNumber(isBetween(30000, 32767))?
+  protocol: ("UDP" | "TCP" | "SCTP")? = "TCP"
+}
+
+class PostgresEnvMapping {
+  uri: String?
+  dbname: String?
+  host: String?
+  username: String?
+  password: String?
+  port: String?
+}
+
+class PostgresDatabaseConfig {
+  name: String = "postgres"
+  instances: Int = 2
+  size: DataSize = 5.gib
+  storageClass: String = "local-path"
+  sharedPreloadLibraries: Listing<String>?
+  extensions: Listing<String>?
+  imageCatalogRefName: String = "postgresql-standard-trixie"
+  envMapping: PostgresEnvMapping = new {}
+}
+
+name: String
+namespace: String = "default"
+configMapName = name + "-configmap"
+secretsName = name + "-secrets"
+image: String
+args: Listing<String>?
+replicas: Int32? = 1
+ports: Listing<Port> = new {}
+livenessProbe: HTTPGetAction?
+startupProbe: HTTPGetAction?
+labels: Mapping<String, String> = new {
+  ["app.kubernetes.io/name"] = name
+}
+volumes: Listing<Volume>?
+resourceRequirements: ResourceRequirements?
+env: Mapping<String, String>?
+secrets: Mapping<String, String>?
+pgDb: PostgresDatabaseConfig?
+securityContext: SecurityContext? = new {
+  runAsUser = 1000
+  runAsGroup = 1000
+  runAsNonRoot = true
+  allowPrivilegeEscalation = false
+  capabilities {
+    drop {
+      "ALL"
+    }
+  }
+  seccompProfile {
+    type = "RuntimeDefault"
+  }
+}
+
+imagePullPolicy: ("Always" | "Never" | "IfNotPresent") = "IfNotPresent"
+
+local app = this
+
+deployment = new Deployment {
+  metadata {
+    name = app.name
+    namespace = app.namespace
+    labels = app.labels
+  }
+  spec {
+    selector {
+      matchLabels = app.labels
+    }
+    replicas = 1
+    template {
+      metadata {
+        labels = app.labels
+      }
+      spec {
+        when (app.volumes != null) {
+          volumes {
+            for (volume in app.volumes!!) {
+              volume.podVolume
+            }
+          }
+        }
+        containers {
+          new {
+            name = app.name
+            image = app.image
+            imagePullPolicy = app.imagePullPolicy
+            when (app.args != null) {
+              args = app.args
+            }
+            ports {
+              for (port in app.ports) {
+                new {
+                  containerPort = port.containerPort
+                  name = port.name
+                  protocol = port.protocol
+                }
+              }
+            }
+            when (app.env != null || app.secrets != null) {
+              envFrom {
+                when (app.env != null) {
+                  new {
+                    configMapRef {
+                      name = app.configMapName
+                    }
+                  }
+                }
+                when (app.secrets != null) {
+                  new {
+                    secretRef {
+                      name = app.secretsName
+                    }
+                  }
+                }
+              }
+            }
+            when (app.pgDb != null) {
+              env {
+                when (app.pgDb.envMapping.uri != null) {
+                  new {
+                    name = app.pgDb.envMapping.uri!!
+                    valueFrom {
+                      secretKeyRef {
+                        name = app.pgDb.name + "-app"
+                        key = "uri"
+                      }
+                    }
+                  }
+                }
+                when (app.pgDb.envMapping.dbname != null) {
+                  new {
+                    name = app.pgDb.envMapping.dbname!!
+                    valueFrom {
+                      secretKeyRef {
+                        name = app.pgDb.name + "-app"
+                        key = "dbname"
+                      }
+                    }
+                  }
+                }
+                when (app.pgDb.envMapping.host != null) {
+                  new {
+                    name = app.pgDb.envMapping.host!!
+                    valueFrom {
+                      secretKeyRef {
+                        name = app.pgDb.name + "-app"
+                        key = "host"
+                      }
+                    }
+                  }
+                }
+                when (app.pgDb.envMapping.username != null) {
+                  new {
+                    name = app.pgDb.envMapping.username!!
+                    valueFrom {
+                      secretKeyRef {
+                        name = app.pgDb.name + "-app"
+                        key = "username"
+                      }
+                    }
+                  }
+                }
+                when (app.pgDb.envMapping.password != null) {
+                  new {
+                    name = app.pgDb.envMapping.password!!
+                    valueFrom {
+                      secretKeyRef {
+                        name = app.pgDb.name + "-app"
+                        key = "password"
+                      }
+                    }
+                  }
+                }
+                when (app.pgDb.envMapping.port != null) {
+                  new {
+                    name = app.pgDb.envMapping.port!!
+                    valueFrom {
+                      secretKeyRef {
+                        name = app.pgDb.name + "-app"
+                        key = "port"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            when (app.volumes != null) {
+              volumeMounts =
+                app.volumes.fold(
+                  new Listing<VolumeMount> {},
+                  (acc, volume) -> (acc.toList() + volume.podVolumeMounts.toList()).toListing(),
+                )
+            }
+            when (app.resourceRequirements != null) {
+              resources = app.resourceRequirements
+            }
+            when (app.livenessProbe != null) {
+              livenessProbe {
+                httpGet = app.livenessProbe
+                failureThreshold = 3
+                periodSeconds = 90
+              }
+            }
+            when (app.startupProbe != null) {
+              startupProbe {
+                httpGet = app.startupProbe
+                failureThreshold = 30
+                periodSeconds = 2
+              }
+            }
+            when (app.securityContext != null) {
+              securityContext = app.securityContext
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+service: Service = new {
+  metadata {
+    name = app.name
+    namespace = app.namespace
+  }
+  spec {
+    type = "ClusterIP"
+    selector = app.labels
+    ports {
+      for (appPort in app.ports) {
+        when (appPort.svcPort != null) {
+          new {
+            port = appPort.svcPort!!
+            targetPort = appPort.containerPort
+            name = appPort.name
+            protocol = appPort.protocol
+            when (appPort.nodePort != null) {
+              nodePort = appPort.nodePort!!
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+namespace_k8s: Namespace? =
+  if (namespace != "default")
+    new {
+      metadata {
+        name = app.namespace
+        labels {
+          ["name"] = app.namespace
+        }
+      }
+    }
+  else
+    null
+
+configMap: ConfigMap? =
+  if (env != null)
+    new {
+      metadata {
+        name = app.configMapName
+        namespace = app.namespace
+      }
+      data = env
+    }
+  else
+    null
+
+secret: Secret? =
+  if (secrets != null)
+    new {
+      metadata {
+        name = app.secretsName
+        namespace = app.namespace
+      }
+      stringData = secrets
+    }
+  else
+    null
+
+pgCluster: CNPG_cluster? =
+  if (pgDb != null)
+    new {
+      metadata {
+        name = app.pgDb.name
+        namespace = app.namespace
+      }
+      spec {
+        instances = app.pgDb.instances
+        storage {
+          storageClass = app.pgDb.storageClass
+          size = app.pgDb.size
+        }
+        imageCatalogRef {
+          apiGroup = "postgresql.cnpg.io"
+          kind = "ClusterImageCatalog"
+          name = app.pgDb.imageCatalogRefName
+          major = 18
+        }
+        when (app.pgDb.extensions != null || app.pgDb.sharedPreloadLibraries != null) {
+          postgresql {
+            when (app.pgDb.extensions != null) {
+              extensions {
+                for (extension in app.pgDb.extensions!!) {
+                  new {
+                    name = extension
+                  }
+                }
+              }
+            }
+            when (app.pgDb.sharedPreloadLibraries != null) {
+              shared_preload_libraries {
+                for (library in app.pgDb.sharedPreloadLibraries!!) {
+                  library
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  else
+    null
+
+resources: Listing<K8sResource> = new {
+  when (namespace_k8s != null) {
+    namespace_k8s!!
+  }
+  deployment
+  when (volumes != null) {
+    for (volume in volumes) {
+      when (volume.pv != null) {
+        (volume.pv!!) {
+          metadata {
+            namespace = app.namespace
+          }
+        }
+      }
+      (volume.pvc) {
+        metadata {
+          namespace = app.namespace
+        }
+      }
+    }
+  }
+  service
+  when (configMap != null) {
+    configMap!!
+  }
+  when (secret != null) {
+    secret!!
+  }
+  when (pgCluster != null) {
+    pgCluster!!
+  }
+}

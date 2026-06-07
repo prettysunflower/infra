@@ -1,0 +1,92 @@
+open module deploy.Volume
+
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/PersistentVolume.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/PersistentVolumeClaim.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/Volume.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/VolumeMount.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sObject.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sResource.pkl"
+
+typealias PVCAccessMode = "ReadWriteOnce" | "ReadOnlyMany" | "ReadWriteMany" | "ReadWriteOncePod"
+
+name: String
+size: DataSize
+containerPath: String?
+containerSubPaths: Mapping<String, String>?
+hostPath: String?
+pvName: String? = name + "-pv"
+accessMode: PVCAccessMode = "ReadWriteMany"
+storageClassName: String = "local-path"
+
+volume = this
+
+pvc: PersistentVolumeClaim = new {
+  metadata {
+    name = volume.name
+  }
+  spec {
+    accessModes {
+      volume.accessMode
+    }
+    resources {
+      requests {
+        ["storage"] = volume.size
+      }
+    }
+    when (volume.hostPath != null) {
+      volumeName = volume.pvName
+    } else {
+      storageClassName = "local-path"
+    }
+  }
+}
+
+pv: PersistentVolume? =
+  if (volume.hostPath != null)
+    new {
+      metadata {
+        name = volume.pvName
+      }
+      spec {
+        capacity {
+          ["storage"] = volume.size
+        }
+        accessModes {
+          volume.accessMode
+        }
+        persistentVolumeReclaimPolicy = "Retain"
+        hostPath {
+          path = volume.hostPath
+        }
+      }
+    }
+  else
+    null
+
+podVolume: Volume = new {
+  name = volume.name
+  persistentVolumeClaim {
+    claimName = volume.name
+  }
+}
+
+podVolumeMounts: Listing<VolumeMount> = new {
+  when (volume.containerSubPaths != null) {
+    for (subPathName, mountPoint in volume.containerSubPaths) {
+      new {
+        name = volume.name
+        mountPath = mountPoint
+        subPath = subPathName
+      }
+    }
+  } else {
+    when (volume.containerPath != null) {
+      new {
+        name = volume.name
+        mountPath = volume.containerPath
+      }
+    } else {
+      throw("Either volume.containerPath or volume.containerSubPaths should be set")
+    }
+  }
+}
