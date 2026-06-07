@@ -1,3 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 resources:
-  - https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.29/releases/cnpg-1.29.0.yaml
-  - catalogs.yaml
+  - https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/af336e8aae721cdd6759babf2f53f91eddf0558d/releases/cnpg-1.29.1.yaml
+  - https://raw.githubusercontent.com/cloudnative-pg/artifacts/74d2077068e3d0e86342368024b62a766cc1329c/image-catalogs/catalog-system-trixie.yaml
+  - https://raw.githubusercontent.com/cloudnative-pg/artifacts/059ff4fb6ff51c46fc61b225c642b5e108603122/image-catalogs-extensions/catalog-minimal-trixie.yaml
+patches:
+  - path: vchord.patch.yaml
+    target:
+      kind: ClusterImageCatalog
+      labelSelector: "images.cnpg.io/type=minimal"
