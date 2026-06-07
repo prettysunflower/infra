@@ -8,7 +8,7 @@ var DSP_PORKBUN = NewDnsProvider("porkbun");
 var hosts = require("./hosts.json");
 var fsn_okina = "23.88.71.121";
 var fsn_okina_ipv6 = "2a01:4f8:272:ea00:be24:11ff:fe33:fa90";
-var internal_okina = "100.74.29.7";
+var internal_okina = "100.99.9.97";
 var dmarc = DMARC_BUILDER({
   policy: "reject",
   ruf: ["mailto:postmaster@prettysunflower.moe"],
@@ -60,10 +60,10 @@ function prettysunflower_moe_common_okina(dns_type) {
     okina("invidious", dns_type),
     okina("gist", dns_type),
     okina("files", dns_type),
-    okina("fedi", dns_type),
     okina("deneb.sonarr", dns_type),
     okina("deneb.radarr", dns_type),
     okina("books", dns_type),
+    okina("budget", dns_type),
   ];
 }
 
@@ -74,6 +74,7 @@ D(
   AAAA("fsn.okina", fsn_okina_ipv6),
   CNAME("tigris", "prettysunflower.fly.storage.tigris.dev."),
   CNAME("s3.fedi", "fedi-prettysunflower-storage.t3.storage.dev."),
+  okina("fedi"),
   mx("@"),
   mx("services"),
   dmarc,
@@ -97,6 +98,7 @@ D(
   CNAME("share.snikket", "snikket.prettysunflower.moe."),
   CNAME("em903851", "return.smtp2go.net."),
   CNAME("s903851._domainkey", "dkim.smtp2go.net."),
+  CNAME("cdn.fedi", "fedi-prettysunflower.b-cdn.net."),
 );
 
 D(
@@ -127,7 +129,6 @@ D(
   prettysunflower_moe_common_okina(DSP_BIND9),
   generateHostsDNS(),
   A("internal.okina", internal_okina),
-  A("actual", internal_okina),
   A("atuin", internal_okina),
   A("caldav", internal_okina),
   A("dns", internal_okina),
@@ -153,6 +154,8 @@ D(
   A("remilia.sonarr", internal_okina),
   A("remilia.radarr", internal_okina),
   A("prowlarr", internal_okina),
+  A("webarchives", internal_okina),
+  A("healthchecks", internal_okina),
   A("kube-dns.kube-system.svc.sekibanki", "10.218.0.10"),
   A("kube-dns.kube-system.svc.yuiman", "10.220.0.10"),
   A("bunny1", "91.200.176.1"),
@@ -251,6 +254,8 @@ function sunflower_lgbt_common_okina(dsp) {
     okina("music", dsp),
     okina("public.registry.container", dsp),
     okina("cimmondayhelper", dsp),
+    okina("pds", dsp),
+    okina("*.pds", dsp),
   ];
 }
 
@@ -258,6 +263,8 @@ D(
   "sunflower.lgbt!common",
   REG_NONE,
   CNAME("tigris", "prettysunflower.fly.storage.tigris.dev."),
+  CNAME("em903851", "return.smtp2go.net."),
+  CNAME("s903851._domainkey", "dkim.smtp2go.net."),
   TXT("_discord", "dh=86bfb23fa64ce4d8e26d4b165e43958a744105f1"),
   TXT(
     "@",
@@ -297,6 +304,7 @@ D(
   A("login", internal_okina),
   A("mediamanager", internal_okina),
   A("changedetection", internal_okina),
+  A("grafana", internal_okina),
 );
 
 D(
@@ -336,6 +344,7 @@ D(
   okina("dolibarr"),
   okina("redmine"),
   okina("redmine.kikimungo"),
+  okina("auth"),
   A("staging.kikimungo", "149.56.130.91"),
   AAAA("staging.kikimungo", "2607:5300:205:200::9b02"),
   A("*.staging.kikimungo", "149.56.130.91"),
