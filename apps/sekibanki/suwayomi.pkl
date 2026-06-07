@@ -1,0 +1,49 @@
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sResource.pkl"
+
+import "../deploy/Deploy.pkl"
+
+app =
+  new Deploy {
+    name = "suwayomi"
+    image = "ghcr.io/suwayomi/suwayomi-server:v2.2.2194"
+    ports {
+      new {
+        containerPort = 4567
+        svcPort = 80
+        name = "http"
+      }
+    }
+    volumes {
+      new {
+        name = "suwayomi-pvc"
+        size = 150.gib
+        accessMode = "ReadWriteOnce"
+        containerPath = "/home/suwayomi/.local/share/Tachidesk"
+      }
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "1500m"
+        ["memory"] = 1.gib
+      }
+      requests {
+        ["cpu"] = "250m"
+        ["memory"] = 512.mib
+      }
+    }
+    env {
+      ["TZ"] = "America/Toronto"
+      ["DOWNLOAD_AS_CBZ"] = "true"
+      ["EXTENSION_REPOS"] =
+        "[\"https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json\"]"
+      ["AUTO_DOWNLOAD_CHAPTERS"] = "true"
+      ["BASIC_AUTH_ENABLED"] = "false"
+    }
+  }.resources
+
+output {
+  value = app
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}
