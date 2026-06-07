@@ -6,3 +6,11 @@ filesystemType: virtiofs
 mount:
   virtiofs:
     tag: yuyuko_data
+---
+apiVersion: v1alpha1
+kind: ExternalVolumeConfig
+name: k8s-ssd
+filesystemType: virtiofs
+mount:
+  virtiofs:
+    tag: k8s-ssd
