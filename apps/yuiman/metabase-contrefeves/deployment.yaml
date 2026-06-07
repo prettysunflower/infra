@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: metabase
-          image: metabase/metabase:latest
+          image: metabase/metabase:v0.61.3.x
           envFrom:
             - configMapRef:
                 name: metabase-config

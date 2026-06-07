@@ -21,8 +21,7 @@ spec:
             claimName: dolibarr-pvc
       containers:
         - name: dolibarr
-          image: dolibarr/dolibarr:develop
-          imagePullPolicy: Always
+          image: dolibarr/dolibarr:23.0.3
           envFrom:
             - configMapRef:
                 name: dolibarr-configmap

@@ -4,3 +4,4 @@ resources:
   - pvc.yaml
   - secrets.yaml
   - configmap.yaml
+  - database.yaml

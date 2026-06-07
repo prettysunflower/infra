@@ -27,7 +27,7 @@ spec:
             claimName: pvc-restic-backups
       containers:
         - name: backrest
-          image: garethgeorge/backrest:v1.12.1
+          image: garethgeorge/backrest:v1.13.0
           envFrom:
             - configMapRef:
                 name: backrest-configmap
