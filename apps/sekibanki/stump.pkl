@@ -1,0 +1,63 @@
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sResource.pkl"
+
+import "sops:stump.secrets.sops.pkl" as secrets_file
+import "../deploy/Deploy.pkl"
+
+app =
+  new Deploy {
+    name = "stump"
+    image = "aaronleopold/stump:latest"
+    ports {
+      new {
+        containerPort = 10801
+        svcPort = 80
+        name = "http"
+      }
+    }
+    volumes {
+      new {
+        name = "stump-config"
+        size = 5.gib
+        accessMode = "ReadWriteOnce"
+        containerPath = "/config"
+      }
+      new {
+      	name = "stump-books"
+	size = 500.gib
+	accessMode = "ReadOnlyMany"
+	containerPath = "/data"
+	hostPath = "/var/mnt/yuyuko/media/media/books"
+      }
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "500m"
+        ["memory"] = 1024.mib
+      }
+      requests {
+        ["cpu"] = "250m"
+        ["memory"] = 256.mib
+      }
+    }
+    env {
+      ["PUID"] = "1000"
+      ["PGID"] = "1000"
+      ["STUMP_PORT"] = "10801"
+      ["STUMP_TRUST_PROXY_HEADERS"] = "true"
+      ["STUMP_OIDC_ENABLED"] = "true"
+      ["STUMP_OIDC_ISSUER_URL"] = "https://login.sunflower.lgbt"
+      ["STUMP_ALLOWED_ORIGINS"] = "https://books.prettysunflower.moe"
+      ["STUMP_OIDC_CLIENT_ID"] = "1f6fa952-5723-4516-9f53-dae224d7e7a4"
+      ["ENABLE_KOREADER_SYNC"] = "true"
+      ["STUMP_ENABLE_UPLOAD"] = "true"
+    }
+    secrets = secrets_file.secrets
+    securityContext = null
+  }.resources
+
+output {
+  value = app
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}
