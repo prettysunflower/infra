@@ -23,7 +23,7 @@ spec:
           persistentVolumeClaim:
             claimName: gotosocial-wazero-cache
       containers:
-        - image: docker.io/superseriousbusiness/gotosocial:snapshot
+        - image: docker.io/superseriousbusiness/gotosocial:0.22.0-rc1
           imagePullPolicy: Always
           name: gotosocial
           ports:
