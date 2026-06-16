@@ -7,7 +7,7 @@ app =
   new Deploy {
     name = "vaultwarden"
     namespace = "vaultwarden"
-    image = "vaultwarden/server:testing-alpine"
+    image = "vaultwarden/server:1.36.0"
     imagePullPolicy = "Always"
     ports {
       new {
