@@ -9,6 +9,7 @@ var hosts = require("./hosts.json");
 var fsn_okina = "23.88.71.121";
 var fsn_okina_ipv6 = "2a01:4f8:272:ea00:be24:11ff:fe33:fa90";
 var internal_okina = "100.99.9.97";
+var internal_okina_ipv6 = "fd7a:115c:a1e0::6c36:961";
 var dmarc = DMARC_BUILDER({
   policy: "reject",
   ruf: ["mailto:postmaster@prettysunflower.moe"],
@@ -40,11 +41,38 @@ function mx(subdomain) {
 
 function okina(subdomain, dsp) {
   if (dsp == DSP_BIND9) {
-    return [A(subdomain, internal_okina)];
+    entries = [
+      A(subdomain, internal_okina),
+      AAAA(subdomain, internal_okina_ipv6),
+      HTTPS(
+        subdomain,
+        1,
+        ".",
+        [
+          "alpn=h3,h2",
+          "ipv4hint=" + internal_okina,
+          "ipv6hint=" + internal_okina_ipv6,
+        ].join(" "),
+      ),
+    ];
   } else {
-    return [A(subdomain, fsn_okina), AAAA(subdomain, fsn_okina_ipv6)];
-    // return [A(subdomain, fsn_okina)];
+    entries = [
+      A(subdomain, fsn_okina),
+      AAAA(subdomain, fsn_okina_ipv6),
+      HTTPS(
+        subdomain,
+        1,
+        ".",
+        [
+          "alpn=h3,h2",
+          "ipv4hint=" + fsn_okina,
+          "ipv6hint=" + fsn_okina_ipv6,
+        ].join(" "),
+      ),
+    ];
   }
+
+  return entries;
 }
 
 function prettysunflower_moe_common_okina(dns_type) {
@@ -64,6 +92,7 @@ function prettysunflower_moe_common_okina(dns_type) {
     okina("deneb.radarr", dns_type),
     okina("books", dns_type),
     okina("budget", dns_type),
+    okina("passwords", dns_type),
   ];
 }
 
@@ -110,7 +139,6 @@ D(
   okina("karakeep"),
   okina("git"),
   okina("papers"),
-  okina("passwords"),
 );
 
 function generateHostsDNS() {
@@ -148,7 +176,6 @@ D(
   A("yuyuko", "100.126.243.21"),
   A("certs", internal_okina),
   A("multiscrobbler", internal_okina),
-  A("passwords", internal_okina),
   A("qui", internal_okina),
   A("jetkvm", "100.98.194.11"),
   A("remilia.sonarr", internal_okina),
@@ -256,6 +283,7 @@ function sunflower_lgbt_common_okina(dsp) {
     okina("cimmondayhelper", dsp),
     okina("pds", dsp),
     okina("*.pds", dsp),
+    okina("login", dsp),
   ];
 }
 
@@ -284,7 +312,6 @@ D(
   DnsProvider(DSP_BUNNY),
   INCLUDE("sunflower.lgbt!common"),
   sunflower_lgbt_common_okina(DSP_BUNNY),
-  okina("login"),
 );
 
 D(
@@ -294,14 +321,12 @@ D(
   INCLUDE("sunflower.lgbt!common"),
   sunflower_lgbt_common_okina(DSP_BIND9),
   A("currency", internal_okina),
-  A("n8n", internal_okina),
   A("mirror.container", internal_okina),
   A("admin.status", internal_okina),
   A("flaresolverr", internal_okina),
   A("dns", "100.74.71.91"),
   A("testmtls", internal_okina),
   A("private.registry.container", internal_okina),
-  A("login", internal_okina),
   A("mediamanager", internal_okina),
   A("changedetection", internal_okina),
   A("grafana", internal_okina),
