@@ -24,6 +24,7 @@ pages:
               - url: https://blog.gitea.com/rss.xml
               - url: https://gitea.com/gitea/act_runner/releases.rss
               - url: https://mcyoung.xyz/feed.xml
+              - url: https://steamdb.info/api/PatchnotesRSS/?appid=2697000
 
           - type: twitch-channels
             channels:
