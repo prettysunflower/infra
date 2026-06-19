@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: teable
-          image: ghcr.io/teableio/teable:release.2026-04-30T01-09-07Z.1592
+          image: ghcr.io/teableio/teable:release.2026-06-14T06-50-06Z.1909
           args:
             - skip-migrate
           ports:
