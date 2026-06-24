@@ -1,6 +1,7 @@
 import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sResource.pkl"
 import "sops:vaultwarden.secrets.sops.pkl" as secrets_file
 
+import "../common/cnpg_backup.pkl"
 import "../deploy/Deploy.pkl"
 
 app =
@@ -68,6 +69,7 @@ app =
       envMapping {
         uri = "DATABASE_URL"
       }
+      backup = cnpg_backup
     }
   }.resources
 
