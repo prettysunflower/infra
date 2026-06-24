@@ -1,0 +1,147 @@
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sResource.pkl"
+
+import "../common/cnpg_backup.pkl"
+import "../deploy/Deploy.pkl"
+
+immich_version = "2.7.5"
+
+immich_env: Mapping<String, String> = new {
+  ["REDIS_HOSTNAME"] = "valkey"
+  ["IMMICH_PORT"] = "2283"
+  ["IMMICH_MACHINE_LEARNING_URL"] = "http://machine-learning:2283"
+  ["TRANSFORMERS_CACHE"] = "/cache"
+  ["HF_XET_CACHE"] = "/cache/huggingface-xet"
+  ["MPLCONFIGDIR"] = "/cache/matplotlib-config"
+  ["IMMICH_HELMET_FILE"] = "true"
+}
+
+app =
+  new Deploy {
+    name = "immich"
+    namespace = "immich"
+    image = "ghcr.io/immich-app/immich-server:v" + immich_version
+    ports {
+      new {
+        containerPort = 2283
+        svcPort = 80
+        name = "http"
+      }
+    }
+    volumes {
+      new {
+        name = "immich-media"
+        size = 300.gib
+        accessMode = "ReadWriteMany"
+        containerPath = "/usr/src/app/upload"
+        hostPath = "/var/mnt/yuyuko/media/media/images"
+      }
+    }
+    livenessProbe {
+      path = "/api/server/ping"
+      port = "http"
+    }
+    startupProbe {
+      path = "/api/server/ping"
+      port = "http"
+    }
+    env = immich_env
+    pgDb {
+      name = "postgres"
+      envMapping {
+        username = "DB_USERNAME"
+        dbname = "DB_DATABASE_NAME"
+        host = "DB_HOSTNAME"
+        password = "DB_PASSWORD"
+        port = "DB_PORT"
+      }
+      size = 15.gib
+      imageCatalogRefName = "postgresql-minimal-trixie"
+      sharedPreloadLibraries {
+        "vchord"
+        "vector"
+      }
+      extensions {
+        "vchord"
+        "pgvector"
+      }
+      storageClass = "local-path-ssd"
+      backup = cnpg_backup
+    }
+  }.resources
+
+immich_machine_learning =
+  new Deploy {
+    name = "immich-machine-learning"
+    namespace = "immich"
+    image = "ghcr.io/immich-app/immich-machine-learning:v" + immich_version
+    ports {
+      new {
+        containerPort = 2283
+        svcPort = 2283
+        name = "machinelearning"
+      }
+    }
+    volumes {
+      new {
+        name = "immich-models-cache"
+        size = 5.gib
+        accessMode = "ReadWriteMany"
+        containerPath = "/cache"
+      }
+    }
+    livenessProbe {
+      path = "/ping"
+      port = "machinelearning"
+    }
+    startupProbe {
+      path = "/ping"
+      port = "machinelearning"
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = 1
+        ["memory"] = 2.gib
+      }
+      requests {
+        ["cpu"] = "50m"
+        ["memory"] = 512.mib
+      }
+    }
+    env = immich_env
+  }.resources
+
+valkey =
+  new Deploy {
+    name = "valkey"
+    namespace = "immich"
+    image = "valkey/valkey:alpine"
+    ports {
+      new {
+        containerPort = 6379
+        svcPort = 6379
+        name = "valkey"
+      }
+    }
+    volumes {
+      new {
+        name = "valkey-pvc"
+        size = 5.gib
+        accessMode = "ReadWriteOnce"
+        containerPath = "/data"
+      }
+    }
+    env = new {
+      ["VALKEY_EXTRA_FLAGS"] = "--save 60 1"
+    }
+  }.resources
+
+output {
+  value = new Listing<K8sResource> {
+    ...app
+    ...immich_machine_learning
+    ...valkey
+  }
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}
