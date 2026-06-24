@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: etherpad
-          image: etherpad/etherpad:3.3.1
+          image: etherpad/etherpad:3.3.2
           ports:
             - containerPort: 9001
               name: http
