@@ -15,7 +15,10 @@ import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/VolumeMount.pk
 import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sObject.pkl"
 import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sResource.pkl"
 
+import "BarmanCloudObjectStore.pkl"
 import "CNPG_cluster.pkl"
+import "CNPGBackupStorage.pkl"
+import "ScheduledBackup.pkl"
 import "Volume.pkl"
 
 class Port {
@@ -44,6 +47,7 @@ class PostgresDatabaseConfig {
   extensions: Listing<String>?
   imageCatalogRefName: String = "postgresql-standard-trixie"
   envMapping: PostgresEnvMapping = new {}
+  backup: CNPGBackupStorage?
 }
 
 name: String
@@ -327,6 +331,16 @@ pgCluster: CNPG_cluster? =
           name = app.pgDb.imageCatalogRefName
           major = 18
         }
+        plugins =
+          app.pgDb.backup.ifNonNull((backup) -> new Listing<CNPG_cluster.PluginConfiguration> {
+            new {
+              name = "barman-cloud.cloudnative-pg.io"
+              isWALArchiver = true
+              parameters = new {
+                ["barmanObjectName"] = app.pgDb.name + "-garage-store"
+              }
+            }
+          })
         when (app.pgDb.extensions != null || app.pgDb.sharedPreloadLibraries != null) {
           postgresql {
             when (app.pgDb.extensions != null) {
@@ -351,6 +365,65 @@ pgCluster: CNPG_cluster? =
     }
   else
     null
+
+backupObjects: Listing<K8sResource> =
+  if (pgDb != null && pgDb.backup != null)
+    new {
+      new Secret {
+        metadata {
+          name = app.pgDb.name + "-backup-s3"
+          namespace = app.namespace
+        }
+        stringData {
+          ["ACCESS_KEY_ID"] = app.pgDb.backup.s3AccessKeyId
+          ["ACCESS_SECRET_KEY"] = app.pgDb.backup.s3SecretKey
+        }
+      }
+      new BarmanCloudObjectStore {
+        metadata {
+          name = app.pgDb.name + "-garage-store"
+          namespace = app.namespace
+        }
+        spec {
+          retentionPolicy = app.pgDb.backup.retentionPolicy
+          configuration {
+            destinationPath =
+              app.pgDb.backup.destinationPath + "/" + app.namespace + "/" + app.pgDb.name + "/"
+            endpointURL = app.pgDb.backup.endpointUrl
+            s3Credentials {
+              accessKeyId {
+                name = app.pgDb.name + "-backup-s3"
+                key = "ACCESS_KEY_ID"
+              }
+              secretAccessKey {
+                name = app.pgDb.name + "-backup-s3"
+                key = "ACCESS_SECRET_KEY"
+              }
+            }
+          }
+        }
+      }
+      new ScheduledBackup {
+        metadata {
+          name = app.pgDb.name + "-backup"
+          namespace = app.namespace
+        }
+        spec {
+          schedule = app.pgDb.backup.backupSchedule
+          backupOwnerReference = "self"
+          cluster {
+            name = app.pgDb.name
+          }
+          method = "plugin"
+          immediate = true
+          pluginConfiguration {
+            name = "barman-cloud.cloudnative-pg.io"
+          }
+        }
+      }
+    }
+  else
+    new {}
 
 resources: Listing<K8sResource> = new {
   when (namespace_k8s != null) {
@@ -383,4 +456,5 @@ resources: Listing<K8sResource> = new {
   when (pgCluster != null) {
     pgCluster!!
   }
+  ...backupObjects
 }

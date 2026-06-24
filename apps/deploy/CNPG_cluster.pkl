@@ -22,6 +22,7 @@ class ClusterSpec {
   postgresql: PostgresConfiguration?
   bootstrap: BootstrapConfiguration?
   storage: StorageConfiguration?
+  plugins: Listing<PluginConfiguration>?
 }
 
 class ImageCatalogRef {
@@ -79,4 +80,11 @@ class StorageConfiguration {
   size: DataSize?
   resizeInUseVolumes: Boolean? = true
   pvcTemplate: PersistentVolumeClaimSpec?
+}
+
+class PluginConfiguration {
+  name: String
+  enabled: Boolean?
+  isWALArchiver: Boolean?
+  parameters: Mapping<String, String>?
 }

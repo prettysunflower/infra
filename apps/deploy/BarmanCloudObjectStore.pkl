@@ -1,0 +1,62 @@
+extends "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sResource.pkl"
+
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/EnvVar.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/PersistentVolumeClaimSpec.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/api/core/v1/ResourceRequirements.pkl"
+import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/apimachinery/pkg/apis/meta/v1/ObjectMeta.pkl"
+
+fixed apiVersion = "barmancloud.cnpg.io/v1"
+fixed kind = "ObjectStore"
+
+metadata: ObjectMeta
+spec: ObjectStoreSpec
+
+class ObjectStoreSpec {
+  configuration: BarmanObjectStoreConfiguration
+  retentionPolicy: String(matches(Regex("^[1-9][0-9]*[dwm]$")))?
+  instanceSidecarConfiguration: InstanceSidecarConfiguration?
+}
+
+class BarmanObjectStoreConfiguration {
+  endpointURL: String?
+  endpointCA: EnvVar.SecretKeySelector?
+  destinationPath: String?
+  serverName: String?
+  wal: WalBackupConfiguration?
+  data: DataBackupConfiguration?
+  tags: Listing<String>?
+  historyTags: Listing<String>?
+  s3Credentials: S3Credentials?
+}
+
+class WalBackupConfiguration {
+  compression: ("bzip2" | "gzip" | "lz4" | "snappy" | "xz" | "zstd")?
+  encryption: ("AES256" | "aws:kms")?
+  maxParallel: Int(this >= 1)?
+  archiveAdditionalCommandArgs: Listing<String>?
+  restoreAdditionalCommandArgs: Listing<String>?
+}
+
+class DataBackupConfiguration {
+  compression: ("bzip2" | "gzip" | "lz4" | "snappy")?
+  encryption: ("AES256" | "aws:kms")?
+  jobs: Int(this >= 1)?
+  immediateCheckpoint: Boolean?
+  additionalCommandArgs: Listing<String>?
+}
+
+class InstanceSidecarConfiguration {
+  env: EnvVar?
+  retentionPolicyIntervalSeconds: Int?
+  resources: ResourceRequirements?
+  additionalContainerArgs: Listing<String>?
+  logLevel: ("error" | "warning" | "info" | "debug" | "trace")?
+}
+
+class S3Credentials {
+  accessKeyId: EnvVar.SecretKeySelector?
+  secretAccessKey: EnvVar.SecretKeySelector?
+  region: EnvVar.SecretKeySelector?
+  sessionToken: EnvVar.SecretKeySelector?
+  inheritFromIAMRole: EnvVar.SecretKeySelector?
+}

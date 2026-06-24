@@ -1,0 +1,8 @@
+open module CNPGBackupStorage
+
+s3AccessKeyId: String
+s3SecretKey: String
+destinationPath: String
+endpointUrl: String
+backupSchedule: String
+retentionPolicy: String?

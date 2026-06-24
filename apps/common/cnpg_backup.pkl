@@ -1,0 +1,10 @@
+extends "../deploy/CNPGBackupStorage.pkl"
+
+import "sops:../common/cnpg_backup_passwords.sops.pkl" as secrets_file
+
+s3AccessKeyId = secrets_file.s3AccessKeyId
+s3SecretKey = secrets_file.s3SecretKey
+destinationPath = "s3://postgres-backup"
+endpointUrl = "http://100.93.51.91:3900"
+backupSchedule = "0 0 0 * * *"
+retentionPolicy = "30d"
