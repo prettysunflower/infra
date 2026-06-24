@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pds
+  namespace: bsky-pds
+  labels:
+    app.kubernetes.io/name: pds
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pds
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: pds
+    spec:
+      volumes:
+        - name: pds-data
+          persistentVolumeClaim:
+            claimName: pds-pvc
+        - name: pds-config
+          secret:
+            secretName: pds-config
+      imagePullSecrets:
+        - name: registry-pull-secrets
+      containers:
+        - name: tranquil-pds
+          image: atcr.io/tranquil.farm/tranquil-pds:latest
+          envFrom:
+            - configMapRef:
+                name: pds-configmap
+            - secretRef:
+                name: pds-secrets
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-app
+                  key: fqdn-uri
+          ports:
+            - containerPort: 3000
+              name: http
+          volumeMounts:
+            - name: pds-data
+              mountPath: "/var/lib/tranquil-pds/blobs"
+              subPath: blobs
+            - name: pds-data
+              mountPath: "/var/lib/tranquil-pds/store"
+              subPath: store
+          livenessProbe:
+            httpGet:
+              path: /xrpc/_health
+              port: http
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            periodSeconds: 90
+          startupProbe:
+            httpGet:
+              path: /xrpc/_health
+              port: http
+            failureThreshold: 30
+            periodSeconds: 2
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault

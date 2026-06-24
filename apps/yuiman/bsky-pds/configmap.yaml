@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pds-configmap
+  namespace: bsky-pds
+data:
+  PDS_HOSTNAME: pds.sunflower.lgbt
+  CRAWLERS: https://bsky.network
+  PDS_AGE_ASSURANCE_OVERRIDE: "true"
+  CONTACT_EMAIL: pds@prettysunflower.moe
+  SSO_OIDC_ENABLED: "true"
+  SSO_OIDC_CLIENT_ID: 55641138-dda1-4871-ad40-7af477eb3987
+  SSO_OIDC_ISSUER: https://login.sunflower.lgbt
+  SSO_OIDC_DISPLAY_NAME: 🌻 login
+  INVITE_CODE_REQUIRED: "true"
+  MAIL_FROM_ADDRESS: "pds@sunflower.lgbt"
+  MAIL_FROM_NAME: 🌻 PDS
+  MAIL_SMARTHOST_HOST: mail.prettysunflower.moe
+  MAIL_SMARTHOST_PORT: "587"
+  MAIL_SMARTHOST_USERNAME: me@prettysunflower.moe
+  MAIL_SMARTHOST_TLS: starttls

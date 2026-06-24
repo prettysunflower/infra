@@ -1,0 +1,11 @@
+namespace: bsky-pds
+
+resources:
+  - deployment.yaml
+  - svc.yaml
+  - pvc.yaml
+  - secrets.yaml
+  - configmap.yaml
+  - namespace.yaml
+  - db.yaml
+  - registry_pull_secrets.yaml
