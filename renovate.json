@@ -1,6 +1,6 @@
 {
   "extends": ["config:recommended", ":prHourlyLimitNone"],
   "kubernetes": {
-    "managerFilePatterns": ["/\\.yaml$/"]
+    "managerFilePatterns": ["/\\.yaml$/", "/\\.pkl$/"]
   }
 }
