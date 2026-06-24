@@ -6,32 +6,45 @@ xcaddy:
         --with github.com/caddy-dns/bunny \
         --with github.com/mholt/caddy-l4
 
+[working-directory('caddy')]
 fmt:
     #!/usr/bin/env sh
-    for f in caddy/sites/*.conf; do
+    for f in sites/*.conf; do
     	caddy fmt --overwrite "$f"
     done
+    caddy fmt --overwrite okina.Caddyfile
+    caddy fmt --overwrite yuyuko.Caddyfile
 
 template $listen: fmt
     gomplate
 
 [working-directory('caddy')]
-adapt $listen: (template listen)
-    ./caddy-bin adapt --config ./Caddyfile --adapter caddyfile
+adapt $file:
+    ./caddy-bin adapt --config "$file" --adapter caddyfile
 
-update_internal:
-    caddy_json=$(just adapt "tailscale") && curl \
+update_caddy_config $caddy_json $endpoint:
+    curl \
         -X POST \
         -H "Content-Type: application/json" \
         --data "$caddy_json" \
-        http://internal.okina.hosts.prettysunflower.moe:2019/load
+        $endpoint
 
-update_public:
-    caddy_json=$(just adapt "public") && curl \
-        -X POST \
-        -H "Content-Type: application/json" \
-        --data "$caddy_json" \
-        http://fsn.okina.hosts.prettysunflower.moe:2019/load
+update_okina_internal: (template "tailscale")
+    caddy_json=$(just adapt okina.Caddyfile) && just \
+        update_caddy_config \
+        "$caddy_json" \
+        "http://internal.okina.hosts.prettysunflower.moe:2019/load"
 
+update_okina_public: (template "public")
+    caddy_json=$(just adapt okina.Caddyfile) && just \
+        update_caddy_config \
+        "$caddy_json" \
+        "http://fsn.okina.hosts.prettysunflower.moe:2019/load"
 
-deploy: update_internal update_public
+update_yuyuko:
+    caddy_json=$(just adapt yuyuko.Caddyfile) && just \
+        update_caddy_config \
+        "$caddy_json" \
+        "http://yuyuko.hosts.prettysunflower.moe:2019/load"
+
+deploy: update_okina_internal update_okina_public update_yuyuko

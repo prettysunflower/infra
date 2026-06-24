@@ -1,0 +1,29 @@
+{
+	log default {
+		format json {
+			time_format unix_nano
+		}
+		output file /var/log/caddy.log {
+			roll_size 1gb
+			roll_keep 5
+			roll_keep_for 720h
+		}
+		exclude http.log.access
+	}
+
+	log access {
+		format json {
+			time_format unix_nano
+		}
+
+		output net unix//var/run/caddy_logs/access {
+			soft_start
+		}
+
+		include http.log.access
+	}
+
+	import layer4.conf
+}
+
+import sites/*.conf

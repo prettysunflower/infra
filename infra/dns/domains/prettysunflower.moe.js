@@ -110,6 +110,7 @@ D(
   A("healthchecks", internal_okina),
   A("kube-dns.kube-system.svc.sekibanki", "10.218.0.10"),
   A("kube-dns.kube-system.svc.yuiman", "10.220.0.10"),
+  A("archives", "100.126.243.21"), // yuyuko
   A("bunny1", "91.200.176.1"),
   A("bunny2", "109.104.147.1"),
   NS("sekibanki", "kube-dns.kube-system.svc.sekibanki.prettysunflower.moe."),

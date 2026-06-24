@@ -1,0 +1,15 @@
+{
+    admin yuyuko.hosts.prettysunflower.moe:2019
+}
+
+import sites/0-bunnydns.conf
+
+archives.prettysunflower.moe {
+    import bunny
+
+    root /mnt/yuyuko/appdata/caddy_archives
+    file_server {
+        hide ".*"
+        browse
+    }
+}

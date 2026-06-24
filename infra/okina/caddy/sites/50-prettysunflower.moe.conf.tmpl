@@ -348,6 +348,13 @@ healthchecks.prettysunflower.moe {
 books.prettysunflower.moe {
 	import bunny
 	log
-	
+
 	reverse_proxy stump.default.svc.sekibanki.prettysunflower.moe
+}
+
+archives.prettysunflower.moe {
+    import bunny
+    log
+
+    reverse_proxy yuyuko.hosts.prettysunflower.moe
 }
