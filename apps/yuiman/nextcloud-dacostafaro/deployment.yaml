@@ -21,7 +21,7 @@ spec:
             claimName: nextcloud-pvc
       containers:
         - name: nextcloud
-          image: nextcloud:34.0.0-apache
+          image: nextcloud:34.0.1-apache
           envFrom:
             - configMapRef:
                 name: nextcloud-config
