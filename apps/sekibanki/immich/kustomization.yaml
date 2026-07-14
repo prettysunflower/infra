@@ -1,4 +1,0 @@
-namespace: immich
-
-resources:
-  - database.yaml
