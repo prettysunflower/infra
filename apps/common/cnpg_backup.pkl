@@ -1,4 +1,4 @@
-extends "../deploy/CNPGBackupStorage.pkl"
+extends "@deploy/CNPGBackupStorage.pkl"
 
 import "sops:../common/cnpg_backup_passwords.sops.pkl" as secrets_file
 

@@ -1,0 +1,13 @@
+module common
+
+amends "../../PklProject"
+
+package {
+    name = "common"
+    baseUri = "package://prettysunflower.moe/pkl/infra/common"
+    packageZipUrl = "https://git.prettysunflower.moe/prettysunflower/infra/archive/main.zip?path=apps%2fcommon"
+    version = "1.0.0"
+    authors = new {
+        "prettysunflower <me@prettysunflower.moe>"
+    }
+}
