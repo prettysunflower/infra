@@ -1,0 +1,76 @@
+import "@k8s/K8sResource.pkl"
+import "@k8s/api/batch/v1/CronJob.pkl"
+import "@k8s/api/core/v1/Secret.pkl"
+
+import "sops:autoupdate-teable-figurines-currencies.secrets.sops.pkl" as secrets_file
+
+secret = new Secret {
+  metadata {
+    name = "autoupdate-teable-figurines-currencies-secrets"
+  }
+  stringData = secrets_file.secrets
+}
+
+cronjob = new CronJob {
+  metadata {
+    name = "autoupdate-teable-figurines-currencies"
+  }
+  spec {
+    schedule = "0 3 * * *"
+    jobTemplate {
+      spec {
+        template {
+          spec {
+            containers {
+              new {
+                name = "autoupdate-teable-figurines-currencies"
+                image = "git.prettysunflower.moe/prettysunflower/autoupdate-teable-figurines-currencies:main"
+                imagePullPolicy = "Always"
+                envFrom {
+                  new {
+                    secretRef {
+                      name = "autoupdate-teable-figurines-currencies-secrets"
+                    }
+                  }
+                }
+                resources {
+                  limits {
+                    ["cpu"] = "500m"
+                    ["memory"] = 256.mib
+                  }
+                  requests {
+                    ["cpu"] = "250m"
+                    ["memory"] = 128.mib
+                  }
+                }
+                securityContext {
+                  runAsUser = 1000
+                  runAsGroup = 1000
+                  runAsNonRoot = true
+                  allowPrivilegeEscalation = false
+                  capabilities {
+                    drop { "ALL" }
+                  }
+                  seccompProfile {
+                    type = "RuntimeDefault"
+                  }
+                }
+              }
+            }
+            restartPolicy = "OnFailure"
+          }
+        }
+      }
+    }
+  }
+}
+
+output {
+  value = new Listing<K8sResource> {
+    secret
+    cronjob
+  }
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}

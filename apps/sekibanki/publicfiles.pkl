@@ -1,0 +1,121 @@
+import "@k8s/K8sResource.pkl"
+import "@k8s/api/core/v1/ConfigMap.pkl"
+import "@k8s/api/core/v1/Volume.pkl"
+import "@k8s/api/core/v1/VolumeMount.pkl"
+import "@deploy/Deploy.pkl"
+
+caddyConfig = new ConfigMap {
+  metadata {
+    name = "publicfiles-caddy-config"
+  }
+  data {
+    ["Caddyfile"] = read("publicfiles/Caddyfile").text
+  }
+}
+
+app =
+  new Deploy {
+    name = "publicfiles"
+    image = "caddy:2.11.4-alpine"
+    imagePullPolicy = "Always"
+    ports {
+      new {
+        containerPort = 80
+        svcPort = 80
+        name = "http"
+      }
+    }
+    volumes {
+      new {
+        name = "publicfiles"
+        pvName = "publicfiles"
+        size = 50.gib
+        accessMode = "ReadOnlyMany"
+        containerPath = "/srv"
+        hostPath = "/var/mnt/yuyuko/public_files"
+      }
+      new {
+        name = "semipublicfiles"
+        pvName = "semipublicfiles"
+        size = 50.gib
+        accessMode = "ReadOnlyMany"
+        containerPath = "/srvsemipublic"
+        hostPath = "/var/mnt/yuyuko/semi_public_files"
+      }
+      new {
+        name = "yuyuko-games"
+        pvName = "yuyuko-games"
+        size = 50.gib
+        accessMode = "ReadOnlyMany"
+        containerPath = "/mnt/yuyuko/games"
+        hostPath = "/var/mnt/yuyuko/games"
+      }
+    }
+    livenessProbe {
+      path = "/"
+      port = "http"
+    }
+    startupProbe {
+      path = "/"
+      port = "http"
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "500m"
+        ["memory"] = 256.mib
+      }
+      requests {
+        ["cpu"] = "250m"
+        ["memory"] = 128.mib
+      }
+    }
+    securityContext {
+      runAsUser = 1000
+      runAsGroup = 1000
+      runAsNonRoot = true
+      allowPrivilegeEscalation = false
+      capabilities {
+        drop { "ALL" }
+        add { "NET_BIND_SERVICE" }
+      }
+      seccompProfile {
+        type = "RuntimeDefault"
+      }
+    }
+    deployment {
+      spec {
+        template {
+          spec {
+            volumes {
+              new Volume {
+                name = "config"
+                configMap {
+                  name = "publicfiles-caddy-config"
+                }
+              }
+            }
+            containers {
+              [0] {
+                volumeMounts {
+                  new VolumeMount {
+                    name = "config"
+                    mountPath = "/etc/caddy"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }.resources
+
+output {
+  value = new Listing<K8sResource> {
+    ...app
+    caddyConfig
+  }
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}

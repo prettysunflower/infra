@@ -1,0 +1,145 @@
+import "@k8s/K8sResource.pkl"
+import "@k8s/api/batch/v1/CronJob.pkl"
+import "@k8s/api/core/v1/Secret.pkl"
+import "@k8s/api/core/v1/PersistentVolume.pkl"
+import "@k8s/api/core/v1/PersistentVolumeClaim.pkl"
+
+import "sops:pixiv-notifs.secrets.sops.pkl" as secrets_file
+
+cachePvc = new PersistentVolumeClaim {
+  metadata {
+    name = "pixivnotifs-cache"
+  }
+  spec {
+    accessModes {
+      "ReadWriteOnce"
+    }
+    resources {
+      requests {
+        ["storage"] = 5.gib
+      }
+    }
+    storageClassName = "local-path"
+  }
+}
+
+galleryDlPv = new PersistentVolume {
+  metadata {
+    name = "pv-pixivnotifs-gallerydl"
+  }
+  spec {
+    capacity {
+      ["storage"] = 2.tib
+    }
+    accessModes {
+      "ReadWriteMany"
+    }
+    persistentVolumeReclaimPolicy = "Retain"
+    hostPath {
+      path = "/var/mnt/yuyuko/images/gallery_dl"
+    }
+  }
+}
+
+galleryDlPvc = new PersistentVolumeClaim {
+  metadata {
+    name = "pvc-pixivnotifs-gallerydl"
+  }
+  spec {
+    accessModes {
+      "ReadWriteMany"
+    }
+    resources {
+      requests {
+        ["storage"] = 2.tib
+      }
+    }
+    volumeName = "pv-pixivnotifs-gallerydl"
+  }
+}
+
+secret = new Secret {
+  metadata {
+    name = "pixiv-notifs-secrets"
+  }
+  stringData = secrets_file.secrets
+}
+
+cronjob = new CronJob {
+  metadata {
+    name = "pixiv-notifs"
+  }
+  spec {
+    schedule = "*/5 * * * *"
+    concurrencyPolicy = "Forbid"
+    jobTemplate {
+      spec {
+        template {
+          spec {
+            volumes {
+              new {
+                name = "cache"
+                persistentVolumeClaim {
+                  claimName = "pixivnotifs-cache"
+                }
+              }
+              new {
+                name = "gallerydl"
+                persistentVolumeClaim {
+                  claimName = "pvc-pixivnotifs-gallerydl"
+                }
+              }
+            }
+            containers {
+              new {
+                name = "pixiv-notifs"
+                image = "git.prettysunflower.moe/prettysunflower/pixiv-notifs@sha256:700b15b81cadabd4bfb76cd73476a402d3e2ecd73f9af13bd8078bdc23303367"
+                envFrom {
+                  new {
+                    secretRef {
+                      name = "pixiv-notifs-secrets"
+                    }
+                  }
+                }
+                volumeMounts {
+                  new {
+                    name = "cache"
+                    mountPath = "/cache"
+                  }
+                  new {
+                    name = "gallerydl"
+                    mountPath = "/gallery-dl"
+                  }
+                }
+                resources {
+                  limits {
+                    ["cpu"] = "1"
+                    ["memory"] = 512.mib
+                  }
+                  requests {
+                    ["cpu"] = "250m"
+                    ["memory"] = 128.mib
+                  }
+                }
+              }
+            }
+            restartPolicy = "Never"
+          }
+        }
+      }
+    }
+  }
+}
+
+output {
+  value = new Listing<K8sResource> {
+    cachePvc
+    galleryDlPv
+    galleryDlPvc
+    secret
+    cronjob
+  }
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}

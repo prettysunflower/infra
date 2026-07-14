@@ -1,0 +1,42 @@
+import "@k8s/K8sResource.pkl"
+
+import "sops:qui.secrets.sops.pkl" as secrets_file
+import "@deploy/Deploy.pkl"
+
+app =
+  new Deploy {
+    name = "qui"
+    image = "ghcr.io/autobrr/qui:v1.20.0"
+    ports {
+      new {
+        containerPort = 7476
+        svcPort = 80
+        name = "http"
+      }
+    }
+    volumes {
+      new {
+        name = "qui-pvc"
+        size = 5.gib
+        accessMode = "ReadWriteOnce"
+        containerPath = "/config"
+      }
+    }
+    env {
+      ["QUI__HOST"] = "0.0.0.0"
+      ["QUI__PORT"] = "7476"
+      ["QUI__OIDC_ISSUER"] = "https://login.sunflower.lgbt"
+      ["QUI__OIDC_CLIENT_ID"] = "f6ba976f-a8c3-49b1-bb10-eef882edbc7a"
+      ["QUI__OIDC_REDIRECT_URL"] = "https://qui.prettysunflower.moe/api/auth/oidc/callback"
+      ["QUI__OIDC_DISABLE_BUILT_IN_LOGIN"] = "true"
+      ["QUI__OIDC_ENABLED"] = "true"
+    }
+    secrets = secrets_file.secrets
+  }.resources
+
+output {
+  value = app
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}

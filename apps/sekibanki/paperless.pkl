@@ -1,0 +1,240 @@
+import "@k8s/K8sResource.pkl"
+
+import "sops:paperless.secrets.sops.pkl" as secrets_file
+import "@common/cnpg_backup.pkl"
+import "@k8s/api/core/v1/Volume.pkl"
+import "@k8s/api/core/v1/VolumeMount.pkl"
+import "@deploy/Deploy.pkl"
+
+paperless =
+  new Deploy {
+    name = "paperless"
+    namespace = "paperless"
+    image = "ghcr.io/paperless-ngx/paperless-ngx:beta"
+    imagePullPolicy = "Always"
+    ports {
+      new {
+        containerPort = 8000
+        svcPort = 80
+        name = "http"
+      }
+    }
+    volumes {
+      new {
+        name = "paperless-pvc"
+        size = 25.gib
+        accessMode = "ReadWriteOnce"
+        containerSubPaths = new {
+          ["data"] = "/usr/src/paperless/data"
+          ["media"] = "/usr/src/paperless/media"
+          ["export"] = "/usr/src/paperless/export"
+          ["consume"] = "/usr/src/paperless/consume"
+        }
+      }
+    }
+    livenessProbe {
+      path = "/"
+      port = "http"
+    }
+    startupProbe {
+      path = "/"
+      port = "http"
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "2"
+        ["memory"] = 2.gib
+      }
+      requests {
+        ["cpu"] = "500m"
+        ["memory"] = 1024.mib
+      }
+    }
+    env {
+      ["PAPERLESS_REDIS"] = "redis://valkey.paperless:6379"
+      ["PAPERLESS_TIKA_ENABLED"] = "1"
+      ["PAPERLESS_TIKA_GOTENBERG_ENDPOINT"] = "http://gotenberg.paperless:3000"
+      ["PAPERLESS_TIKA_ENDPOINT"] = "http://tika.paperless:9998"
+      ["PAPERLESS_URL"] = "https://papers.prettysunflower.moe"
+      ["PAPERLESS_TIME_ZONE"] = "America/Toronto"
+      ["PAPERLESS_OCR_LANGUAGE"] = "eng+fra"
+      ["PAPERLESS_EMAIL_TASK_CRON"] = "* * * * *"
+      ["PAPERLESS_APPS"] = "allauth.socialaccount.providers.openid_connect"
+      ["PAPERLESS_DISABLE_REGULAR_LOGIN"] = "True"
+      ["PAPERLESS_OCR_USER_ARGS"] = "{\"invalidate_digital_signatures\": true}"
+      ["GRANIAN_PORT"] = "8000"
+      ["USERMAP_UID"] = "1000"
+      ["USERMAP_GID"] = "1000"
+      ["PAPERLESS_CONSUMER_POLLING_INTERVAL"] = "5"
+      ["PAPERLESS_DBENGINE"] = "postgresql"
+      ["PAPERLESS_AI_ENABLED"] = "true"
+      ["PAPERLESS_AI_LLM_EMBEDDING_BACKEND"] = "ollama"
+      ["PAPERLESS_AI_LLM_BACKEND"] = "openai-like"
+      ["PAPERLESS_AI_LLM_MODEL"] = "glm-5-turbo"
+      ["PAPERLESS_AI_LLM_ENDPOINT"] = "https://api.z.ai/api/coding/paas/v4"
+      ["PAPERLESS_AI_LLM_EMBEDDING_ENDPOINT"] = "http://nareko.hosts.prettysunflower.moe:11434"
+      ["PAPERLESS_AI_LLM_EMBEDDING_MODEL"] = "embeddinggemma"
+      ["PAPERLESS_AI_LLM_CONTEXT_SIZE"] = "200000"
+      ["S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES"] = "1"
+      ["S6_READ_ONLY_ROOT"] = "1"
+    }
+    secrets = secrets_file.secrets
+    pgDb {
+      name = "postgres"
+      instances = 3
+      size = 5.gib
+      storageClass = "local-path-ssd"
+      envMapping {
+        host = "PAPERLESS_DBHOST"
+        username = "PAPERLESS_DBUSER"
+        password = "PAPERLESS_DBPASS"
+        dbname = "PAPERLESS_DBNAME"
+      }
+      backup = cnpg_backup
+    }
+    deployment {
+      spec {
+        template {
+          spec {
+            volumes {
+              new Volume {
+                name = "run"
+                emptyDir {
+                  sizeLimit = "500Mi"
+                  medium = "Memory"
+                }
+              }
+            }
+            containers {
+              [0] {
+                volumeMounts {
+                  new VolumeMount {
+                    name = "run"
+                    mountPath = "/run"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }.resources
+
+valkey =
+  new Deploy {
+    name = "valkey"
+    namespace = "paperless"
+    labels {
+      ["app.kubernetes.io/name"] = "paperless-valkey"
+    }
+    image = "valkey/valkey:9.1.0-alpine"
+    ports {
+      new {
+        containerPort = 6379
+        svcPort = 6379
+        name = "valkey"
+      }
+    }
+    volumes {
+      new {
+        name = "paperless-valkey-pvc"
+        size = 2.gib
+        accessMode = "ReadWriteOnce"
+        containerPath = "/data"
+      }
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "500m"
+        ["memory"] = 256.mib
+      }
+      requests {
+        ["cpu"] = "250m"
+        ["memory"] = 128.mib
+      }
+    }
+  }.resources
+
+gotenberg =
+  new Deploy {
+    name = "gotenberg"
+    namespace = "paperless"
+    labels {
+      ["app.kubernetes.io/name"] = "paperless-gotenberg"
+    }
+    image = "docker.io/gotenberg/gotenberg:8.34"
+    ports {
+      new {
+        containerPort = 3000
+        svcPort = 3000
+        name = "gotenberg"
+      }
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "1"
+        ["memory"] = 1.gib
+      }
+      requests {
+        ["cpu"] = "250m"
+        ["memory"] = 128.mib
+      }
+    }
+    deployment {
+      spec {
+        template {
+          spec {
+            containers {
+              [0] {
+                command = new {
+                  "gotenberg"
+                  "--chromium-disable-javascript=true"
+                  "--chromium-allow-list=file:///tmp/.*"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }.resources
+
+tika =
+  new Deploy {
+    name = "tika"
+    namespace = "paperless"
+    labels {
+      ["app.kubernetes.io/name"] = "paperless-tika"
+    }
+    image = "docker.io/apache/tika:latest"
+    ports {
+      new {
+        containerPort = 9998
+        svcPort = 9998
+        name = "tika"
+      }
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "1"
+        ["memory"] = 1.gib
+      }
+      requests {
+        ["cpu"] = "250m"
+        ["memory"] = 256.mib
+      }
+    }
+  }.resources
+
+output {
+  value = new Listing<K8sResource> {
+    ...paperless
+    ...valkey
+    ...gotenberg
+    ...tika
+  }
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}

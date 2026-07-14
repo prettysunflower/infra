@@ -1,0 +1,73 @@
+import "@k8s/K8sResource.pkl"
+import "@k8s/api/core/v1/ConfigMap.pkl"
+import "@k8s/api/core/v1/Volume.pkl"
+import "@deploy/Deploy.pkl"
+
+glanceConfig = new ConfigMap {
+  metadata {
+    name = "glance-config"
+  }
+  data {
+    ["glance.yml"] = read("glance/glance.yml").text
+  }
+}
+
+app =
+  new Deploy {
+    name = "glance"
+    image = "glanceapp/glance:v0.8.5"
+    imagePullPolicy = "Always"
+    ports {
+      new {
+        containerPort = 8080
+        svcPort = 80
+        name = "http"
+      }
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "500m"
+        ["memory"] = 256.mib
+      }
+      requests {
+        ["cpu"] = "250m"
+        ["memory"] = 128.mib
+      }
+    }
+    deployment {
+      spec {
+        template {
+          spec {
+            volumes {
+              new Volume {
+                name = "config"
+                configMap {
+                  name = "glance-config"
+                }
+              }
+            }
+            containers {
+              [0] {
+                volumeMounts {
+                  new {
+                    name = "config"
+                    mountPath = "/app/config"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }.resources
+
+output {
+  value = new Listing<K8sResource> {
+    ...app
+    glanceConfig
+  }
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}

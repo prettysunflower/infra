@@ -1,0 +1,121 @@
+import "@k8s/K8sResource.pkl"
+import "@k8s/api/batch/v1/CronJob.pkl"
+import "@k8s/api/core/v1/Secret.pkl"
+
+import "sops:renovate.secrets.sops.pkl" as secrets_file
+import "@deploy/Deploy.pkl"
+
+renovateCache =
+  new Deploy {
+    name = "renovate-cache"
+    image = "valkey/valkey:9.1.0-alpine"
+    ports {
+      new {
+        containerPort = 6379
+        svcPort = 6379
+        name = "valkey"
+      }
+    }
+    volumes {
+      new {
+        name = "renovate-cache-pvc"
+        size = 5.gib
+        accessMode = "ReadWriteOnce"
+        containerPath = "/data"
+      }
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "500m"
+        ["memory"] = 256.mib
+      }
+      requests {
+        ["cpu"] = "250m"
+        ["memory"] = 128.mib
+      }
+    }
+    env {
+      ["VALKEY_EXTRA_FLAGS"] = "--save 60 1"
+    }
+    deployment {
+      spec {
+        template {
+          spec {
+            containers {
+              [0] {
+                command = new {
+                  "valkey-server"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }.resources
+
+secret = new Secret {
+  metadata {
+    name = "renovate-secrets"
+  }
+  stringData = secrets_file.secrets
+}
+
+cronjob = new CronJob {
+  metadata {
+    name = "renovate-gitea"
+  }
+  spec {
+    schedule = "*/15 9-22 * * *"
+    concurrencyPolicy = "Forbid"
+    jobTemplate {
+      spec {
+        template {
+          spec {
+            containers {
+              new {
+                name = "renovate"
+                image = "renovate/renovate:latest"
+                env {
+                  new {
+                    name = "LOG_LEVEL"
+                    value = "debug"
+                  }
+                }
+                envFrom {
+                  new {
+                    secretRef {
+                      name = "renovate-secrets"
+                    }
+                  }
+                }
+                resources {
+                  limits {
+                    ["cpu"] = "1"
+                    ["memory"] = 512.mib
+                  }
+                  requests {
+                    ["cpu"] = "250m"
+                    ["memory"] = 128.mib
+                  }
+                }
+              }
+            }
+            restartPolicy = "Never"
+          }
+        }
+      }
+    }
+  }
+}
+
+output {
+  value = new Listing<K8sResource> {
+    ...renovateCache
+    secret
+    cronjob
+  }
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}

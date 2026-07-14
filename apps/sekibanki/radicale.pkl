@@ -1,0 +1,113 @@
+import "@k8s/K8sResource.pkl"
+import "@k8s/api/core/v1/ConfigMap.pkl"
+import "@k8s/api/core/v1/Volume.pkl"
+import "@k8s/api/core/v1/VolumeMount.pkl"
+import "@deploy/Deploy.pkl"
+
+radicaleConfig = new ConfigMap {
+  metadata {
+    name = "radicale-config"
+  }
+  data {
+    ["config"] = read("radicale/config").text
+  }
+}
+
+app =
+  new Deploy {
+    name = "radicale"
+    image = "tomsquest/docker-radicale:3.7.5.0"
+    ports {
+      new {
+        containerPort = 5232
+        svcPort = 80
+        name = "http"
+      }
+    }
+    volumes {
+      new {
+        name = "radicale-data-pvc"
+        size = 3.gib
+        accessMode = "ReadWriteOnce"
+        containerPath = "/data"
+      }
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "500m"
+        ["memory"] = 256.mib
+      }
+      requests {
+        ["cpu"] = "200m"
+        ["memory"] = 64.mib
+      }
+    }
+    livenessProbe {
+      path = "/"
+      port = "http"
+    }
+    securityContext {
+      runAsUser = 2999
+      runAsGroup = 2999
+      runAsNonRoot = true
+      allowPrivilegeEscalation = false
+      capabilities {
+        drop { "ALL" }
+      }
+      seccompProfile {
+        type = "RuntimeDefault"
+      }
+    }
+    service {
+      metadata {
+        name = "caldav"
+      }
+    }
+    deployment {
+      spec {
+        template {
+          spec {
+            volumes {
+              new Volume {
+                name = "radicale-config"
+                configMap {
+                  name = "radicale-config"
+                }
+              }
+              new Volume {
+                name = "cache-volume"
+                emptyDir {
+                  sizeLimit = "50Mi"
+                  medium = "Memory"
+                }
+              }
+            }
+            containers {
+              [0] {
+                volumeMounts {
+                  new VolumeMount {
+                    name = "radicale-config"
+                    mountPath = "/config"
+                  }
+                  new VolumeMount {
+                    name = "cache-volume"
+                    mountPath = "/cache"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }.resources
+
+output {
+  value = new Listing<K8sResource> {
+    ...app
+    radicaleConfig
+  }
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}

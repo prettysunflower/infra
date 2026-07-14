@@ -1,0 +1,151 @@
+import "@cnpg/Database.pkl"
+import "@k8s/K8sResource.pkl"
+import "@deploy/Deploy.pkl"
+
+deneb =
+  new Deploy {
+    name = "radarr-deneb"
+    namespace = "radarr"
+    image = "ghcr.io/linuxserver/radarr:6.2.1.10461-ls307"
+    ports {
+      new {
+        containerPort = 7878
+        svcPort = 80
+        name = "http"
+      }
+    }
+    volumes {
+      new {
+        name = "deneb-config"
+        size = 5.gib
+        accessMode = "ReadWriteOnce"
+        containerPath = "/config"
+      }
+      new {
+        name = "pvc-medias-deneb"
+        pvName = "pv-radarr-media-deneb"
+        size = 2.tib
+        accessMode = "ReadWriteMany"
+        containerPath = "/synology"
+        hostPath = "/var/mnt/yuyuko/deneb/"
+      }
+    }
+    livenessProbe {
+      path = "/ping"
+      port = "http"
+    }
+    startupProbe {
+      path = "/ping"
+      port = "http"
+    }
+    env {
+      ["PUID"] = "1000"
+      ["PGID"] = "1000"
+      ["TZ"] = "America/Toronto"
+    }
+    pgDb {
+      name = "pg-deneb"
+      instances = 2
+      size = 5.gib
+      storageClass = "local-path-ssd"
+    }
+    service {
+      metadata {
+        name = "deneb"
+      }
+    }
+  }.resources
+
+remilia =
+  new Deploy {
+    name = "radarr-remilia"
+    namespace = "radarr"
+    image = "ghcr.io/linuxserver/radarr:6.2.1.10461-ls307"
+    ports {
+      new {
+        containerPort = 7878
+        svcPort = 80
+        name = "http"
+      }
+    }
+    volumes {
+      new {
+        name = "remilia-config"
+        size = 5.gib
+        accessMode = "ReadWriteOnce"
+        containerPath = "/config"
+      }
+      new {
+        name = "pvc-medias-remilia"
+        pvName = "pv-radarr-media-remilia"
+        size = 2.tib
+        accessMode = "ReadWriteMany"
+        containerPath = "/data"
+        hostPath = "/var/mnt/yuyuko/media/"
+      }
+    }
+    livenessProbe {
+      path = "/ping"
+      port = "http"
+    }
+    startupProbe {
+      path = "/ping"
+      port = "http"
+    }
+    env {
+      ["PUID"] = "1000"
+      ["PGID"] = "1000"
+      ["TZ"] = "America/Toronto"
+    }
+    pgDb {
+      name = "pg-remilia"
+      instances = 2
+      size = 5.gib
+      storageClass = "local-path-ssd"
+    }
+    service {
+      metadata {
+        name = "remilia"
+      }
+    }
+  }.resources
+
+denebLogsDb = new Database {
+  metadata {
+    name = "pg-deneb-logs"
+    namespace = "radarr"
+  }
+  spec {
+    name = "radarr-logs"
+    owner = "app"
+    cluster {
+      name = "pg-deneb"
+    }
+  }
+}
+
+remiliaLogsDb = new Database {
+  metadata {
+    name = "pg-remilia-logs"
+    namespace = "radarr"
+  }
+  spec {
+    name = "radarr-logs"
+    owner = "app"
+    cluster {
+      name = "pg-remilia"
+    }
+  }
+}
+
+output {
+  value = new Listing<K8sResource> {
+    ...deneb
+    ...remilia
+    denebLogsDb
+    remiliaLogsDb
+  }
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}

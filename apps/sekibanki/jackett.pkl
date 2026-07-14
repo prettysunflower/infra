@@ -1,0 +1,73 @@
+import "@k8s/K8sResource.pkl"
+import "@deploy/Deploy.pkl"
+import "@k8s/api/core/v1/Volume.pkl"
+import "@k8s/api/core/v1/VolumeMount.pkl"
+
+app =
+  new Deploy {
+    name = "jackett"
+    image = "lscr.io/linuxserver/jackett:latest"
+    ports {
+      new {
+        containerPort = 9117
+        svcPort = 80
+        name = "http"
+      }
+    }
+    volumes {
+      new {
+        name = "jackett-pvc"
+        size = 5.gib
+        accessMode = "ReadWriteOnce"
+        containerPath = "/config"
+      }
+    }
+    livenessProbe {
+      path = "/health"
+      port = "http"
+    }
+    startupProbe {
+      path = "/health"
+      port = "http"
+    }
+    env {
+      ["AUTO_UPDATE"] = "true"
+      ["PUID"] = "1000"
+      ["GUID"] = "1000"
+      ["TZ"] = "America/Toronto"
+    }
+    deployment {
+      spec {
+        template {
+          spec {
+            volumes {
+              new Volume {
+                name = "jackett-torrent-blackhole"
+                emptyDir {
+                  sizeLimit = "128Mi"
+                  medium = "Memory"
+                }
+              }
+            }
+            containers {
+              [0] {
+                volumeMounts {
+                  new VolumeMount {
+                    name = "jackett-torrent-blackhole"
+                    mountPath = "/downloads"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }.resources
+
+output {
+  value = app
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}

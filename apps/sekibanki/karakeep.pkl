@@ -1,0 +1,186 @@
+import "@k8s/K8sResource.pkl"
+
+import "sops:karakeep.secrets.sops.pkl" as secrets_file
+import "@k8s/api/core/v1/Volume.pkl"
+import "@deploy/Deploy.pkl"
+
+karakeep =
+  new Deploy {
+    name = "karakeep"
+    namespace = "karakeep"
+    image = "ghcr.io/karakeep-app/karakeep:0.32.0"
+    ports {
+      new {
+        containerPort = 3000
+        svcPort = 80
+        name = "http"
+      }
+    }
+    volumes {
+      new {
+        name = "karakeep-pvc"
+        size = 100.gib
+        accessMode = "ReadWriteOnce"
+        containerSubPaths = new {
+          ["karakeep"] = "/data"
+        }
+      }
+    }
+    livenessProbe {
+      path = "/"
+      port = "http"
+    }
+    startupProbe {
+      path = "/"
+      port = "http"
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "2"
+        ["memory"] = 2.gib
+      }
+      requests {
+        ["cpu"] = "500m"
+        ["memory"] = 128.mib
+      }
+    }
+    env {
+      ["MEILI_ADDR"] = "http://karakeep-meilisearch:7700"
+      ["MEILI_NO_ANALYTICS"] = "true"
+      ["BROWSER_WEB_URL"] = "http://chrome:9222"
+      ["DATA_DIR"] = "/data"
+      ["NEXTAUTH_URL"] = "https://karakeep.prettysunflower.moe"
+      ["CRAWLER_FULL_PAGE_ARCHIVE"] = "true"
+      ["DB_WAL_MODE"] = "true"
+      ["DISABLE_PASSWORD_AUTH"] = "true"
+      ["OAUTH_WELLKNOWN_URL"] = "https://login.sunflower.lgbt/.well-known/openid-configuration"
+      ["OAUTH_CLIENT_ID"] = "8af5e154-362d-429d-ab0f-1a333b4a10e0"
+      ["OAUTH_PROVIDER_NAME"] = "🌻 Login"
+      ["OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING"] = "true"
+    }
+    secrets = secrets_file.secrets
+  }.resources
+
+chrome =
+  new Deploy {
+    name = "chrome"
+    namespace = "karakeep"
+    image = "gcr.io/zenika-hub/alpine-chrome:124"
+    ports {
+      new {
+        containerPort = 9222
+        svcPort = 9222
+        name = "chrome"
+      }
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "1"
+        ["memory"] = 512.mib
+      }
+      requests {
+        ["cpu"] = "500m"
+        ["memory"] = 128.mib
+      }
+    }
+    deployment {
+      spec {
+        template {
+          spec {
+            containers {
+              [0] {
+                command = new {
+                  "chromium-browser"
+                  "--headless"
+                  "--no-sandbox"
+                  "--disable-gpu"
+                  "--disable-dev-shm-usage"
+                  "--remote-debugging-address=0.0.0.0"
+                  "--remote-debugging-port=9222"
+                  "--hide-scrollbars"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }.resources
+
+meilisearch =
+  new Deploy {
+    name = "karakeep-meilisearch"
+    namespace = "karakeep"
+    image = "getmeili/meilisearch:v1.48.2"
+    ports {
+      new {
+        containerPort = 7700
+        svcPort = 7700
+        name = "meilisearch"
+      }
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "1"
+        ["memory"] = 1.gib
+      }
+      requests {
+        ["cpu"] = "500m"
+        ["memory"] = 256.mib
+      }
+    }
+    deployment {
+      spec {
+        template {
+          spec {
+            volumes {
+              new Volume {
+                name = "karakeep-data"
+                persistentVolumeClaim {
+                  claimName = "karakeep-pvc"
+                }
+              }
+            }
+            containers {
+              [0] {
+                command = new {
+                  "meilisearch"
+                  "--experimental-dumpless-upgrade"
+                }
+                envFrom {
+                  new {
+                    configMapRef {
+                      name = "karakeep-configmap"
+                    }
+                  }
+                  new {
+                    secretRef {
+                      name = "karakeep-secrets"
+                    }
+                  }
+                }
+                volumeMounts {
+                  new {
+                    name = "karakeep-data"
+                    mountPath = "/meili_data"
+                    subPath = "melisearch"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }.resources
+
+output {
+  value = new Listing<K8sResource> {
+    ...karakeep
+    ...chrome
+    ...meilisearch
+  }
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}

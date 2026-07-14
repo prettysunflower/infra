@@ -1,0 +1,81 @@
+import "@k8s/K8sResource.pkl"
+
+import "sops:opengist.secrets.sops.pkl" as secrets_file
+import "@deploy/Deploy.pkl"
+
+app =
+  new Deploy {
+    name = "opengist"
+    namespace = "opengist"
+    image = "ghcr.io/thomiceli/opengist:1.13"
+    ports {
+      new {
+        containerPort = 6157
+        svcPort = 80
+        name = "http"
+      }
+    }
+    volumes {
+      new {
+        name = "opengist-data-pvc"
+        size = 5.gib
+        accessMode = "ReadWriteOnce"
+        containerPath = "/opengist"
+      }
+    }
+    livenessProbe {
+      path = "/healthcheck"
+      port = "http"
+    }
+    startupProbe {
+      path = "/healthcheck"
+      port = "http"
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "500m"
+        ["memory"] = 256.mib
+      }
+      requests {
+        ["cpu"] = "250m"
+        ["memory"] = 128.mib
+      }
+    }
+    env {
+      ["OG_OPENGIST_HOME"] = "/opengist"
+    }
+    secrets = secrets_file.secrets
+    pgDb {
+      name = "postgres"
+      instances = 2
+      size = 5.gib
+      storageClass = "local-path"
+      envMapping {
+        uri = "OG_DB_URI"
+      }
+    }
+    deployment {
+      spec {
+        template {
+          spec {
+            containers {
+              [0] {
+                command = new {
+                  "/app/opengist/opengist"
+                  "--config"
+                  "/config.yml"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }.resources
+
+output {
+  value = app
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}

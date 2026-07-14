@@ -1,0 +1,145 @@
+import "@k8s/K8sResource.pkl"
+
+import "sops:outline.secrets.sops.pkl" as secrets_file
+import "@deploy/Deploy.pkl"
+
+outline =
+  new Deploy {
+    name = "outline"
+    namespace = "outline"
+    image = "outlinewiki/outline:1.9.1"
+    ports {
+      new {
+        containerPort = 3000
+        svcPort = 80
+        name = "http"
+      }
+    }
+    livenessProbe {
+      path = "/"
+      port = "http"
+    }
+    startupProbe {
+      path = "/"
+      port = "http"
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "1"
+        ["memory"] = 2.gib
+      }
+      requests {
+        ["cpu"] = "500m"
+        ["memory"] = 1.gib
+      }
+    }
+    env {
+      ["NODE_ENV"] = "production"
+      ["PGSSLMODE"] = "disable"
+      ["REDIS_URL"] = "redis://valkey:6379"
+      ["URL"] = "https://wiki.prettysunflower.moe"
+      ["PORT"] = "3000"
+      ["FILE_STORAGE"] = "s3"
+      ["FILE_STORAGE_UPLOAD_MAX_SIZE"] = "262144000"
+      ["AWS_REGION"] = "auto"
+      ["AWS_S3_UPLOAD_BUCKET_URL"] = "https://t3.storage.dev"
+      ["AWS_S3_UPLOAD_BUCKET_NAME"] = "prettysunflower-wiki"
+      ["AWS_S3_FORCE_PATH_STYLE"] = "true"
+      ["AWS_S3_ACL"] = "private"
+      ["OIDC_AUTH_URI"] = "https://login.sunflower.lgbt/authorize"
+      ["OIDC_TOKEN_URI"] = "https://login.sunflower.lgbt/api/oidc/token"
+      ["OIDC_USERINFO_URI"] = "https://login.sunflower.lgbt/api/oidc/userinfo"
+      ["OIDC_LOGOUT_URI"] = "https://login.sunflower.lgbt/api/oidc/end-session"
+      ["OIDC_USERNAME_CLAIM"] = "preferred_username"
+      ["OIDC_DISPLAY_NAME"] = "Auth prettysunflower"
+      ["OIDC_SCOPES"] = "openid profile email"
+      ["DEFAULT_LANGUAGE"] = "en_US"
+      ["RATE_LIMITER_ENABLED"] = "true"
+      ["RATE_LIMITER_REQUESTS"] = "1000"
+      ["RATE_LIMITER_DURATION_WINDOW"] = "60"
+      ["FORCE_HTTPS"] = "false"
+    }
+    secrets = secrets_file.secrets
+    pgDb {
+      name = "postgres"
+      instances = 2
+      size = 5.gib
+      storageClass = "local-path-ssd"
+      envMapping {
+        uri = "DATABASE_URL"
+      }
+    }
+    deployment {
+      spec {
+        template {
+          spec {
+            hostAliases {
+              new {
+                ip = "100.113.193.5"
+                hostnames {
+                  "mail.prettysunflower.moe"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }.resources
+
+valkey =
+  new Deploy {
+    name = "valkey"
+    namespace = "outline"
+    image = "valkey/valkey:9.1.0-alpine"
+    ports {
+      new {
+        containerPort = 6379
+        svcPort = 6379
+        name = "valkey"
+      }
+    }
+    volumes {
+      new {
+        name = "valkey-outline-pvc"
+        size = 5.gib
+        accessMode = "ReadWriteOnce"
+        containerPath = "/data"
+      }
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "500m"
+        ["memory"] = 256.mib
+      }
+      requests {
+        ["cpu"] = "250m"
+        ["memory"] = 128.mib
+      }
+    }
+    deployment {
+      spec {
+        template {
+          spec {
+            containers {
+              [0] {
+                command = new {
+                  "valkey-server"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }.resources
+
+output {
+  value = new Listing<K8sResource> {
+    ...outline
+    ...valkey
+  }
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}

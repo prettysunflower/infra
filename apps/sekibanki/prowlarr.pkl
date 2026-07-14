@@ -1,0 +1,68 @@
+import "@cnpg/Database.pkl"
+import "@k8s/K8sResource.pkl"
+import "@deploy/Deploy.pkl"
+
+app =
+  new Deploy {
+    name = "prowlarr"
+    namespace = "prowlarr"
+    image = "ghcr.io/linuxserver/prowlarr:2.3.0.5236-ls134"
+    ports {
+      new {
+        containerPort = 9696
+        svcPort = 80
+        name = "http"
+      }
+    }
+    volumes {
+      new {
+        name = "prowlarr-config"
+        size = 5.gib
+        accessMode = "ReadWriteOnce"
+        containerPath = "/config"
+      }
+    }
+    livenessProbe {
+      path = "/ping"
+      port = "http"
+    }
+    startupProbe {
+      path = "/ping"
+      port = "http"
+    }
+    env {
+      ["PUID"] = "1000"
+      ["PGID"] = "1000"
+      ["TZ"] = "America/Toronto"
+    }
+    pgDb {
+      name = "postgres"
+      instances = 2
+      size = 5.gib
+      storageClass = "local-path-ssd"
+    }
+  }.resources
+
+prowlarrLogsDb = new Database {
+  metadata {
+    name = "postgres-logs"
+    namespace = "prowlarr"
+  }
+  spec {
+    name = "prowlarr-logs"
+    owner = "app"
+    cluster {
+      name = "postgres"
+    }
+  }
+}
+
+output {
+  value = new Listing<K8sResource> {
+    ...app
+    prowlarrLogsDb
+  }
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}

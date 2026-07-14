@@ -1,0 +1,80 @@
+import "@k8s/K8sResource.pkl"
+import "@deploy/Deploy.pkl"
+
+changedetection =
+  new Deploy {
+    name = "changedetection"
+    namespace = "changedetection"
+    image = "ghcr.io/dgtlmoon/changedetection.io"
+    ports {
+      new {
+        containerPort = 5000
+        svcPort = 80
+        name = "http"
+      }
+    }
+    volumes {
+      new {
+        name = "changedetection-pvc"
+        size = 10.gib
+        accessMode = "ReadWriteOnce"
+        containerPath = "/datastore"
+      }
+    }
+    livenessProbe {
+      path = "/"
+      port = "http"
+    }
+    startupProbe {
+      path = "/"
+      port = "http"
+    }
+    env {
+      ["PORT"] = "5000"
+      ["PLAYWRIGHT_DRIVER_URL"] = "ws://sockpuppet-chrome.changedetection:3000/wd/hub"
+      ["BASE_URL"] = "https://changedetection.sunflower.lgbt"
+      ["USE_X_SETTINGS"] = "1"
+      ["HIDE_REFERER"] = "true"
+      ["TZ"] = "America/Toronto"
+    }
+  }.resources
+
+sockpuppetChrome =
+  new Deploy {
+    name = "sockpuppet-chrome"
+    namespace = "changedetection"
+    image = "dgtlmoon/sockpuppetbrowser:latest"
+    ports {
+      new {
+        containerPort = 3000
+        svcPort = 3000
+        name = "ws"
+      }
+    }
+    resourceRequirements {
+      limits {
+        ["cpu"] = "1"
+        ["memory"] = 512.mib
+      }
+      requests {
+        ["cpu"] = "500m"
+        ["memory"] = 128.mib
+      }
+    }
+    env {
+      ["SCREEN_WIDTH"] = "1920"
+      ["SCREEN_HEIGHT"] = "1024"
+      ["SCREEN_DEPTH"] = "16"
+      ["MAX_CONCURRENT_CHROME_PROCESSES"] = "10"
+    }
+  }.resources
+
+output {
+  value = new Listing<K8sResource> {
+    ...changedetection
+    ...sockpuppetChrome
+  }
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}
