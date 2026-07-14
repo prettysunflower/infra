@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "resolvedDependencies": {
+    "package://prettysunflower.moe/pkl/barman@0": {
+      "type": "remote",
+      "uri": "projectpackage://prettysunflower.moe/pkl/barman@0.13.0",
+      "checksums": {
+        "sha256": "c2b2dab767502cb0fe19a74a10113308301dc6ee3db7abd60be391938f0f6e44"
+      }
+    },
+    "package://pkg.pkl-lang.org/pkl-k8s/k8s@1": {
+      "type": "remote",
+      "uri": "projectpackage://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1",
+      "checksums": {
+        "sha256": "0520f82219c074d2f4b69ab9c57a4a1c1d0b3c4acc1e5d12749e72e0d567d9bf"
+      }
+    },
+    "package://prettysunflower.moe/pkl/cnpg@1": {
+      "type": "remote",
+      "uri": "projectpackage://prettysunflower.moe/pkl/cnpg@1.30.0",
+      "checksums": {
+        "sha256": "9b0d4b4053e1de84c26bc4024872d991f8fa4d687d3a933113fc31bcc0e7167f"
+      }
+    },
+    "package://prettysunflower.moe/pkl/deploy@1": {
+      "type": "remote",
+      "uri": "projectpackage://prettysunflower.moe/pkl/deploy@1.0.0",
+      "checksums": {
+        "sha256": "a98fef911dafbd7198cc1f787383acd351eb86d7c6ad6e6b05b81a66d10d0be7"
+      }
+    },
+    "package://prettysunflower.moe/pkl/infra/common@1": {
+      "type": "local",
+      "uri": "projectpackage://prettysunflower.moe/pkl/infra/common@1.0.0",
+      "path": "../common"
+    }
+  }
+}

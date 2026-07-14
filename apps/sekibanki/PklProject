@@ -1,0 +1,17 @@
+module sekibanki
+
+amends "../../PklProject"
+
+dependencies {
+  ["common"] = import("../common/PklProject")
+}
+
+package {
+    name = "sekibanki"
+    baseUri = "package://prettysunflower.moe/pkl/infra/sekibanki"
+    packageZipUrl = "https://git.prettysunflower.moe/prettysunflower/infra/archive/main.zip?path=apps%2fsekibanki"
+    version = "1.0.0"
+    authors = new {
+        "prettysunflower <me@prettysunflower.moe>"
+    }
+}

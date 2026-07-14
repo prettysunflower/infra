@@ -1,6 +1,5 @@
-import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sResource.pkl"
-
-import "../deploy/Deploy.pkl"
+import "@k8s/K8sResource.pkl"
+import "@deploy/Deploy.pkl"
 
 actual =
   new Deploy {
