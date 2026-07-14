@@ -1,0 +1,24 @@
+amends "pkl:Project"
+
+dependencies {
+  ["k8s"] {
+    uri = "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1"
+  }
+  ["cnpg"] {
+    uri = "package://prettysunflower.moe/pkl/cnpg@1.30.0"
+  }
+  ["barman"] {
+    uri = "package://prettysunflower.moe/pkl/barman@0.13.0"
+  }
+  ["deploy"] {
+    uri = "package://prettysunflower.moe/pkl/deploy@1.0.0"
+  }
+}
+
+evaluatorSettings {
+  externalModuleReaders {
+    ["sops"] {
+    	executable = "/home/prettysunflower/pkl-sops/pkl-sops"
+    }
+  }
+}
