@@ -3,7 +3,7 @@ import "@common/cnpg_backup.pkl"
 import "@deploy/Deploy.pkl"
 import "@k8s/K8sResource.pkl"
 
-immich_version = "3.0.2"
+immich_version = "3.0.3"
 
 immich_env: Mapping<String, String> = new {
   ["REDIS_HOSTNAME"] = "valkey"
