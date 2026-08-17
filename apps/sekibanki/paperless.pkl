@@ -1,16 +1,20 @@
-import "@k8s/K8sResource.pkl"
+#!/usr/bin/env -S pkl eval
 
 import "sops:paperless.secrets.sops.pkl" as secrets_file
+
 import "@common/cnpg_backup.pkl"
+import "@deploy/Deploy.pkl"
 import "@k8s/api/core/v1/Volume.pkl"
 import "@k8s/api/core/v1/VolumeMount.pkl"
-import "@deploy/Deploy.pkl"
+import "@k8s/K8sResource.pkl"
+
+import "valkeyURL.pkl"
 
 paperless =
   new Deploy {
     name = "paperless"
     namespace = "paperless"
-    image = "ghcr.io/paperless-ngx/paperless-ngx:beta"
+    image = "ghcr.io/paperless-ngx/paperless-ngx:3.0.5"
     imagePullPolicy = "Always"
     ports {
       new {
