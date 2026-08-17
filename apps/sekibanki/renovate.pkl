@@ -1,64 +1,35 @@
-import "@k8s/K8sResource.pkl"
-import "@k8s/api/batch/v1/CronJob.pkl"
-import "@k8s/api/core/v1/Secret.pkl"
-
 import "sops:renovate.secrets.sops.pkl" as secrets_file
-import "@deploy/Deploy.pkl"
 
-renovateCache =
-  new Deploy {
-    name = "renovate-cache"
-    image = "valkey/valkey:9.1.0-alpine"
-    ports {
-      new {
-        containerPort = 6379
-        svcPort = 6379
-        name = "valkey"
-      }
-    }
-    volumes {
-      new {
-        name = "renovate-cache-pvc"
-        size = 5.gib
-        accessMode = "ReadWriteOnce"
-        containerPath = "/data"
-      }
-    }
-    resourceRequirements {
-      limits {
-        ["cpu"] = "500m"
-        ["memory"] = 256.mib
-      }
-      requests {
-        ["cpu"] = "250m"
-        ["memory"] = 128.mib
-      }
-    }
-    env {
-      ["VALKEY_EXTRA_FLAGS"] = "--save 60 1"
-    }
-    deployment {
-      spec {
-        template {
-          spec {
-            containers {
-              [0] {
-                command = new {
-                  "valkey-server"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }.resources
+import "@deploy/Deploy.pkl"
+import "@k8s/api/batch/v1/CronJob.pkl"
+import "@k8s/api/core/v1/ConfigMap.pkl"
+import "@k8s/api/core/v1/Secret.pkl"
+import "@k8s/K8sResource.pkl"
+
+import "valkeyURL.pkl"
 
 secret = new Secret {
   metadata {
     name = "renovate-secrets"
   }
   stringData = secrets_file.secrets
+}
+
+configMap = new ConfigMap {
+  metadata {
+    name = "renovate-configmap"
+  }
+  data {
+    ["RENOVATE_AUTODISCOVER"] = "true"
+    ["RENOVATE_ENDPOINT"] = "https://git.prettysunflower.moe/api/v1"
+    ["RENOVATE_GIT_AUTHOR"] = "Renovate Bot <renovatebot@prettysunflower.moe>"
+    ["RENOVATE_PLATFORM"] = "gitea"
+    ["RENOVATE_KUBERNETES"] = "{\"fileMatch\":[\"\\.yaml$\"]}"
+    ["RENOVATE_PR_HOURLY_LIMIT"] = "0"
+    ["RENOVATE_CACHE_HARD_TTL_MINUTES"] = "60"
+    ["RENOVATE_REDIS_URL"] = valkeyURL.urlForService(valkeyURL.renovate)
+    ["RENOVATE_DETECT_HOST_RULES_FROM_ENV"] = "true"
+  }
 }
 
 cronjob = new CronJob {
@@ -83,6 +54,11 @@ cronjob = new CronJob {
                   }
                 }
                 envFrom {
+                  new {
+                    configMapRef {
+                      name = configMap.metadata.name
+                    }
+                  }
                   new {
                     secretRef {
                       name = "renovate-secrets"
@@ -111,8 +87,8 @@ cronjob = new CronJob {
 
 output {
   value = new Listing<K8sResource> {
-    ...renovateCache
     secret
+    configMap
     cronjob
   }
   renderer = (K8sResource.output.renderer as YamlRenderer) {
