@@ -1,0 +1,24 @@
+#!/usr/bin/env -S pkl eval
+
+extends "@deploy/Deploy.pkl"
+
+name = "vlmcsd"
+image = "mikolatero/vlmcsd@sha256:217a03280410aa06bca7dd1b4e3e206317ba740a990d90683462fb21b17c9e7d"
+replicas = 2
+ports {
+  new {
+    containerPort = 1688
+    svcPort = 1688
+    name = "kms"
+  }
+}
+resourceRequirements {
+  limits {
+    ["cpu"] = "200m"
+    ["memory"] = 256.mib
+  }
+  requests {
+    ["cpu"] = "50m"
+    ["memory"] = 64.mib
+  }
+}
