@@ -1,0 +1,17 @@
+module yuiman
+
+amends "../../PklProject"
+
+dependencies {
+  ["common"] = import("../common/PklProject")
+}
+
+package {
+    name = "yuiman"
+    baseUri = "package://prettysunflower.moe/pkl/infra/yuiman"
+    packageZipUrl = "https://git.prettysunflower.moe/prettysunflower/infra/archive/main.zip?path=apps%2fyuiman"
+    version = "1.0.0"
+    authors = new {
+        "prettysunflower <me@prettysunflower.moe>"
+    }
+}
