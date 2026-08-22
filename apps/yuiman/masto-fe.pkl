@@ -1,0 +1,41 @@
+#!/usr/bin/env -S pkl eval
+
+extends "@deploy/Deploy.pkl"
+
+name = "masto-fe"
+image = "git.prettysunflower.moe/prettysunflower/masto-fe-standalone:latest"
+imagePullPolicy = "Always"
+
+ports {
+  new {
+    containerPort = 80
+    svcPort = 80
+    name = "http"
+  }
+}
+
+livenessProbe {
+  path = "/"
+  port = "http"
+}
+readinessProbe {
+  path = "/"
+  port = "http"
+}
+startupProbe {
+  path = "/"
+  port = "http"
+}
+
+resourceRequirements {
+  limits {
+    ["cpu"] = "500m"
+    ["memory"] = 256.mib
+  }
+  requests {
+    ["cpu"] = "250m"
+    ["memory"] = 128.mib
+  }
+}
+
+securityContext = null
