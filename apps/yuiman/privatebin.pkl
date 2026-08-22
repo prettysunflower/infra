@@ -1,0 +1,45 @@
+#!/usr/bin/env -S pkl eval
+
+extends "@deploy/Deploy.pkl"
+
+name = "privatebin"
+image = "privatebin/nginx-fpm-alpine:2.0.6"
+
+volumes {
+  new {
+    name = "privatebin-data-pvc"
+    size = 5.gib
+    storageClassName = "local-path"
+    containerPath = "/srv/data"
+  }
+}
+
+ports {
+  new {
+    containerPort = 8080
+    svcPort = 80
+    name = "http"
+  }
+}
+resourceRequirements {
+  limits {
+    ["cpu"] = "500m"
+    ["memory"] = 256.mib
+  }
+  requests {
+    ["cpu"] = "50m"
+    ["memory"] = 128.mib
+  }
+}
+livenessProbe {
+  path = "/"
+  port = "http"
+}
+readinessProbe {
+  path = "/"
+  port = "http"
+}
+startupProbe {
+  path = "/"
+  port = "http"
+}
