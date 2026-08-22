@@ -19,6 +19,7 @@ function sunflower_lgbt_common_okina(dsp) {
     okina("pds", dsp),
     okina("*.pds", dsp),
     okina("login", dsp),
+    okina("food", dsp),
   ];
 }
 
@@ -37,6 +38,10 @@ D(
     "ps1._domainkey",
     "v=DKIM1; h=sha256; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA50E/cNEHusN8UjwWQ2b4MzlQCXLdOfYT9CDrv0ZZOQODEfK0tP93pQ1cF5MaaltRfM70Y3yEnE06O+CvKaXRtpP32WoW/H72FZidfHU/GymW75WZ0n+yW2jc0KUEeBx8c7tkMMdrh5VQ8vL4qOTtmPgyrU+HRkR9xnmFEwqUXnGBwAL8IhC899H0xE0S2dYQm1U9tZ1Mzgl7DEfWfw7z5p5FXFzfbyJEYHEJX+DHJGfXq85n0GIZwd+zIju1iMgV66yyzqzFSh1mNjKtRRcc+avxn5yAqhpeiJ9Q924luOaGaPxGL2PnZ5prt6HDJFPUcLHVQmhXoaQMpL7i5lNOuQIDAQAB",
   ),
+  TXT(
+    "_validation-persist",
+    "letsencrypt.org; accounturi=https://acme-v02.api.letsencrypt.org/acme/acct/2838003766",
+  ),
   mx("@"),
   dmarc,
 );
@@ -53,6 +58,7 @@ D(
   "sunflower.lgbt!internal",
   REG_NONE,
   DnsProvider(DSP_BIND9),
+  DnsProvider(DSP_BIND9_FSN),
   INCLUDE("sunflower.lgbt!common"),
   sunflower_lgbt_common_okina(DSP_BIND9),
   A("currency", internal_okina),

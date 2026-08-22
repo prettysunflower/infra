@@ -4,6 +4,7 @@ D(
   "deneb.local",
   REG_NONE,
   DnsProvider(DSP_BIND9),
+  DnsProvider(DSP_BIND9_FSN),
   A("qbittorrent", "10.0.0.228"),
   A("sonarr", "10.0.0.228"),
 );

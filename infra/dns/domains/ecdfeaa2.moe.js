@@ -12,12 +12,17 @@ D(
   ),
   CNAME("em903851", "return.smtp2go.net."),
   CNAME("s903851._domainkey", "dkim.smtp2go.net."),
+  TXT(
+    "_validation-persist",
+    "letsencrypt.org; accounturi=https://acme-v02.api.letsencrypt.org/acme/acct/2838003766",
+  ),
 );
 
 D(
   "ecdfeaa2.moe!internal",
   REG_NONE,
   DnsProvider(DSP_BIND9),
+  DnsProvider(DSP_BIND9_FSN),
   INCLUDE("ecdfeaa2.moe!public"),
   CNAME("doujins", "suika.prettysunflower.moe."),
 );

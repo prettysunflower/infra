@@ -13,6 +13,7 @@ D(
   "kakigoori.dev!internal",
   REG_NONE,
   DnsProvider(DSP_BIND9),
+  DnsProvider(DSP_BIND9_FSN),
   okina("@", DSP_BIND9),
   okina("www", DSP_BIND9),
   CNAME("images", "kakigoori.fly.storage.tigris.dev."),

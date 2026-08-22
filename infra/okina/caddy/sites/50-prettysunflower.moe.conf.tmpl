@@ -11,6 +11,10 @@ prettysunflower.moe, www.prettysunflower.moe {
 		redir https://fedi.prettysunflower.moe{uri} permanent
 	}
 
+	handle_path /pkl/* {
+		redir https://git.prettysunflower.moe/prettysunflower/pkl/releases/download/{uri}/{uri}
+	}
+
 	handle /.within.website/* {
 		reverse_proxy prettysunflower-website.anubis.svc.yuiman.prettysunflower.moe {
 			header_up X-Real-Ip {remote_host}
@@ -21,7 +25,14 @@ prettysunflower.moe, www.prettysunflower.moe {
 		reverse_proxy static.prettysunflower-website.svc.yuiman.prettysunflower.moe
 	}
 
+
+
 	handle {
+	respond /dik3gcep4g.txt 200 {
+		body "Nya~"
+		close
+	}
+
 		reverse_proxy http.prettysunflower-website.svc.yuiman.prettysunflower.moe {
 			header_up X-Real-Ip {remote_host}
 		}
@@ -130,13 +141,6 @@ files.prettysunflower.moe {
 	log
 
 	reverse_proxy publicfiles.default.svc.sekibanki.prettysunflower.moe
-}
-
-invidious.prettysunflower.moe {
-	import bunny
-	log
-
-	reverse_proxy 100.105.17.105:4039
 }
 
 karakeep.prettysunflower.moe {
@@ -269,11 +273,6 @@ deneb.sonarr.prettysunflower.moe {
 	import bunny
 	log
 
-	{{ if ne (.Env.listen | strings.ToLower) "tailscale" }}
-		import mtls
-	{{ end -}}
-
-
 	reverse_proxy deneb.sonarr.svc.sekibanki.prettysunflower.moe
 }
 
@@ -291,11 +290,6 @@ remilia.radarr.prettysunflower.moe {
 deneb.radarr.prettysunflower.moe {
 	import bunny
 	log
-
-	{{ if ne (.Env.listen | strings.ToLower) "tailscale" }}
-		import mtls
-	{{ end -}}
-
 
 	reverse_proxy deneb.radarr.svc.sekibanki.prettysunflower.moe
 }
@@ -355,6 +349,13 @@ books.prettysunflower.moe {
 archives.prettysunflower.moe {
     import bunny
     log
+
+	@knownAIBots header_regexp User-Agent AI2Bot|Ai2Bot-Dolma|Amazonbot|anthropic-ai|Applebot|Applebot-Extended|Brightbot 1.0|Bytespider|CCBot|ChatGPT-User|Claude-Web|ClaudeBot|cohere-ai|cohere-training-data-crawler|Crawlspace|Diffbot|DuckAssistBot|FacebookBot|FriendlyCrawler|Google-Extended|GoogleOther|GoogleOther-Image|GoogleOther-Video|GPTBot|iaskspider/2.0|ICC-Crawler|ImagesiftBot|img2dataset|ISSCyberRiskCrawler|Kangaroo Bot|Meta-ExternalAgent|Meta-ExternalFetcher|OAI-SearchBot|omgili|omgilibot|PanguBot|Perplexity-User|PerplexityBot|PetalBot|Scrapy|SemrushBot-OCOB|SemrushBot-SWA|Sidetrade indexer bot|Timpibot|VelenPublicWebCrawler|Webzio-Extended|YouBot
+
+	handle @knownAIBots {
+		abort
+	}
+
 
     reverse_proxy yuyuko.hosts.prettysunflower.moe
 }

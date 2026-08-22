@@ -28,6 +28,12 @@ D(
     "@",
     "google-site-verification=LsHs_iV-KqKKe3tViAr_8Xlw0eg8i7T7RPvH2OyCAGU",
   ),
+  TXT("@", "t-verify=f09da9d945557cf72d03f878679b6712"),
+  TXT(
+    "_bgpe-verify",
+    "bgpe-domain-verification=7bf8888335a8a2c37010604e3e67a1334b21eb8c5ba8f9cf",
+  ),
+  AAAA("as402919", "2602:f31b:1:1:be24:11ff:fe19:b360"),
 );
 
 D(
@@ -41,6 +47,7 @@ D(
   "nyallo.net!internal",
   REG_NONE,
   DnsProvider(DSP_BIND9),
+  DnsProvider(DSP_BIND9_FSN),
   INCLUDE("nyallo.net!common"),
   A("mail", "100.113.193.5"),
 );

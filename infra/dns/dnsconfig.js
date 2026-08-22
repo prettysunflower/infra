@@ -3,6 +3,7 @@
 var REG_NONE = NewRegistrar("none");
 var DSP_BUNNY = NewDnsProvider("bunny");
 var DSP_BIND9 = NewDnsProvider("bind9");
+var DSP_BIND9_FSN = NewDnsProvider("fsn.bind9");
 var DSP_PORKBUN = NewDnsProvider("porkbun");
 
 var hosts = require("./hosts.json");
@@ -40,7 +41,7 @@ function mx(subdomain) {
 }
 
 function okina(subdomain, dsp) {
-  if (dsp == DSP_BIND9) {
+  if (dsp == DSP_BIND9 || dsp == DSP_BIND9_FSN) {
     entries = [
       A(subdomain, internal_okina),
       AAAA(subdomain, internal_okina_ipv6),

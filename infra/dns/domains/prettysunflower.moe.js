@@ -10,7 +10,6 @@ function prettysunflower_moe_common_okina(dns_type) {
     okina("kms", dns_type),
     okina("data", dns_type),
     okina("wiki", dns_type),
-    okina("invidious", dns_type),
     okina("gist", dns_type),
     okina("files", dns_type),
     okina("deneb.sonarr", dns_type),
@@ -18,6 +17,7 @@ function prettysunflower_moe_common_okina(dns_type) {
     okina("books", dns_type),
     okina("budget", dns_type),
     okina("passwords", dns_type),
+    okina("youtubethumbnails", dns_type),
   ];
 }
 
@@ -27,6 +27,7 @@ D(
   A("fsn.okina", fsn_okina),
   AAAA("fsn.okina", fsn_okina_ipv6),
   CNAME("tigris", "prettysunflower.fly.storage.tigris.dev."),
+  CNAME("pkl", "pkl-prettysunflower.t3.tigrisfiles.io."),
   CNAME("s3.fedi", "fedi-prettysunflower-storage.t3.storage.dev."),
   okina("fedi"),
   mx("@"),
@@ -46,6 +47,14 @@ D(
     "ps1._domainkey.services",
     "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvNq0uP0gT1HM7W674qJnuwocGHjzZJpOvqlQJWstzqzlvPpR8Qb+0iVCC/vmWhlaeb//cHMOH1zTgB+x0EHkJGvcdHMVpClTp4o7Ch3zlUvWGfMl/M5Jq133/s8ZKXxwR75RszxdhcmflhcfFiawTJYAZF7fxVrJQm1kyeTxS2nQFsm2trgtVZ5X0BIGM5+Ij33xYq7o8XLySb8BGA1M4NeWv/7xJm22EZph18vyYH3fCdqRwPKh/FNX5p9mwh4roRLl7o433KH3cn+X1OFxN9wNhm2ss6uD6gIN9FosRs0FrQvTGOHHlV48Em+bgWzuhguKT1Eqba+Bqk40qTII6wIDAQAB",
   ),
+  TXT(
+    "_validation-persist.services",
+    "letsencrypt.org; accounturi=https://acme-v02.api.letsencrypt.org/acme/acct/2838003766",
+  ),
+  TXT(
+    "_validation-persist",
+    "letsencrypt.org; accounturi=https://acme-v02.api.letsencrypt.org/acme/acct/2838003766",
+  ),
   A("snikket", "116.202.12.37"),
   AAAA("snikket", "2a01:4f8:c013:ca31::1"),
   CNAME("groups.snikket", "snikket.prettysunflower.moe."),
@@ -64,6 +73,7 @@ D(
   okina("karakeep"),
   okina("git"),
   okina("papers"),
+  okina("archives"),
 );
 
 function generateHostsDNS() {
@@ -78,6 +88,7 @@ D(
   "prettysunflower.moe!internal",
   REG_NONE,
   DnsProvider(DSP_BIND9),
+  DnsProvider(DSP_BIND9_FSN),
   INCLUDE("prettysunflower.moe!common"),
   prettysunflower_moe_common_okina(DSP_BIND9),
   generateHostsDNS(),
