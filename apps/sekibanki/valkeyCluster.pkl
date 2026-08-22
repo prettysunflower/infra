@@ -1,0 +1,80 @@
+#!/usr/bin/env -S pkl eval
+
+import "@k8s/api/core/v1/Namespace.pkl"
+import "@k8s/K8sResource.pkl"
+import "@valkey/ValkeyCluster.pkl"
+
+local containersSecurityContext: ValkeyCluster.SecurityContext = new {
+  allowPrivilegeEscalation = false
+  capabilities {
+    drop {
+      "ALL"
+    }
+  }
+}
+
+namespace: Namespace = new {
+  metadata {
+    name = "valkey"
+    labels {
+      ["name"] = "valkey"
+    }
+  }
+}
+
+cluster = new ValkeyCluster {
+  metadata {
+    name = "main-cluster"
+    namespace = "valkey"
+  }
+
+  spec {
+    image = "valkey/valkey:9.1.1-alpine"
+
+    shards = 3
+    replicas = 1
+
+    config {
+      ["save"] = "60 1"
+      ["cluster-databases"] = "16"
+    }
+
+    workloadType = "StatefulSet"
+
+    persistence {
+      size = "10Gi"
+      storageClassName = "local-path-ssd"
+      reclaimPolicy = "Delete"
+    }
+
+    podSecurityContext {
+      runAsUser = 1000
+      runAsGroup = 1000
+      runAsNonRoot = true
+      seccompProfile {
+        type = "RuntimeDefault"
+      }
+    }
+
+    containers {
+      new {
+        name = "server"
+        securityContext = containersSecurityContext
+      }
+      new {
+        name = "metrics-exporter"
+        securityContext = containersSecurityContext
+      }
+    }
+  }
+}
+
+output {
+  value = new Listing<K8sResource> {
+    namespace
+    cluster
+  }
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}

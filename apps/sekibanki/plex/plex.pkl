@@ -1,22 +1,24 @@
 import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sObject.pkl"
 import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sResource.pkl"
 
-import "../../deploy/Deploy.pkl"
+import "@deploy/Deploy.pkl"
 
 user: String
 mediaHostPath: String
 mediaContainerPath: String
+nodeExtPort: Int
 
 config = this
 
 deploy: Deploy = new {
   name = "plex-" + user
   namespace = "plex"
-  image = "lscr.io/linuxserver/plex:1.43.1.10611-1e34174b1-ls305"
+  image = "lscr.io/linuxserver/plex:1.43.3.10828-00f62d37d-ls315"
   ports {
     new {
       containerPort = 32400
       svcPort = 80
+      nodePort = nodeExtPort
       name = "http"
     }
   }
@@ -40,4 +42,9 @@ deploy: Deploy = new {
     ["S6_READ_ONLY_ROOT"] = "1"
   }
   securityContext = null
+  service {
+   spec {
+      type = "NodePort"
+    } 
+  }
 }

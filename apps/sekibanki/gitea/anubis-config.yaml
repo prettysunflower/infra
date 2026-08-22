@@ -171,7 +171,7 @@ status_codes:
 store:
   backend: valkey
   parameters:
-    url: "redis://valkey.gitea.svc.sekibanki.prettysunflower.moe:6379/1"
+    url: "redis+cluster://valkey-main-cluster.valkey:6379/2"
 
 # The weight thresholds for when to trigger individual challenges. Any
 # CHALLENGE will take precedence over this.

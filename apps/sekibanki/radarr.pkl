@@ -6,7 +6,7 @@ deneb =
   new Deploy {
     name = "radarr-deneb"
     namespace = "radarr"
-    image = "ghcr.io/linuxserver/radarr:6.2.1.10461-ls307"
+    image = "ghcr.io/linuxserver/radarr:6.3.0.10514-ls313"
     ports {
       new {
         containerPort = 7878
@@ -30,6 +30,7 @@ deneb =
         hostPath = "/var/mnt/yuyuko/deneb/"
       }
     }
+    securityContext = null
     livenessProbe {
       path = "/ping"
       port = "http"
@@ -45,7 +46,7 @@ deneb =
     }
     pgDb {
       name = "pg-deneb"
-      instances = 2
+      instances = 3
       size = 5.gib
       storageClass = "local-path-ssd"
     }
@@ -60,7 +61,7 @@ remilia =
   new Deploy {
     name = "radarr-remilia"
     namespace = "radarr"
-    image = "ghcr.io/linuxserver/radarr:6.2.1.10461-ls307"
+    image = "ghcr.io/linuxserver/radarr:6.3.0.10514-ls313"
     ports {
       new {
         containerPort = 7878
@@ -97,9 +98,10 @@ remilia =
       ["PGID"] = "1000"
       ["TZ"] = "America/Toronto"
     }
+    securityContext = null
     pgDb {
       name = "pg-remilia"
-      instances = 2
+      instances = 3
       size = 5.gib
       storageClass = "local-path-ssd"
     }

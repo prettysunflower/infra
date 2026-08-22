@@ -84,7 +84,7 @@ paperless =
     }
     secrets = secrets_file.secrets
     pgDb {
-      name = "postgres"
+      name = "paperless-postgres"
       instances = 3
       size = 5.gib
       storageClass = "local-path-ssd"

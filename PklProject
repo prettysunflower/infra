@@ -13,12 +13,15 @@ dependencies {
   ["deploy"] {
     uri = "package://prettysunflower.moe/pkl/deploy@1.0.0"
   }
+  ["valkey"] {
+    uri = "package://pkl.prettysunflower.moe/valkey-operator@0.4.0"
+  }
 }
 
 evaluatorSettings {
   externalModuleReaders {
     ["sops"] {
-    	executable = "/home/prettysunflower/pkl-sops/pkl-sops"
+      executable = "/home/prettysunflower/pkl-sops/pkl-sops"
     }
   }
 }

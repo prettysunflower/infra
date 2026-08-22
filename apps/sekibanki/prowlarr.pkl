@@ -30,6 +30,7 @@ app =
       path = "/ping"
       port = "http"
     }
+    securityContext = null
     env {
       ["PUID"] = "1000"
       ["PGID"] = "1000"
@@ -37,7 +38,7 @@ app =
     }
     pgDb {
       name = "postgres"
-      instances = 2
+      instances = 3
       size = 5.gib
       storageClass = "local-path-ssd"
     }

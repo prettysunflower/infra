@@ -62,7 +62,7 @@ outline =
     secrets = secrets_file.secrets
     pgDb {
       name = "postgres"
-      instances = 2
+      instances = 3
       size = 5.gib
       storageClass = "local-path-ssd"
       envMapping {

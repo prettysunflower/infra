@@ -1,5 +1,5 @@
-import "@k8s/K8sResource.pkl"
 import "@deploy/Deploy.pkl"
+import "@k8s/K8sResource.pkl"
 
 changedetection =
   new Deploy {

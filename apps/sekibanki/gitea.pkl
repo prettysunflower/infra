@@ -7,11 +7,13 @@ import "@k8s/api/apps/v1/Deployment.pkl"
 import "@k8s/api/core/v1/ConfigMap.pkl"
 import "@k8s/api/core/v1/Volume.pkl"
 
+import "valkeyURL.pkl"
+
 gitea =
   new Deploy {
     name = "gitea"
     namespace = "gitea"
-    image = "docker.gitea.com/gitea:1.27.0-rootless"
+    image = "docker.gitea.com/gitea:1.27.2-rootless"
     ports {
       new {
         containerPort = 3000
@@ -79,8 +81,8 @@ gitea =
       ["GITEA__database__SSL_MODE"] = "disable"
       ["GITEA__database__SCHEMA"] = "public"
       ["GITEA__database__LOG_SQL"] = "false"
-      ["GITEA__session__PROVIDER"] = "redis"
-      ["GITEA__session__PROVIDER_CONFIG"] = "redis://valkey:6379/2"
+      ["GITEA__session__PROVIDER"] = "db"
+      //["GITEA__session__PROVIDER_CONFIG"] = valkeyURL.urlForService(valkeyURL.gitea)
       ["GITEA__log__MODE"] = "console"
       ["GITEA__log__LEVEL"] = "info"
       ["GITEA__mailer__ENABLED"] = "true"
@@ -112,8 +114,8 @@ gitea =
       ["GITEA__repository_0X2E_signing__DEFAULT_TRUST_MODEL"] = "committer"
       ["GITEA__security__INSTALL_LOCK"] = "true"
       ["GITEA__security__PASSWORD_HASH_ALGO"] = "argon2"
-      ["GITEA__cache__ADAPTER"] = "redis"
-      ["GITEA__cache__HOST"] = "redis://valkey:6379/0"
+      ["GITEA__cache__ADAPTER"] = "memory"
+      //["GITEA__cache__HOST"] = valkeyURL.urlForService(valkeyURL.gitea)
       ["GITEA__ui__THEMES"] = "gitea-light,gitea-dark,gitea-auto"
       ["GITEA__ui__DEFAULT_THEME"] = "gitea-auto"
     }
@@ -129,41 +131,6 @@ gitea =
       size = 10.gib
       storageClass = "local-path-ssd"
       instances = 3
-    }
-  }.resources
-
-valkey =
-  new Deploy {
-    name = "valkey"
-    namespace = "gitea"
-    image = "valkey/valkey:alpine"
-    ports {
-      new {
-        containerPort = 6379
-        svcPort = 6379
-        name = "valkey"
-      }
-    }
-    volumes {
-      new {
-        name = "valkey-pvc"
-        size = 5.gib
-        accessMode = "ReadWriteMany"
-        containerPath = "/data"
-      }
-    }
-    env = new {
-      ["VALKEY_EXTRA_FLAGS"] = "--save 60 1"
-    }
-    resourceRequirements {
-      limits {
-        ["cpu"] = "500m"
-        ["memory"] = 256.mib
-      }
-      requests {
-        ["cpu"] = "250m"
-        ["memory"] = 64.mib
-      }
     }
   }.resources
 
@@ -263,7 +230,6 @@ anubisGiteaConfig = new ConfigMap {
 output {
   value = new Listing {
     ...gitea
-    ...valkey
     ...anubis
     anubisGiteaConfig
   }

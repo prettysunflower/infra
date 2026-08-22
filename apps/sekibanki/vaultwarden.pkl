@@ -1,14 +1,14 @@
 import "package://pkg.pkl-lang.org/pkl-k8s/k8s@1.4.1#/K8sResource.pkl"
 import "sops:vaultwarden.secrets.sops.pkl" as secrets_file
 
-import "../common/cnpg_backup.pkl"
+import "@common/cnpg_backup.pkl"
 import "@deploy/Deploy.pkl"
 
 app =
   new Deploy {
     name = "vaultwarden"
     namespace = "vaultwarden"
-    image = "vaultwarden/server:1.36.0"
+    image = "vaultwarden/server:testing-alpine"
     imagePullPolicy = "Always"
     ports {
       new {

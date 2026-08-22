@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: deneb-config
-  namespace: radarr
-data:
-  PUID: "1000"
-  PGID: "1000"
-  TZ: America/Toronto

@@ -1,0 +1,9 @@
+typealias Service = Int(this >= 1)
+
+function urlForService(svc: Service): String =
+  "redis+cluster://valkey-main-cluster.valkey:6379/\(svc)"
+
+gitea = 1
+giteaAnubis = 2
+renovate = 3
+immich = 4

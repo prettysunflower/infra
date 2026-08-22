@@ -1,9 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/af336e8aae721cdd6759babf2f53f91eddf0558d/releases/cnpg-1.29.1.yaml
-  - https://raw.githubusercontent.com/cloudnative-pg/artifacts/74d2077068e3d0e86342368024b62a766cc1329c/image-catalogs/catalog-system-trixie.yaml
-  - https://raw.githubusercontent.com/cloudnative-pg/artifacts/059ff4fb6ff51c46fc61b225c642b5e108603122/image-catalogs-extensions/catalog-minimal-trixie.yaml
+  - https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.30/releases/cnpg-1.30.0.yaml
+  - https://raw.githubusercontent.com/cloudnative-pg/artifacts/f02378072682cdbb044e92f62e606ca8681ef02a/image-catalogs/catalog-standard-trixie.yaml
+  - https://raw.githubusercontent.com/cloudnative-pg/artifacts/fc079891360644b84eb2434b08cf12f3ea4d4fae/image-catalogs-extensions/catalog-minimal-trixie.yaml
 patches:
   - path: vchord.patch.yaml
     target:

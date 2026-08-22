@@ -15,6 +15,13 @@
         "sha256": "0520f82219c074d2f4b69ab9c57a4a1c1d0b3c4acc1e5d12749e72e0d567d9bf"
       }
     },
+    "package://pkl.prettysunflower.moe/valkey-operator@0": {
+      "type": "remote",
+      "uri": "projectpackage://pkl.prettysunflower.moe/valkey-operator@0.4.0",
+      "checksums": {
+        "sha256": "2a8a5b7cedad51a1a2a1eabb4472a5a671dd5fff9feddd057d8a8b0f835538b7"
+      }
+    },
     "package://prettysunflower.moe/pkl/cnpg@1": {
       "type": "remote",
       "uri": "projectpackage://prettysunflower.moe/pkl/cnpg@1.30.0",

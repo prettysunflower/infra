@@ -1,46 +1,35 @@
-import "@k8s/K8sResource.pkl"
+amends "@deploy/Deploy.pkl"
 
 import "sops:epicgames-freegames.secrets.sops.pkl" as secrets_file
-import "@deploy/Deploy.pkl"
 
-app =
-  new Deploy {
-    name = "epicgames-freegames"
-    image = "ghcr.io/claabs/epicgames-freegames-node:latest"
-    ports {
-      new {
-        containerPort = 3000
-        svcPort = 80
-        name = "http"
-      }
-    }
-    volumes {
-      new {
-        name = "epicgames-freegames-pvc"
-        size = 5.gib
-        accessMode = "ReadWriteOnce"
-        containerPath = "/usr/app/config"
-      }
-    }
-    resourceRequirements {
-      limits {
-        ["memory"] = "2G"
-      }
-    }
-    env {
-      ["EMAIL"] = "epicgames@prettysunflower.moe"
-      ["BASE_URL"] = "http://epicgames-freegames.default.svc.sekibanki.prettysunflower.moe"
-      ["TEST_NOTIFIERS"] = "false"
-      ["TZ"] = "America/Toronto"
-      ["CRON_SCHEDULE"] = "0 0,6,12,18 * * *"
-      ["RUN_ON_STARTUP"] = "true"
-    }
-    secrets = secrets_file.secrets
-  }.resources
-
-output {
-  value = app
-  renderer = (K8sResource.output.renderer as YamlRenderer) {
-    isStream = true
+name = "epicgames-freegames"
+image = "ghcr.io/claabs/epicgames-freegames-node:latest"
+ports {
+  new {
+    containerPort = 3000
+    svcPort = 80
+    name = "http"
   }
 }
+volumes {
+  new {
+    name = "epicgames-freegames-pvc"
+    size = 5.gib
+    accessMode = "ReadWriteOnce"
+    containerPath = "/usr/app/config"
+  }
+}
+resourceRequirements {
+  limits {
+    ["memory"] = "2G"
+  }
+}
+env {
+  ["EMAIL"] = "epicgames@prettysunflower.moe"
+  ["BASE_URL"] = "http://epicgames-freegames.default.svc.sekibanki.prettysunflower.moe"
+  ["TEST_NOTIFIERS"] = "false"
+  ["TZ"] = "America/Toronto"
+  ["CRON_SCHEDULE"] = "0 0,6,12,18 * * *"
+  ["RUN_ON_STARTUP"] = "true"
+}
+secrets = secrets_file.secrets

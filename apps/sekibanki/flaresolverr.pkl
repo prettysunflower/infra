@@ -1,50 +1,41 @@
+amends "@deploy/Deploy.pkl"
+
 import "@k8s/K8sResource.pkl"
-import "@deploy/Deploy.pkl"
 
-app =
-  new Deploy {
-    name = "flaresolverr"
-    image = "ghcr.io/flaresolverr/flaresolverr:v3.5.0"
-    ports {
-      new {
-        containerPort = 8191
-        svcPort = 80
-        name = "http"
-      }
-      new {
-        containerPort = 8192
-        name = "metrics"
-      }
-    }
-    livenessProbe {
-      path = "/metrics"
-      port = "metrics"
-    }
-    startupProbe {
-      path = "/metrics"
-      port = "metrics"
-    }
-    resourceRequirements {
-      limits {
-        ["cpu"] = "2"
-        ["memory"] = 1.gib
-      }
-      requests {
-        ["cpu"] = "250m"
-        ["memory"] = 64.mib
-      }
-    }
-    env {
-      ["LOG_LEVEL"] = "info"
-      ["PORT"] = "8191"
-      ["PROMETHEUS_ENABLED"] = "true"
-      ["PROMETHEUS_PORT"] = "8192"
-    }
-  }.resources
-
-output {
-  value = app
-  renderer = (K8sResource.output.renderer as YamlRenderer) {
-    isStream = true
+name = "flaresolverr"
+image = "ghcr.io/flaresolverr/flaresolverr:v3.5.0"
+ports {
+  new {
+    containerPort = 8191
+    svcPort = 80
+    name = "http"
   }
+  new {
+    containerPort = 8192
+    name = "metrics"
+  }
+}
+livenessProbe {
+  path = "/metrics"
+  port = "metrics"
+}
+startupProbe {
+  path = "/metrics"
+  port = "metrics"
+}
+resourceRequirements {
+  limits {
+    ["cpu"] = "2"
+    ["memory"] = 1.gib
+  }
+  requests {
+    ["cpu"] = "250m"
+    ["memory"] = 64.mib
+  }
+}
+env {
+  ["LOG_LEVEL"] = "info"
+  ["PORT"] = "8191"
+  ["PROMETHEUS_ENABLED"] = "true"
+  ["PROMETHEUS_PORT"] = "8192"
 }

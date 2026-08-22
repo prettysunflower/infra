@@ -1,9 +1,0 @@
-namespace: opengist
-
-resources:
-  - deployment.yaml
-  - pvc.yaml
-  - services.yaml
-  - secrets.yaml
-  - namespace.yaml
-  - database.yaml

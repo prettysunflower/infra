@@ -1,82 +1,73 @@
-import "@k8s/K8sResource.pkl"
-import "@deploy/Deploy.pkl"
+amends "@deploy/Deploy.pkl"
+
 import "@k8s/api/core/v1/Volume.pkl"
 import "@k8s/api/core/v1/VolumeMount.pkl"
 
-app =
-  new Deploy {
-    name = "backrest"
-    namespace = "backrest"
-    image = "garethgeorge/backrest:v1.13.0"
-    ports {
-      new {
-        containerPort = 9898
-        svcPort = 80
-        name = "http"
-      }
+name = "backrest"
+namespace = "backrest"
+image = "garethgeorge/backrest:v1.13.0"
+ports {
+  new {
+    containerPort = 9898
+    svcPort = 80
+    name = "http"
+  }
+}
+volumes {
+  new {
+    name = "backrest-pvc"
+    size = 20.gib
+    accessMode = "ReadWriteOnce"
+    containerSubPaths = new {
+      ["data"] = "/data"
+      ["config"] = "/config"
+      ["cache"] = "/cache"
+      ["rclone"] = "/root/.config/rclone"
     }
-    volumes {
-      new {
-        name = "backrest-pvc"
-        size = 20.gib
-        accessMode = "ReadWriteOnce"
-        containerSubPaths = new {
-          ["data"] = "/data"
-          ["config"] = "/config"
-          ["cache"] = "/cache"
-          ["rclone"] = "/root/.config/rclone"
-        }
-      }
-      new {
-        name = "pvc-restic-backups"
-        pvName = "pv-restic-backups"
-        size = 25.tib
-        accessMode = "ReadWriteMany"
-        containerPath = "/mnt/yuyuko/backups/restic"
-        hostPath = "/var/mnt/yuyuko/backups/restic"
-      }
-    }
-    env {
-      ["BACKREST_DATA"] = "/data"
-      ["BACKREST_CONFIG"] = "/config/config.json"
-      ["XDG_CACHE_HOME"] = "/cache"
-      ["TMPDIR"] = "/tmp"
-      ["TZ"] = "America/Toronto"
-      ["BACKREST_PORT"] = "9898"
-    }
-    securityContext = null
-    deployment {
+  }
+  new {
+    name = "pvc-restic-backups"
+    pvName = "pv-restic-backups"
+    size = 25.tib
+    accessMode = "ReadWriteMany"
+    containerPath = "/mnt/yuyuko/backups/restic"
+    hostPath = "/var/mnt/yuyuko/backups/restic"
+  }
+}
+env {
+  ["BACKREST_DATA"] = "/data"
+  ["BACKREST_CONFIG"] = "/config/config.json"
+  ["XDG_CACHE_HOME"] = "/cache"
+  ["TMPDIR"] = "/tmp"
+  ["TZ"] = "America/Toronto"
+  ["BACKREST_PORT"] = "9898"
+}
+securityContext = null
+
+deployment {
+  spec {
+    template {
       spec {
-        template {
-          spec {
-            volumes {
-              new Volume {
-                name = "backrest-tmp"
-                emptyDir {
-                  sizeLimit = "500Mi"
-                  medium = "Memory"
-                }
-              }
+        volumes {
+          new Volume {
+            name = "backrest-tmp"
+            emptyDir {
+              sizeLimit = "500Mi"
+              medium = "Memory"
             }
-            containers {
-              [0] {
-                volumeMounts {
-                  new VolumeMount {
-                    name = "backrest-tmp"
-                    mountPath = "/tmp"
-                  }
-                }
+          }
+        }
+        containers {
+          [0] {
+            volumeMounts {
+              new VolumeMount {
+                name = "backrest-tmp"
+                mountPath = "/tmp"
               }
             }
           }
         }
       }
     }
-  }.resources
-
-output {
-  value = app
-  renderer = (K8sResource.output.renderer as YamlRenderer) {
-    isStream = true
   }
 }
