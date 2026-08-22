@@ -1,0 +1,6 @@
+extends "base.pkl"
+
+name = "dolibarr-dacostafaro"
+env {
+  ["DOLI_URL_ROOT"] = "https://dolibarr.dacostafaro.com"
+}

@@ -1,0 +1,70 @@
+abstract module dolibarr
+
+extends "@deploy/Deploy.pkl"
+
+import "@common/cnpg_backup.pkl"
+
+name = "dolibarr"
+dolibarr_version = "23.0.3"
+image = "dolibarr/dolibarr:" + dolibarr_version
+pvc_name = name + "-pvc"
+
+ports {
+  new {
+    containerPort = 80
+    svcPort = 80
+    name = "http"
+  }
+}
+volumes {
+  new {
+    name = pvc_name
+    size = 5.gib
+    accessMode = "ReadWriteOnce"
+    containerSubPaths {
+      ["documents"] = "/var/www/documents"
+      ["html_custom"] = "/var/www/html/custom"
+      ["config"] = "/var/www/html/conf"
+    }
+  }
+}
+livenessProbe {
+  path = "/"
+  port = "http"
+}
+startupProbe {
+  path = "/"
+  port = "http"
+}
+resourceRequirements {
+  limits {
+    ["cpu"] = "500m"
+    ["memory"] = 256.mib
+  }
+  requests {
+    ["cpu"] = "250m"
+    ["memory"] = 128.mib
+  }
+}
+env {
+  ["DOLI_INSTALL_AUTO"] = "0"
+  ["DOLI_INIT_DEMO"] = "0"
+  ["DOLI_PROD"] = "1"
+  ["DOLI_DB_TYPE"] = "pgsql"
+  ["WWW_USER_ID"] = "1000"
+  ["WWW_GROUP_ID"] = "1000"
+}
+secrets = null
+pgDb {
+  instances = 3
+  size = 5.gib
+  storageClass = "local-path"
+  backup = cnpg_backup
+  envMapping {
+    host = "DOLI_DB_HOST"
+    port = "DOLI_DB_HOST_PORT"
+    dbname = "DOLI_DB_NAME"
+    username = "DOLI_DB_USER"
+    password = "DOLI_DB_PASSWORD"
+  }
+}

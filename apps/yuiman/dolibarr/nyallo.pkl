@@ -1,0 +1,6 @@
+extends "base.pkl"
+
+namespace = "dolibarr"
+env {
+  ["DOLI_URL_ROOT"] = "https://dolibarr.nyallo.net"
+}
