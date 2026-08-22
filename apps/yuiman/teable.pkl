@@ -1,0 +1,183 @@
+#!/usr/bin/env -S pkl eval
+
+import "sops:teable.secrets.sops.pkl" as secrets_file
+
+import "@common/cnpg_backup.pkl"
+import "@deploy/Deploy.pkl"
+import "@k8s/api/core/v1/PodSpec.pkl"
+import "@k8s/K8sResource.pkl"
+
+teable_version = "release.2026-08-19T02-25-59Z.2698"
+teable_image = "ghcr.io/teableio/teable:" + teable_version
+
+teable =
+  new Deploy {
+    name = "teable"
+    namespace = "teable"
+    image = teable_image
+    args {
+      "skip-migrate"
+    }
+    ports {
+      new {
+        containerPort = 3000
+        svcPort = 80
+        name = "http"
+      }
+    }
+    livenessProbe {
+      path = "/health"
+      port = "http"
+    }
+    startupProbe {
+      path = "/health"
+      port = "http"
+    }
+    securityContext = null
+    resourceRequirements {
+      requests {
+        ["cpu"] = "200m"
+        ["memory"] = 400.mib
+      }
+      limits {
+        ["cpu"] = "1"
+        ["memory"] = 4.gib
+      }
+    }
+    env {
+      ["PUBLIC_ORIGIN"] = "https://data.sunflower.lgbt"
+      ["BACKEND_CACHE_PROVIDER"] = "redis"
+      ["NEXT_ENV_IMAGES_ALL_REMOTE"] = "true"
+      ["PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING"] = "1"
+      ["NODE_TLS_REJECT_UNAUTHORIZED"] = "0"
+      ["BACKEND_STORAGE_TOKEN_EXPIRE_IN"] = "1d"
+      ["BACKEND_OIDC_CLIENT_ID"] = "c74c1483-dce9-4a0b-b65a-cbbfc918b93c"
+      ["BACKEND_OIDC_CALLBACK_URL"] = "https://data.sunflower.lgbt/api/auth/oidc/callback"
+      ["BACKEND_OIDC_AUTHORIZATION_URL"] = "https://login.sunflower.lgbt/authorize"
+      ["BACKEND_OIDC_TOKEN_URL"] = "https://login.sunflower.lgbt/api/oidc/token"
+      ["BACKEND_OIDC_USER_INFO_URL"] = "https://login.sunflower.lgbt/api/oidc/userinfo"
+      ["BACKEND_OIDC_ISSUER"] = "https://login.sunflower.lgbt"
+      ["BACKEND_OIDC_OTHER"] = "{\"scope\": [\"openid\", \"email\", \"profile\"]}"
+      ["SOCIAL_AUTH_PROVIDERS"] = "oidc"
+      ["BACKEND_CACHE_REDIS_URI"] = "redis://valkey.teable:6379/0"
+      ["BACKEND_STORAGE_PROVIDER"] = "s3"
+      ["BACKEND_STORAGE_S3_REGION"] = "auto"
+      ["BACKEND_STORAGE_S3_ENDPOINT"] = "https://t3.storage.dev"
+      ["BACKEND_STORAGE_PUBLIC_BUCKET"] = "prettysunflower-teable-public"
+      ["BACKEND_STORAGE_PRIVATE_BUCKET"] = "prettysunflower-teable-private"
+      ["BACKEND_MAIL_HOST"] = "mail.prettysunflower.moe"
+      ["BACKEND_MAIL_PORT"] = "587"
+      ["BACKEND_MAIL_SECURE"] = "false"
+      ["BACKEND_MAIL_SENDER"] = "teable@prettysunflower.moe"
+    }
+    secrets = secrets_file.secrets
+    pgDb {
+      instances = 3
+      backup = cnpg_backup
+      storageClass = "local-path"
+      imageCatalogRefName = "postgresql-standard-trixie"
+      size = 5.gib
+      envMapping {
+        uri = "PRISMA_DATABASE_URL"
+      }
+    }
+    pgCluster {
+      spec {
+        managed {
+          roles {
+            new {
+              name = "app"
+              ensure = "present"
+              login = true
+              superuser = true
+            }
+          }
+        }
+      }
+    }
+    deployment {
+      spec {
+        template {
+          spec {
+            initContainers {
+              new PodSpec.Container {
+                image = teable_image
+                name = "teable-migrate-db"
+                args {
+                  "migrate-only"
+                }
+                envFrom {
+                  new {
+                    configMapRef {
+                      name = "teable-config"
+                    }
+                  }
+                  new {
+                    secretRef {
+                      name = "teable-secrets"
+                    }
+                  }
+                }
+                env {
+                  new {
+                    name = "PRISMA_DATABASE_URL"
+                    valueFrom {
+                      secretKeyRef {
+                        name = "postgres-app"
+                        key = "fqdn-uri"
+                      }
+                    }
+                  }
+                }
+                resources {
+                  requests {
+                    ["cpu"] = "250m"
+                    ["memory"] = 256.mib
+                  }
+                  limits {
+                    ["cpu"] = 1
+                    ["memory"] = 1.gib
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }.resources
+
+valkey =
+  new Deploy {
+    name = "valkey"
+    namespace = "teable"
+    image = "valkey/valkey:alpine"
+    ports {
+      new {
+        containerPort = 6379
+        svcPort = 6379
+        name = "valkey"
+      }
+    }
+    volumes {
+      new {
+        name = "valkey-data-pvc"
+        size = 5.gib
+        accessMode = "ReadWriteOnce"
+        containerPath = "/data"
+      }
+    }
+    env = new {
+      ["VALKEY_EXTRA_FLAGS"] = "--save 60 1"
+    }
+  }.resources
+
+output {
+  value = new Listing {
+    ...teable
+    ...valkey
+  }
+  renderer = (K8sResource.output.renderer as YamlRenderer) {
+    isStream = true
+  }
+}
