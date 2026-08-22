@@ -1,0 +1,61 @@
+#!/usr/bin/env -S pkl eval
+
+extends "@deploy/Deploy.pkl"
+
+import "sops:pocketid.secrets.sops.pkl" as secrets_file
+
+import "@common/cnpg_backup.pkl"
+
+name = "pocketid"
+namespace = "pocketid"
+image = "ghcr.io/pocket-id/pocket-id:v2.14.0-distroless"
+
+ports {
+  new {
+    containerPort = 1411
+    svcPort = 80
+    name = "http"
+  }
+}
+
+volumes {
+  new {
+    name = "pocketid-pvc"
+    storageClassName = "local-path"
+    size = 1.gib
+    accessMode = "ReadWriteOnce"
+    containerPath = "/app/data"
+  }
+}
+
+env {
+  ["APP_URL"] = "https://login.sunflower.lgbt"
+  ["TRUST_PROXY"] = "true"
+}
+
+secrets {
+  ["ENCRYPTION_KEY"] = secrets_file.ENCRYPTION_KEY
+  ["MAXMIND_LICENSE_KEY"] = secrets_file.MAXMIND_LICENSE_KEY
+}
+
+resourceRequirements {
+  limits {
+    ["cpu"] = "500m"
+    ["memory"] = 256.mib
+  }
+  requests {
+    ["cpu"] = "100m"
+    ["memory"] = 64.mib
+  }
+}
+
+pgDb {
+  name = "postgres"
+  instances = 3
+  storageClass = "local-path"
+  size = 5.gib
+  backup = cnpg_backup
+  envMapping {
+    uri = "DB_CONNECTION_STRING"
+  }
+}
