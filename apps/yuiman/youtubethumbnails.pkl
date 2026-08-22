@@ -1,0 +1,23 @@
+extends "@deploy/Deploy.pkl"
+
+name = "youtubethumbnails"
+image = "git.prettysunflower.moe/prettysunflower/youtubethumbnails:latest"
+replicas = 2
+
+ports {
+  new {
+    containerPort = 3333
+    svcPort = 80
+  }
+}
+
+resourceRequirements {
+  limits {
+    ["cpu"] = "500m"
+    ["memory"] = 256.mib
+  }
+  requests {
+    ["cpu"] = "50m"
+    ["memory"] = 64.mib
+  }
+}
